@@ -16,7 +16,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.events;
+package org.imsglobal.caliper.v1p1.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
@@ -30,6 +30,7 @@ import org.imsglobal.caliper.entities.outcome.Score;
 import org.imsglobal.caliper.entities.resource.Assessment;
 import org.imsglobal.caliper.entities.resource.AssessmentItem;
 import org.imsglobal.caliper.entities.resource.Attempt;
+import org.imsglobal.caliper.events.GradeEvent;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;

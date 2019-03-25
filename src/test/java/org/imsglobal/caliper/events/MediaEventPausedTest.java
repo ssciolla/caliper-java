@@ -109,7 +109,7 @@ public class MediaEventPausedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventMediaPausedVideo.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventMediaPausedVideo.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

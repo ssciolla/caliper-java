@@ -103,7 +103,7 @@ public class ForumEventSubscribedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventForumSubscribed.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventForumSubscribed.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

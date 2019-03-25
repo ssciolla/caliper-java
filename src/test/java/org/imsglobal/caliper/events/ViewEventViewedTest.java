@@ -104,7 +104,7 @@ public class ViewEventViewedTest {
 
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventViewViewed.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventViewViewed.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

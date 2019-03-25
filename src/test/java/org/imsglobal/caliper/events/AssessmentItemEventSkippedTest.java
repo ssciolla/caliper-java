@@ -114,7 +114,7 @@ public class AssessmentItemEventSkippedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventAssessmentItemSkipped.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventAssessmentItemSkipped.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

@@ -105,7 +105,7 @@ public class NavigationEventNavigatedToTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventNavigationNavigatedTo.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventNavigationNavigatedTo.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

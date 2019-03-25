@@ -55,7 +55,7 @@ public class PersonTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/caliperEntityPerson.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEntityPerson.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

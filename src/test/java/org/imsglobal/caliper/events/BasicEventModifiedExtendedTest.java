@@ -94,7 +94,7 @@ public class BasicEventModifiedExtendedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventBasicModifiedExtended.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventBasicModifiedExtended.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

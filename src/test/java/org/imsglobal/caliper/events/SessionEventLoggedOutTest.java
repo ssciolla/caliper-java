@@ -78,7 +78,7 @@ public class SessionEventLoggedOutTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventSessionLoggedOut.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventSessionLoggedOut.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

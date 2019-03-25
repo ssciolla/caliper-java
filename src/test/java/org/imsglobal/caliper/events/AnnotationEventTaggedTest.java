@@ -128,7 +128,7 @@ public class AnnotationEventTaggedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventAnnotationTagged.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventAnnotationTagged.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

@@ -34,11 +34,13 @@ local development machine.
 documentation and reporting.
 
 ### Building
-First, clone the *caliper-common-fixtures* project to your development machine and add a symbolic 
-link: 
+First, clone the *caliper-common-fixtures* project to your development machine and add symbolic 
+links: 
 
 ```
-ln -s /Path/to/caliper-common-fixtures/src/test/resources/fixtures/ src/test/resources/fixtures
+ln -s /Path/to/caliper-common-fixtures/v1p0 src/test/resources/fixtures/v1p0
+ln -s /Path/to/caliper-common-fixtures/v1p1 src/test/resources/fixtures/v1p1
+ln -s /Path/to/caliper-common-fixtures/v1p2 src/test/resources/fixtures/v1p2
 ``` 
 
 Then from your local *caliper-java* directory run:

@@ -160,7 +160,7 @@ public class EnvelopeEventSingleTest {
         Matcher matcher = pattern.matcher(json);
         json = matcher.replaceFirst("\"sendTime\":\"" + sendTime +"\"");
 
-        String fixture = jsonFixture("fixtures/caliperEnvelopeEventSingle.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEnvelopeEventSingle.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

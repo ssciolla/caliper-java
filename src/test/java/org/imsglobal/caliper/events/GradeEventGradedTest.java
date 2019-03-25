@@ -102,7 +102,7 @@ public class GradeEventGradedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventGradeGraded.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventGradeGraded.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

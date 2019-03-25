@@ -75,7 +75,7 @@ public class SessionEventTimedOutTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/caliperEventSessionTimedOut.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventSessionTimedOut.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

@@ -43,5 +43,7 @@ public interface CaliperDigitalResource extends CaliperEntity, CaliperGeneratabl
 
     DateTime getDatePublished();
 
+    String getStorageName();
+
     String getVersion();
 }

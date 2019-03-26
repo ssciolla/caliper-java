@@ -39,6 +39,9 @@ public abstract class AbstractDigitalResource extends AbstractEntity implements 
     @JsonProperty("mediaType")
     private final String mediaType;
 
+    @JsonProperty("storageName")
+    private final String storageName;
+
     @JsonProperty("creators")
     private final ImmutableList<CaliperAgent> creators;
 
@@ -64,6 +67,7 @@ public abstract class AbstractDigitalResource extends AbstractEntity implements 
         super(builder);
 
         this.mediaType = builder.mediaType;
+        this.storageName = builder.storageName;
         this.creators = ImmutableList.copyOf(builder.creators);
         this.learningObjectives = ImmutableList.copyOf(builder.learningObjectives);
         this.keywords = ImmutableList.copyOf(builder.keywords);
@@ -79,6 +83,12 @@ public abstract class AbstractDigitalResource extends AbstractEntity implements 
     public String getMediaType() {
         return mediaType;
     }
+
+    /**
+     * @return the storage name
+     */
+    @Nullable
+    public String getStorageName() { return storageName; }
 
     /**
      * Return an immutable view of the creators list.
@@ -137,6 +147,7 @@ public abstract class AbstractDigitalResource extends AbstractEntity implements 
      */
     public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T>  {
         private String mediaType;
+        private String storageName;
         private List<CaliperAgent> creators = Lists.newArrayList();
         private List<LearningObjective> learningObjectives = Lists.newArrayList();
         private List<String> keywords = Lists.newArrayList();
@@ -157,6 +168,15 @@ public abstract class AbstractDigitalResource extends AbstractEntity implements 
          */
         public T mediaType(String mediaType) {
             this.mediaType = mediaType;
+            return self();
+        }
+
+        /**
+         * @param storageName
+         * @return builder.
+         */
+        public T storageName(String storageName) {
+            this.storageName = storageName;
             return self();
         }
 

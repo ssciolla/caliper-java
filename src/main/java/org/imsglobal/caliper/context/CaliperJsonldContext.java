@@ -32,7 +32,7 @@ public enum CaliperJsonldContext {
     V1P1_SEARCH("http://purl.imsglobal.org/ctx/caliper/v1p1/SearchProfile-extension"),
     V1P1_TOOL_LAUNCH("http://purl.imsglobal.org/ctx/caliper/v1p1/ToolLaunchProfile-extension"),
     V1P1_TOOL_USE("http://purl.imsglobal.org/ctx/caliper/v1p1/ToolUseProfile-extension"),
-    V1P2("https://purl.imsglobal.org/ctx/caliper/v1p2");
+    V1P2("http://purl.imsglobal.org/ctx/caliper/v1p2");
 
     private final String value;
     private static Map<String, CaliperJsonldContext> lookup;

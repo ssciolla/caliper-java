@@ -25,7 +25,5 @@ import com.google.common.collect.ImmutableList;
  */
 public interface CaliperCollection<T extends CaliperEntity> extends CaliperEntity {
 
-    CaliperEntity getIsPartOf();
-
     ImmutableList<T> getItems();
 }

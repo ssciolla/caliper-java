@@ -19,65 +19,106 @@
 package org.imsglobal.caliper.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.actions.Action;
+import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.search.SearchResponse;
 import org.imsglobal.caliper.validators.EventValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Concrete implementation of a generic Event.
- */
-@SupportedActions({
-    Action.ABANDONED, Action.ACTIVATED, Action.ADDED, Action.ARCHIVED, Action.ATTACHED, Action.BOOKMARKED,
-    Action.CHANGED_RESOLUTION, Action.CHANGED_SIZE, Action.CHANGED_SPEED, Action.CHANGED_VOLUME,
-    Action.CLASSIFIED, Action.CLOSED_POPOUT, Action.COMMENTED, Action.COMPLETED, Action.COPIED, Action.CREATED,
-    Action.DEACTIVATED, Action.DELETED, Action.DESCRIBED, Action.DISABLED_CLOSED_CAPTIONING, Action.DISLIKED,
-    Action.DOWNLOADED, Action.ENABLED_CLOSED_CAPTIONING, Action.ENDED, Action.ENTERED_FULLSCREEN,
-    Action.EXITED_FULLSCREEN, Action.FORWARDED_TO, Action.GRADED, Action.HID, Action.HIGHLIGHTED, Action.IDENTIFIED,
-    Action.JUMPED_TO, Action.LIKED, Action.LINKED, Action.LOGGED_IN, Action.LOGGED_OUT, Action.MARKED_AS_READ,
-    Action.MARKED_AS_UNREAD, Action.MODIFIED, Action.MUTED, Action.NAVIGATED_TO, Action.OPENED_POPOUT,
-    Action.PAUSED, Action.POSTED, Action.PRINTED, Action.PUBLISHED, Action.QUESTIONED, Action.RANKED, Action.RECOMMENDED,
-    Action.REPLIED, Action.RESET, Action.RESTARTED, Action.RESTORED, Action.RESUMED, Action.RETRIEVED, Action.REVIEWED,
-    Action.REWOUND, Action.SAVED, Action.SEARCHED, Action.SHARED, Action.SHOWED, Action.SKIPPED, Action.STARTED,
-    Action.SUBMITTED, Action.SUBSCRIBED, Action.TAGGED, Action.TIMED_OUT, Action.UNMUTED, Action.UNPUBLISHED,
-    Action.UNSUBSCRIBED, Action.UPLOADED, Action.USED, Action.VIEWED
-})
-public class Event extends AbstractEvent {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+@SupportedActions({ Action.SEARCHED })
+public class SearchEvent extends Event {
+
+    @JsonProperty("actor")
+    private final Person actor;
+
+    @JsonProperty("generated")
+    private final SearchResponse generated;
 
     @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(Event.class);
+    private static final Logger log = LoggerFactory.getLogger(SearchEvent.class);
 
     /**
-     * Utilize builder to construct BasicEvent.  Validate View object copy rather than the
+     * Utilize builder to construct SearchEvent.  Validate View object copy rather than the
      * View builder.  This approach protects the class against parameter changes from another
      * thread during the "window of vulnerability" between the time the parameters are checked
      * until when they are copied.
      *
      * @param builder
      */
-    protected Event(Builder<?> builder) {
+    protected SearchEvent(Builder<?> builder) {
         super(builder);
+
+        EventValidator.checkType(this.getType(), EventType.SEARCH);
+        EventValidator.checkAction(this.getAction(), SearchEvent.class);
+
+        this.actor = builder.actor;
+        this.generated = builder.generated;
+    }
+
+    /**
+     * Required.
+     * @return the actor
+     */
+    @Override
+    @Nonnull
+    public Person getActor() {
+        return actor;
+    }
+
+    /**
+     * Optional.
+     * @return the generated search response
+     */
+    @Override
+    @Nullable
+    public SearchResponse getGenerated() {
+        return generated;
     }
 
     /**
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+        private Person actor;
+        private SearchResponse generated;
 
         /*
          * Constructor
          */
         public Builder() {
-            super.type(EventType.EVENT);
+            super.type(EventType.SEARCH);
+        }
+
+        /**
+         * @param actor
+         * @return builder.
+         */
+        public T actor(Person actor) {
+            this.actor = actor;
+            return self();
+        }
+
+        /**
+         * @param generated
+         * @return builder.
+         */
+        public T generated(SearchResponse generated) {
+            this.generated = generated;
+            return self();
         }
 
         /**
          * Client invokes build method in order to create an immutable profile object.
-         * @return a new BasicEvent instance.
+         * @return a new SearchEvent instance.
          */
-        public Event build() {
-            return new Event(this);
+        public SearchEvent build() {
+            return new SearchEvent(this);
         }
     }
 

@@ -20,15 +20,14 @@ package org.imsglobal.caliper.entities.outcome;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.CaliperGeneratable;
+import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
-import org.imsglobal.caliper.entities.resource.Attempt;
 
 import javax.annotation.Nullable;
 
-public class Result extends AbstractEntity implements CaliperGeneratable {
+public class Result extends Entity implements CaliperGeneratable {
 
     @JsonProperty("attempt")
     private Attempt attempt;
@@ -106,7 +105,7 @@ public class Result extends AbstractEntity implements CaliperGeneratable {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
         private Attempt attempt;
         private double maxResultScore;
         private double resultScore;

@@ -131,8 +131,7 @@ public abstract class AbstractEntity implements CaliperEntity, CaliperCoercible 
      * @return date created.
      */
     @Nullable
-    public DateTime getDateCreated()
-    {
+    public DateTime getDateCreated() {
         return dateCreated;
     }
 

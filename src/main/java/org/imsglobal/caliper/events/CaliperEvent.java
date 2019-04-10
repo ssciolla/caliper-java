@@ -23,7 +23,7 @@ import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.CaliperGeneratable;
-import org.imsglobal.caliper.entities.CaliperReferrer;
+import org.imsglobal.caliper.entities.CaliperReferable;
 import org.imsglobal.caliper.entities.CaliperTargetable;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
 import org.imsglobal.caliper.entities.agent.CaliperOrganization;
@@ -104,7 +104,7 @@ public interface CaliperEvent extends CaliperSendable {
      * Represents the entity from where the navigation commenced.  Optional.
      * @return the referring context
      */
-    CaliperReferrer getReferrer();
+    CaliperReferable getReferrer();
 
     /**
      * The module, application, platform, system and/or service that provides the technological context within which

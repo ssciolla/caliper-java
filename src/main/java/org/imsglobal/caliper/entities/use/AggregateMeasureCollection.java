@@ -16,60 +16,58 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities;
+package org.imsglobal.caliper.entities.use;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.imsglobal.caliper.entities.*;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-/**
- * This class provides a skeletal implementation of the Resource interface
- * in order to minimize the effort required to implement the interface.
- */
-public abstract class AbstractCollection extends AbstractEntity implements CaliperCollection {
+public class AggregateMeasureCollection extends Entity implements CaliperCollection<AggregateMeasure>, CaliperGeneratable {
 
     @JsonProperty("items")
-    private final ImmutableList<CaliperEntity> items;
+    private final ImmutableList<AggregateMeasure> items;
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected AbstractCollection(Builder<?> builder) {
+    protected AggregateMeasureCollection(Builder<?> builder) {
         super(builder);
-        this.items = ImmutableList.copyOf(builder.items);;
+        this.items = ImmutableList.copyOf(builder.items);
     }
 
     /**
-     * Return an immutable list of items.
-     * @return the items that comprise the collection
+     * Return an immutable list of the Collection's items.
+     * @return the items
      */
+    @Override
     @Nullable
-    public ImmutableList<CaliperEntity> getItems() {
+    public ImmutableList<AggregateMeasure> getItems() {
         return items;
     }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder
+     * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T>  {
-        private List<CaliperEntity> items = Lists.newArrayList();
+    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+        private List<AggregateMeasure> items = Lists.newArrayList();
 
-        /*
+        /**
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.COLLECTION);
+            super.type(EntityType.AGGREGATE_MEASURE_COLLECTION);
         }
 
         /**
          * @param items
          * @return builder.
          */
-        public T items(List<CaliperEntity> items) {
+        public T items(List<AggregateMeasure> items) {
             if(items != null) {
                 this.items.addAll(items);
             }
@@ -80,9 +78,17 @@ public abstract class AbstractCollection extends AbstractEntity implements Calip
          * @param item
          * @return builder.
          */
-        public T item(CaliperEntity item) {
+        public T item(AggregateMeasure item) {
             this.items.add(item);
             return self();
+        }
+
+        /**
+         * Client invokes build method in order to create an immutable object.
+         * @return a new instance of the AggregateMeasureCollection.
+         */
+        public AggregateMeasureCollection build() {
+            return new AggregateMeasureCollection(this);
         }
     }
 
@@ -94,5 +100,13 @@ public abstract class AbstractCollection extends AbstractEntity implements Calip
         protected Builder2 self() {
             return this;
         }
+    }
+
+    /**
+     * Static factory method.
+     * @return a new instance of the builder.
+     */
+    public static Builder<?> builder() {
+        return new Builder2();
     }
 }

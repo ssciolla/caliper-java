@@ -21,10 +21,7 @@ package org.imsglobal.caliper.entities.search;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import org.imsglobal.caliper.entities.CaliperEntity;
-import org.imsglobal.caliper.entities.CaliperGeneratable;
-import org.imsglobal.caliper.entities.Entity;
-import org.imsglobal.caliper.entities.EntityType;
+import org.imsglobal.caliper.entities.*;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 
 import javax.annotation.Nullable;
@@ -42,7 +39,7 @@ public class SearchResponse extends Entity implements CaliperGeneratable {
     private final Query query;
 
     @JsonProperty("searchResultsItemCount")
-    private final Integer searchResultsItemCount;
+    private final int searchResultsItemCount;
 
     @JsonProperty("searchResults")
     private final ImmutableList<CaliperEntity> searchResults;
@@ -87,7 +84,7 @@ public class SearchResponse extends Entity implements CaliperGeneratable {
      * @return the searchResultsItemCount
      */
     @Nullable
-    public Integer getSearchResultsItemCount() {
+    public int getSearchResultsItemCount() {
         return searchResultsItemCount;
     }
 
@@ -107,7 +104,7 @@ public class SearchResponse extends Entity implements CaliperGeneratable {
         private SoftwareApplication searchProvider;
         private CaliperEntity searchTarget;
         private Query query;
-        private Integer searchResultsItemCount;
+        private int searchResultsItemCount;
         private List<CaliperEntity> searchResults = Lists.newArrayList();
 
         /**
@@ -148,7 +145,7 @@ public class SearchResponse extends Entity implements CaliperGeneratable {
          * @param searchResultsItemCount
          * @return builder
          */
-        public T searchResultsItemCount(Integer searchResultsItemCount) {
+        public T searchResultsItemCount(int searchResultsItemCount) {
             this.searchResultsItemCount = searchResultsItemCount;
             return self();
         }

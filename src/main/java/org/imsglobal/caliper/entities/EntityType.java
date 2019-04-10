@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EntityType implements CaliperEntityType {
     AGENT("Agent"),
+    AGGREGATE_MEASURE("AggregateMeasure"),
+    AGGREGATE_MEASURE_COLLECTION("AggregateMeasureCollection"),
     ANNOTATION("Annotation"),
     ASSESSMENT("Assessment"),
     ASSESSMENT_ITEM("AssessmentItem"),

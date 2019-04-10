@@ -24,7 +24,7 @@ import org.imsglobal.caliper.entities.agent.CaliperAgent;
 import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Status;
 import org.imsglobal.caliper.entities.agent.SupportedStatuses;
-import org.imsglobal.caliper.entities.resource.Attempt;
+import org.imsglobal.caliper.entities.outcome.Attempt;
 import org.joda.time.DateTime;
 
 import static com.google.common.base.Preconditions.checkArgument;

@@ -19,9 +19,10 @@
 package org.imsglobal.caliper.entities.resource;
 
 import org.imsglobal.caliper.entities.AbstractEntity;
+import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 
-public class LearningObjective extends AbstractEntity {
+public class LearningObjective extends Entity {
 
     /**
      * @param builder apply builder object properties to the object.
@@ -34,7 +35,7 @@ public class LearningObjective extends AbstractEntity {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
 
         /**
          * Constructor

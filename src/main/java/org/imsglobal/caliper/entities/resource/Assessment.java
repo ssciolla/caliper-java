@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Caliper representation of an Assessment.  Part of the Assessment Metric Profile
  */
-public class Assessment extends AssignableDigitalResource implements CaliperAssessable, CaliperCollection {
+public class Assessment extends AssignableDigitalResource implements CaliperAssessable, CaliperCollection<AssessmentItem> {
 
     @JsonProperty("items")
     private final ImmutableList<AssessmentItem> items;

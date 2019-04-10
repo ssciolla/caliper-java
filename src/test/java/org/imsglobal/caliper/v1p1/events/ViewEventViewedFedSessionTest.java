@@ -36,6 +36,7 @@ import org.imsglobal.caliper.entities.resource.WebPage;
 import org.imsglobal.caliper.entities.session.LtiSession;
 import org.imsglobal.caliper.entities.session.Session;
 import org.imsglobal.caliper.events.ViewEvent;
+import org.imsglobal.caliper.lti.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -108,14 +109,16 @@ public class ViewEventViewedFedSessionTest {
             .startedAtTime(new DateTime(2016, 11, 15, 10, 20, 0, 0, DateTimeZone.UTC))
             .build();
 
-        Map<String, Object> messageParameters = getMessageParameters();
+        Map<String, Object> messageParameters = Maps.newHashMap();
+        messageParameters.putAll(getMessageParameters());
+        //messageParameters = getMessageParameters();
 
         federatedSession = LtiSession.builder()
-            .id("urn:uuid:1c519ff7-3dfa-4764-be48-d2fb35a2925a")
-            .user(actorToId)
+            .id(BASE_IRI_EDU.concat("/lti/sessions/b533eb02823f31024e6b7f53436c42fb99b31241"))
+            .user(actor)
             .messageParameters(messageParameters)
-            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .dateCreated(new DateTime(2018, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2018, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .build();
 
         // Build event
@@ -165,28 +168,97 @@ public class ViewEventViewedFedSessionTest {
 
     /**
      * LTI message parameters
+     *
      * @return messageParameters
      */
     private Map<String, Object> getMessageParameters() {
-
         Map<String, Object> params = Maps.newHashMap();
-        params.put("lti_message_type", "basic-lti-launch-request");
-        params.put("lti_version", "LTI-1p0");
-        params.put("context_id", "4f1a161f-59c3-43e5-be37-445ad09e3f76");
-        params.put("context_type", "urn:lti:context-type:ims/lis/CourseSection");
-        params.put("context_label", "SI182");
-        params.put("context_title", "Design of Personal Environments");
-        params.put("resource_link_id", "6b37a950-42c9-4117-8f4f-03e6e5c88d24");
+        params.put("iss", "https://example.edu");
+        params.put("sub", "https://example.edu/users/554433");
+
+        List<String> auds = Lists.newArrayList();
+        auds.add("https://example.com/lti/tool");
+
+        params.put("aud", auds);
+        params.put("exp", 1510185728);
+        params.put("iat", 1510185228);
+        params.put("azp", "962fa4d8-bcbf-49a0-94b2-2de05ad274af");
+        params.put("nonce", "fc5fdc6d-5dd6-47f4-b2c9-5d1216e9b771");
+        params.put("name", "Ms Jane Marie Doe");
+        params.put("given_name", "Jane");
+        params.put("family_name", "Doe");
+        params.put("middle_name", "Marie");
+        params.put("picture", "https://example.edu/jane.jpg");
+        params.put("email", "jane@example.edu");
+        params.put("locale", "en-US");
+        params.put("https://purl.imsglobal.org/spec/lti/claim/deployment_id", "07940580-b309-415e-a37c-914d387c1150");
+        params.put("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest");
+        params.put("https://purl.imsglobal.org/spec/lti/claim/version", "1.3.0");
 
         List<String> roles = Lists.newArrayList();
-        roles.add("urn:lti:role:ims/lis/Learner");
+        roles.add("http://purl.imsglobal.org/vocab/lis/v2/institution/person#Student");
+        roles.add("http://purl.imsglobal.org/vocab/lis/v2/membership#Learner");
+        roles.add("http://purl.imsglobal.org/vocab/lis/v2/membership#Mentor");
 
-        params.put("roles", roles);
-        params.put("tool_consumer_instance_guid", "SomeLMS.example.edu");
-        params.put("tool_consumer_instance_description", "Sample University (SomeLMS)");
-        params.put("user_id", "0ae836b9-7fc9-4060-006f-27b2066ac545");
-        params.put("custom_xstart", "2016-08-21T01:00:00Z");
-        params.put("ext_com_somelms_example_course_section_instructor","https://example.edu/faculty/1234");
+        params.put("https://purl.imsglobal.org/spec/lti/claim/roles", roles);
+
+        List<String> mentors = Lists.newArrayList();
+        mentors.add("http://purl.imsglobal.org/vocab/lis/v2/institution/person#Administrator");
+
+        params.put("https://purl.imsglobal.org/spec/lti/claim/role_scope_mentor", mentors);
+
+        List<String> types = Lists.newArrayList();
+        types.add("http://purl.imsglobal.org/vocab/lis/v2/course#CourseSection");
+
+        ContextClaim contextClaim = ContextClaim.builder()
+            .id("https://example.edu/terms/201801/courses/7/sections/1")
+            .label("CPS 435-01")
+            .title("CPS 435 Learning Analytics, Section 01")
+            .type(types)
+            .build();
+        params.put("https://purl.imsglobal.org/spec/lti/claim/context", contextClaim);
+
+        CustomClaim customClaim = CustomClaim.builder()
+            .xstart("2017-04-21T01:00:00Z")
+            .requestURL("https://tool.com/link/123")
+            .build();
+        params.put("https://purl.imsglobal.org/spec/lti/claim/custom", customClaim);
+
+        LaunchPresentationClaim launchPresentationClaim = LaunchPresentationClaim.builder()
+            .documentTarget("iframe")
+            .height(320)
+            .width(240)
+            .returnUrl("https://example.edu/terms/201801/courses/7/sections/1/pages/1")
+            .build();
+        params.put("https://purl.imsglobal.org/spec/lti/claim/launch_presentation", launchPresentationClaim);
+
+        LisClaim lisClaim = LisClaim.builder()
+            .personSourcedId("example.edu:71ee7e42-f6d2-414a-80db-b69ac2defd4")
+            .courseOfferingSourcedId("example.edu:SI182-F16")
+            .courseSectionSourcedId("example.edu:SI182-001-F16")
+            .build();
+        params.put("https://purl.imsglobal.org/spec/lti/claim/lis", lisClaim);
+
+        ResourceLinkClaim resourceLinkClaim = ResourceLinkClaim.builder()
+            .id("200d101f-2c14-434a-a0f3-57c2a42369fd")
+            .description("Assignment to introduce who you are")
+            .title("Introduction Assignment")
+            .build();
+        params.put("https://purl.imsglobal.org/spec/lti/claim/resource_link", resourceLinkClaim);
+
+        ToolPlatformClaim toolPlatformClaim = ToolPlatformClaim.builder()
+            .guid("https://example.edu")
+            .contactEmail("support@example.edu")
+            .description("An Example Tool Platform")
+            .name("Example Tool Platform")
+            .url("https://example.edu")
+            .productFamilyCode("ExamplePlatformVendor-Product")
+            .version("1.0")
+            .build();
+        params.put("https://purl.imsglobal.org/spec/lti/claim/tool_platform", toolPlatformClaim);
+
+        MessageParameterSession messageParamSession = MessageParameterSession.builder().id("89023sj890dju080").build();
+        params.put("http://www.ExamplePlatformVendor.com/session", messageParamSession);
 
         return params;
     }

@@ -21,13 +21,17 @@ package org.imsglobal.caliper.events;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.actions.Action;
+import org.imsglobal.caliper.entities.CaliperGeneratable;
 import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
+import org.imsglobal.caliper.entities.outcome.Attempt;
+import org.imsglobal.caliper.entities.use.AggregateMeasureCollection;
 import org.imsglobal.caliper.validators.EventValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @SupportedActions({Action.USED})
 public class ToolUseEvent extends Event {
@@ -37,6 +41,9 @@ public class ToolUseEvent extends Event {
 
     @JsonProperty("object")
     private final SoftwareApplication object;
+
+    @JsonProperty("generated")
+    private final AggregateMeasureCollection generated;
 
     @JsonIgnore
     private static final Logger log = LoggerFactory.getLogger(ToolUseEvent.class);
@@ -54,9 +61,11 @@ public class ToolUseEvent extends Event {
 
         EventValidator.checkType(this.getType(), EventType.TOOL_USE);
         EventValidator.checkAction(this.getAction(), ToolUseEvent.class);
+        //EventValidator.checkGeneratedType(this.getGenerated(), AggregateMeasureCollection.class);
 
         this.actor = builder.actor;
         this.object = builder.object;
+        this.generated = builder.generated;
     }
 
     /**
@@ -80,12 +89,23 @@ public class ToolUseEvent extends Event {
     }
 
     /**
+     * Optional.
+     * @return the generated object
+     */
+    @Override
+    @Nullable
+    public AggregateMeasureCollection getGenerated() {
+        return generated;
+    }
+
+    /**
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
     public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
         private Person actor;
         private SoftwareApplication object;
+        private AggregateMeasureCollection generated;
 
         /*
          * Constructor
@@ -109,6 +129,15 @@ public class ToolUseEvent extends Event {
          */
         public T object(SoftwareApplication object) {
             this.object = object;
+            return self();
+        }
+
+        /**
+         * @param generated
+         * @return builder.
+         */
+        public T generated(AggregateMeasureCollection generated) {
+            this.generated = generated;
             return self();
         }
 

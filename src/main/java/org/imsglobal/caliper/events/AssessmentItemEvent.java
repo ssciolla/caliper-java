@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.resource.AssessmentItem;
-import org.imsglobal.caliper.entities.resource.Attempt;
+import org.imsglobal.caliper.entities.outcome.Attempt;
 import org.imsglobal.caliper.entities.response.CaliperResponse;
 import org.imsglobal.caliper.validators.EventValidator;
 import org.slf4j.Logger;

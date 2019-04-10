@@ -16,53 +16,75 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.response;
+package org.imsglobal.caliper.entities.use;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.imsglobal.caliper.entities.AbstractEntity;
+import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 import org.imsglobal.caliper.entities.TimePeriod;
-import org.imsglobal.caliper.entities.outcome.Attempt;
 import org.imsglobal.caliper.validators.EntityValidator;
 import org.joda.time.DateTime;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * This class provides a skeletal implementation of the Response interface
- * in order to minimize the effort required to implement the interface.
+ * Representation of an AggregateMeasure.
  */
-public class AbstractResponse extends AbstractEntity implements CaliperResponse {
+public class AggregateMeasure extends Entity {
 
-    @JsonProperty("attempt")
-    private Attempt attempt;
+    @JsonProperty("metric")
+    private CaliperMetric metric;
+
+    @JsonProperty("metricValue")
+    private double metricValue;
+
+    @JsonProperty("maxMetricValue")
+    private double maxMetricValue;
 
     @JsonIgnore
     private TimePeriod timePeriod = new TimePeriod();
 
     /**
-     * @param builder apply builder object properties to the Response object.
+     * @param builder apply builder object properties to the object.
      */
-    protected AbstractResponse(Builder<?> builder) {
+    protected AggregateMeasure(Builder<?> builder) {
         super(builder);
+        this.metric = builder.metric;
+        this.metricValue = builder.metricValue;
+        this.maxMetricValue = builder.maxMetricValue;
 
         EntityValidator.checkStartTime(builder.timePeriod.getStartedAtTime(), builder.timePeriod.getEndedAtTime());
-        EntityValidator.checkDuration(builder.timePeriod.getDuration());
 
-        this.attempt = builder.attempt;
         this.timePeriod.setStartedAtTime(builder.timePeriod.getStartedAtTime());
         this.timePeriod.setEndedAtTime(builder.timePeriod.getEndedAtTime());
-        this.timePeriod.setDuration(builder.timePeriod.getDuration());
     }
 
     /**
-     * @return attempt associated with the response;
+     * @return the metric
      */
-    @Nonnull
-    public Attempt getAttempt() {
-        return attempt;
+    @Nullable
+    public CaliperMetric getMetric() {
+        return metric;
+    }
+
+    /**
+     * @return the metricValue
+     */
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public double getMetricValue() {
+        return metricValue;
+    }
+
+    /**
+     * @return the maxMetricValue
+     */
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public double getMaxMetricValue() {
+        return maxMetricValue;
     }
 
     /**
@@ -82,34 +104,46 @@ public class AbstractResponse extends AbstractEntity implements CaliperResponse 
     }
 
     /**
-     * @return duration
-     */
-    @Nullable
-    public String getDuration() {
-        return timePeriod.getDuration();
-    }
-
-    /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder
+     * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T>  {
-        private Attempt attempt;
+    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+        private CaliperMetric metric;
+        private double metricValue;
+        private double maxMetricValue;
         private TimePeriod timePeriod = new TimePeriod();
 
         /**
-         * Initialize type with default value.
+         * Constructor
          */
         public Builder() {
-            super.type(EntityType.RESPONSE);
+            super.type(EntityType.AGGREGATE_MEASURE);
         }
 
         /**
-         * @param attempt
-         * @return builder.
+         * @param metric
+         * @return builder
          */
-        public T attempt(Attempt attempt) {
-            this.attempt = attempt;
+        public T metric(CaliperMetric metric) {
+            this.metric = metric;
+            return self();
+        }
+
+        /**
+         * @param metricValue
+         * @return builder
+         */
+        public T metricValue(double metricValue) {
+            this.metricValue = metricValue;
+            return self();
+        }
+
+        /**
+         * @param maxMetricValue
+         * @return builder
+         */
+        public T maxMetricValue(double maxMetricValue) {
+            this.maxMetricValue = maxMetricValue;
             return self();
         }
 
@@ -119,7 +153,6 @@ public class AbstractResponse extends AbstractEntity implements CaliperResponse 
          */
         public T startedAtTime(DateTime startedAtTime) {
             this.timePeriod.setStartedAtTime(startedAtTime);
-
             return self();
         }
 
@@ -133,12 +166,11 @@ public class AbstractResponse extends AbstractEntity implements CaliperResponse 
         }
 
         /**
-         * @param duration
-         * @return
+         * Client invokes build method in order to create an immutable object.
+         * @return a new instance of the AggregateMeasure.
          */
-        public T duration(String duration) {
-            this.timePeriod.setDuration(duration);
-            return self();
+        public AggregateMeasure build() {
+            return new AggregateMeasure(this);
         }
     }
 
@@ -150,5 +182,13 @@ public class AbstractResponse extends AbstractEntity implements CaliperResponse 
         protected Builder2 self() {
             return this;
         }
+    }
+
+    /**
+     * Static factory method.
+     * @return a new instance of the builder.
+     */
+    public static Builder<?> builder() {
+        return new Builder2();
     }
 }

@@ -27,7 +27,7 @@ import org.imsglobal.caliper.entities.EntityType;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class DigitalResourceCollection extends DigitalResource implements CaliperCollection {
+public class DigitalResourceCollection extends DigitalResource implements CaliperCollection<CaliperDigitalResource> {
 
     @JsonProperty("items")
     private final ImmutableList<CaliperDigitalResource> items;

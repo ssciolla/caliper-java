@@ -21,7 +21,7 @@ package org.imsglobal.caliper.entities.resource;
 import com.google.common.collect.ImmutableList;
 import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.CaliperGeneratable;
-import org.imsglobal.caliper.entities.CaliperReferrer;
+import org.imsglobal.caliper.entities.CaliperReferable;
 import org.imsglobal.caliper.entities.CaliperTargetable;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
 import org.joda.time.DateTime;
@@ -29,7 +29,7 @@ import org.joda.time.DateTime;
 /**
  * A generic representation of a resource, analogous to schema.org's CreativeWork.
  */
-public interface CaliperDigitalResource extends CaliperEntity, CaliperGeneratable, CaliperReferrer, CaliperTargetable {
+public interface CaliperDigitalResource extends CaliperEntity, CaliperGeneratable, CaliperReferable, CaliperTargetable {
 
     String getMediaType();
 

@@ -21,13 +21,12 @@ package org.imsglobal.caliper.events;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.CaliperGeneratable;
-import org.imsglobal.caliper.entities.CaliperReferrer;
+import org.imsglobal.caliper.entities.CaliperReferable;
 import org.imsglobal.caliper.entities.CaliperTargetable;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
 import org.imsglobal.caliper.entities.agent.CaliperOrganization;
@@ -74,7 +73,7 @@ public abstract class AbstractEvent implements CaliperEvent {
     private final CaliperGeneratable generated;
 
     @JsonProperty("referrer")
-    private final CaliperReferrer referrer;
+    private final CaliperReferable referrer;
 
     @JsonProperty("eventTime")
     private final DateTime eventTime;
@@ -205,7 +204,7 @@ public abstract class AbstractEvent implements CaliperEvent {
      * @return referrer
      */
     @Nullable
-    public CaliperReferrer getReferrer() {
+    public CaliperReferable getReferrer() {
         return referrer;
     }
 
@@ -287,7 +286,7 @@ public abstract class AbstractEvent implements CaliperEvent {
         private CaliperEntity object;
         private CaliperTargetable target;
         private CaliperGeneratable generated;
-        private CaliperReferrer referrer;
+        private CaliperReferable referrer;
         private DateTime eventTime;
         private SoftwareApplication edApp;
         private CaliperOrganization group;
@@ -382,7 +381,7 @@ public abstract class AbstractEvent implements CaliperEvent {
          * @param referrer
          * @return builder.
          */
-        public T referrer(CaliperReferrer referrer) {
+        public T referrer(CaliperReferable referrer) {
             this.referrer = referrer;
             return self();
         }

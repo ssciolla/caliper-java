@@ -18,29 +18,70 @@
 
 package org.imsglobal.caliper.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
+import javax.annotation.Nullable;
+import java.util.List;
+
 /**
  * Concrete implementation of a generic Collection.
  */
-public class Collection extends AbstractCollection {
+public class Collection extends Entity implements CaliperCollection<CaliperEntity> {
+
+    @JsonProperty("items")
+    private final ImmutableList<CaliperEntity> items;
 
     /**
      * @param builder apply builder object properties to the object.
      */
     protected Collection(Builder<?> builder) {
         super(builder);
+        this.items = ImmutableList.copyOf(builder.items);
+    }
+
+    /**
+     * Return an immutable list of items.
+     * @return the items that comprise the collection
+     */
+    @Nullable
+    public ImmutableList<CaliperEntity> getItems() {
+        return items;
     }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractCollection.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+        private List<CaliperEntity> items = Lists.newArrayList();
 
         /**
          * Constructor
          */
         public Builder() {
             super.type(EntityType.COLLECTION);
+        }
+
+        /**
+         * @param items
+         * @return builder.
+         */
+        public T items(List<CaliperEntity> items) {
+            if(items != null) {
+                this.items.addAll(items);
+            }
+            return self();
+        }
+
+        /**
+         * @param item
+         * @return builder.
+         */
+        public T item(CaliperEntity item) {
+            this.items.add(item);
+            return self();
         }
 
         /**

@@ -19,13 +19,12 @@
 package org.imsglobal.caliper.entities.agent;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.CaliperReferrer;
+import org.imsglobal.caliper.entities.CaliperReferable;
 
 import javax.annotation.Nullable;
 
-public class SoftwareApplication extends Agent implements CaliperReferrer {
+public class SoftwareApplication extends Agent implements CaliperReferable {
 
     @JsonProperty("version")
     private final String version;

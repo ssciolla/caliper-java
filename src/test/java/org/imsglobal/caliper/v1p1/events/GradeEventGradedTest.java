@@ -28,7 +28,7 @@ import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.outcome.Score;
 import org.imsglobal.caliper.entities.resource.Assessment;
-import org.imsglobal.caliper.entities.resource.Attempt;
+import org.imsglobal.caliper.entities.outcome.Attempt;
 import org.imsglobal.caliper.events.GradeEvent;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;

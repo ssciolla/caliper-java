@@ -20,7 +20,7 @@ package org.imsglobal.caliper.entities.response;
 
 import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.CaliperGeneratable;
-import org.imsglobal.caliper.entities.resource.Attempt;
+import org.imsglobal.caliper.entities.outcome.Attempt;
 import org.joda.time.DateTime;
 
 /**

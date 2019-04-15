@@ -26,6 +26,7 @@ public enum EventType implements CaliperEventType {
     ASSESSMENT_ITEM("AssessmentItemEvent"),
     ASSIGNABLE("AssignableEvent"),
     EVENT("Event"),
+    FEEDBACK("FeedbackEvent"),
     FORUM("ForumEvent"),
     MEDIA("MediaEvent"),
     MESSAGE("MessageEvent"),

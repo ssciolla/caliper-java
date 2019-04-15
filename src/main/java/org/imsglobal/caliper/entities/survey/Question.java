@@ -16,17 +16,20 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.agent;
+package org.imsglobal.caliper.entities.survey;
 
-import org.imsglobal.caliper.entities.Entity;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.entities.EntityType;
 
-public class Agent extends Entity implements CaliperAgent {
+import javax.annotation.Nullable;
+
+public class Question extends AbstractQuestion {
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected Agent(Builder<?> builder) {
+    protected Question(Builder<?> builder) {
         super(builder);
     }
 
@@ -34,21 +37,22 @@ public class Agent extends Entity implements CaliperAgent {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractQuestion.Builder<T> {
+        private String questionPosed;
 
         /**
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.AGENT);
+            super.type(EntityType.QUESTION);
         }
 
         /**
          * Client invokes build method in order to create an immutable object.
-         * @return a new instance of the Agent.
+         * @return a new instance of the Question.
          */
-        public Agent build() {
-            return new Agent(this);
+        public Question build() {
+            return new Question(this);
         }
     }
 

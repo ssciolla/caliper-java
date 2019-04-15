@@ -16,39 +16,67 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.agent;
+package org.imsglobal.caliper.entities.survey;
 
-import org.imsglobal.caliper.entities.Entity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import org.imsglobal.caliper.entities.AbstractEntity;
+import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.EntityType;
+import org.imsglobal.caliper.entities.agent.CaliperAgent;
+import org.joda.time.DateTime;
 
-public class Agent extends Entity implements CaliperAgent {
+import javax.annotation.Nullable;
+import java.util.List;
+
+/**
+ * This class provides a skeletal implementation of the Question interface
+ * in order to minimize the effort required to implement the interface.
+ */
+public abstract class AbstractQuestion extends AbstractEntity implements CaliperQuestion {
+
+    @JsonProperty("questionPosed")
+    private final String questionPosed;
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected Agent(Builder<?> builder) {
+    protected AbstractQuestion(Builder<?> builder) {
         super(builder);
+
+        this.questionPosed = builder.questionPosed;
+    }
+
+    /**
+     * @return the questionPosed
+     */
+    @Nullable
+    public String getQuestionPosed() {
+        return questionPosed;
     }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder.
+     * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T>  {
+        private String questionPosed;
 
-        /**
+        /*
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.AGENT);
+            super.type(EntityType.QUESTION);
         }
 
         /**
-         * Client invokes build method in order to create an immutable object.
-         * @return a new instance of the Agent.
+         * @param questionPosed
+         * @return builder.
          */
-        public Agent build() {
-            return new Agent(this);
+        public T questionPosed(String questionPosed) {
+            this.questionPosed = questionPosed;
+            return self();
         }
     }
 
@@ -60,13 +88,5 @@ public class Agent extends Entity implements CaliperAgent {
         protected Builder2 self() {
             return this;
         }
-    }
-
-    /**
-     * Static factory method.
-     * @return a new instance of the builder.
-     */
-    public static Builder<?> builder() {
-        return new Builder2();
     }
 }

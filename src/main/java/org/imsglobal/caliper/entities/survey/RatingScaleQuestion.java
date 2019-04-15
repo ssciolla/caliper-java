@@ -16,75 +16,64 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.resource;
+package org.imsglobal.caliper.entities.survey;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.entities.EntityType;
+import org.imsglobal.caliper.entities.scale.CaliperScale;
+import org.imsglobal.caliper.entities.scale.Scale;
 
 import javax.annotation.Nullable;
 
-/**
- * Caliper representation of an Assessment Item.  Part of the Assessment Metric Profile.
- */
-public class AssessmentItem extends AssignableDigitalResource implements CaliperAssessable {
+public class RatingScaleQuestion extends AbstractQuestion {
 
-    @JsonProperty("isTimeDependent")
-    private final Boolean isTimeDependent;
+    @JsonProperty("scale")
+    private final CaliperScale scale;
 
     /**
-     * @param builder apply builder object properties to the AssessmentItem object.
+     * @param builder apply builder object properties to the object.
      */
-    protected AssessmentItem(Builder<?> builder) {
+    protected RatingScaleQuestion(Builder<?> builder) {
         super(builder);
-        this.isTimeDependent = builder.isTimeDependent;
+        this.scale = builder.scale;
     }
 
     /**
-     * Indicate whether or not the time taken to respond is important and must be recorded.
-     * This could be used by responses which set a sequence of events to be completed
-     * in a predefined period or where the response sequence is determined by the
-     * time taken to complete certain responses.
-     *
-     * A Boolean object rather than a boolean primitive data type is utilized to avoid inadvertently
-     * serializing the boolean primitive's default value (false).
-     *
-     * @return true/false
+     * @return the scale
      */
     @Nullable
-    public Boolean getIsTimeDependent() {
-        return isTimeDependent;
-    }
+    public CaliperScale getScale() { return scale; }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder
+     * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AssignableDigitalResource.Builder<T>  {
-        private Boolean isTimeDependent;
+    public static abstract class Builder<T extends Builder<T>> extends AbstractQuestion.Builder<T> {
+        private CaliperScale scale;
 
         /**
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.ASSESSMENT_ITEM);
+            super.type(EntityType.RATING_SCALE_QUESTION);
         }
 
         /**
-         * Wrap primitive in Boolean object to ensure that serializing this property only occurs if set by user.
-         * @param isTimeDependent
+         * @param scale
          * @return builder.
          */
-        public T isTimeDependent(boolean isTimeDependent) {
-            this.isTimeDependent = isTimeDependent;
+        public T scale(CaliperScale scale) {
+            this.scale = scale;
             return self();
         }
 
         /**
          * Client invokes build method in order to create an immutable object.
-         * @return a new instance of AssessmentItem.
+         * @return a new instance of the RatingScaleQuestion.
          */
-        public AssessmentItem build() {
-            return new AssessmentItem(this);
+        public RatingScaleQuestion build() {
+            return new RatingScaleQuestion(this);
         }
     }
 

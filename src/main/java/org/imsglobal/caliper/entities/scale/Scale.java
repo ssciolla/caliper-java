@@ -16,17 +16,18 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.agent;
+package org.imsglobal.caliper.entities.scale;
 
+import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 
-public class Agent extends Entity implements CaliperAgent {
+public class Scale extends Entity implements CaliperScale {
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected Agent(Builder<?> builder) {
+    protected Scale(Builder<?> builder) {
         super(builder);
     }
 
@@ -40,15 +41,15 @@ public class Agent extends Entity implements CaliperAgent {
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.AGENT);
+            super.type(EntityType.SCALE);
         }
 
         /**
          * Client invokes build method in order to create an immutable object.
-         * @return a new instance of the Agent.
+         * @return a new instance of the Scale.
          */
-        public Agent build() {
-            return new Agent(this);
+        public Scale build() {
+            return new Scale(this);
         }
     }
 

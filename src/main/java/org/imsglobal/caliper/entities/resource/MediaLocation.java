@@ -25,7 +25,7 @@ import org.imsglobal.caliper.entities.CaliperTargetable;
 /**
  * Media Location
  */
-public class MediaLocation extends DigitalResource implements CaliperTargetable {
+public class MediaLocation extends AbstractDigitalResource implements CaliperTargetable {
 
     @JsonProperty("currentTime")
     private String currentTime;
@@ -50,7 +50,7 @@ public class MediaLocation extends DigitalResource implements CaliperTargetable 
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends DigitalResource.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T>  {
         private String currentTime;
 
         /**

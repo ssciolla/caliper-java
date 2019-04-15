@@ -23,7 +23,7 @@ import org.imsglobal.caliper.entities.EntityType;
 
 import javax.annotation.Nullable;
 
-public class BookmarkAnnotation extends Annotation {
+public class BookmarkAnnotation extends AbstractAnnotation {
 
     @JsonProperty("bookmarkNotes")
     private String bookmarkNotes;
@@ -48,7 +48,7 @@ public class BookmarkAnnotation extends Annotation {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Annotation.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractAnnotation.Builder<T> {
         private String bookmarkNotes;
 
         /**

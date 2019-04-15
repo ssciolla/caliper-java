@@ -51,7 +51,7 @@ import javax.annotation.Nonnull;
     Action.MUTED,
     Action.UNMUTED
 })
-public class MediaEvent extends Event {
+public class MediaEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
@@ -105,7 +105,7 @@ public class MediaEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
         private CaliperMediaObject object;
 

@@ -22,13 +22,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MultiselectScale extends Entity implements CaliperScale {
+public class MultiselectScale extends AbstractEntity implements CaliperScale {
 
     @JsonProperty("isOrderedSelection")
     private final boolean isOrderedSelection;
@@ -119,7 +120,7 @@ public class MultiselectScale extends Entity implements CaliperScale {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private boolean isOrderedSelection;
         private List<String> itemLabels = Lists.newArrayList();
         private List<String> itemValues = Lists.newArrayList();

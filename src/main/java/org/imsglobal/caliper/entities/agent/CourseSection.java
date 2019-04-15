@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * A Caliper CourseSection provides a subset of the CourseSection properties specified in the
  * IMS LTI 2.0 specification, which in turn, draws inspiration from the IMS LIS 1.0 specification.
  */
-public class CourseSection extends CourseOffering {
+public class CourseSection extends AbstractCourse {
 
     @JsonProperty("category")
     private final String category;
@@ -58,7 +58,7 @@ public class CourseSection extends CourseOffering {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends CourseOffering.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractCourse.Builder<T> {
         private String category;
 
         /**

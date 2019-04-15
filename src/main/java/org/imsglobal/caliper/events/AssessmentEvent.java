@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
     Action.RESUMED,
     Action.SUBMITTED
 })
-public class AssessmentEvent extends Event {
+public class AssessmentEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
@@ -105,7 +105,7 @@ public class AssessmentEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
         private Assessment object;
         private Attempt generated;

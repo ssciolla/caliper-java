@@ -19,12 +19,13 @@
 package org.imsglobal.caliper.entities.agent;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.EntityType;
 import org.imsglobal.caliper.entities.CaliperReferable;
 
 import javax.annotation.Nullable;
 
-public class SoftwareApplication extends Agent implements CaliperReferable {
+public class SoftwareApplication extends AbstractEntity implements CaliperAgent, CaliperReferable {
 
     @JsonProperty("version")
     private final String version;
@@ -49,7 +50,7 @@ public class SoftwareApplication extends Agent implements CaliperReferable {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Agent.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private String version;
 
         /**

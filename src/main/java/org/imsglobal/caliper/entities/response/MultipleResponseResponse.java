@@ -30,7 +30,7 @@ import java.util.List;
  * Representation of a response to a multiple choice question that permits one or more
  * options to be selected.
  */
-public class MultipleResponseResponse extends Response {
+public class MultipleResponseResponse extends AbstractResponse {
 
     @JsonProperty("values")
     private ImmutableList<String> values;
@@ -55,7 +55,7 @@ public class MultipleResponseResponse extends Response {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Response.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractResponse.Builder<T>  {
         private List<String> values = Lists.newArrayList();
         private TimePeriod timePeriod = new TimePeriod();
 

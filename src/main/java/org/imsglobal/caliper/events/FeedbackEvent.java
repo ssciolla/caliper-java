@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
     Action.COMMENTED,
     Action.RANKED
 })
-public class FeedbackEvent extends Event {
+public class FeedbackEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
@@ -71,7 +71,7 @@ public class FeedbackEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
 
         /*

@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
     Action.MARKED_AS_UNREAD,
     Action.POSTED
 })
-public class MessageEvent extends Event {
+public class MessageEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
@@ -87,7 +87,7 @@ public class MessageEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
         private Message object;
 

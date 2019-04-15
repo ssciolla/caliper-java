@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 
 @SupportedActions({ Action.NAVIGATED_TO })
-public class NavigationEvent extends Event {
+public class NavigationEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
@@ -68,7 +68,7 @@ public class NavigationEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
 
         /*

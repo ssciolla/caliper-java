@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @SupportedActions({Action.USED})
-public class ToolUseEvent extends Event {
+public class ToolUseEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
@@ -102,7 +102,7 @@ public class ToolUseEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
         private SoftwareApplication object;
         private AggregateMeasureCollection generated;

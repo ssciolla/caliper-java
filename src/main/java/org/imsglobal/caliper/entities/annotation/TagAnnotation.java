@@ -26,7 +26,7 @@ import org.imsglobal.caliper.entities.EntityType;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TagAnnotation extends Annotation {
+public class TagAnnotation extends AbstractAnnotation {
 
     @JsonProperty("tags")
     private ImmutableList<String> tags;
@@ -52,7 +52,7 @@ public class TagAnnotation extends Annotation {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Annotation.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractAnnotation.Builder<T> {
         private List<String> tags = Lists.newArrayList();
 
         /**

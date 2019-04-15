@@ -29,7 +29,7 @@ import java.util.List;
  *  Represents a response that identifies text from a presented paragraph or list.
  *  The response is the identified string or a mapping to a logical identifier;
  */
-public class SelectTextResponse extends Response {
+public class SelectTextResponse extends AbstractResponse {
 
     @JsonProperty("values")
     private ImmutableList<String> values;
@@ -54,7 +54,7 @@ public class SelectTextResponse extends Response {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Response.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractResponse.Builder<T>  {
         private List<String> values = Lists.newArrayList();
 
         /**

@@ -21,7 +21,7 @@ package org.imsglobal.caliper.entities.resource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.entities.EntityType;
 
-public class Frame extends DigitalResource {
+public class Frame extends AbstractDigitalResource {
 
     @JsonProperty("index")
     private int index;
@@ -39,7 +39,7 @@ public class Frame extends DigitalResource {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends DigitalResource.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T> {
         private int index;
 
         /**

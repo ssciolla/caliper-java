@@ -19,15 +19,12 @@
 package org.imsglobal.caliper.entities.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.imsglobal.caliper.entities.CaliperEntity;
-import org.imsglobal.caliper.entities.CaliperGeneratable;
-import org.imsglobal.caliper.entities.Entity;
-import org.imsglobal.caliper.entities.EntityType;
+import org.imsglobal.caliper.entities.*;
 import org.imsglobal.caliper.entities.agent.Person;
 
 import javax.annotation.Nullable;
 
-public class Query extends Entity {
+public class Query extends AbstractEntity {
 
     @JsonProperty("creator")
     private final Person creator;
@@ -76,7 +73,7 @@ public class Query extends Entity {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private Person creator;
         private CaliperEntity searchTarget;
         private String searchTerms;

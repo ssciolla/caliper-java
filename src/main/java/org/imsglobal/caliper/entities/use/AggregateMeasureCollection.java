@@ -26,7 +26,7 @@ import org.imsglobal.caliper.entities.*;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AggregateMeasureCollection extends Entity implements CaliperCollection<AggregateMeasure>, CaliperGeneratable {
+public class AggregateMeasureCollection extends AbstractEntity implements CaliperCollection<AggregateMeasure>, CaliperGeneratable {
 
     @JsonProperty("items")
     private final ImmutableList<AggregateMeasure> items;
@@ -53,7 +53,7 @@ public class AggregateMeasureCollection extends Entity implements CaliperCollect
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private List<AggregateMeasure> items = Lists.newArrayList();
 
         /**

@@ -18,36 +18,59 @@
 
 package org.imsglobal.caliper.entities.resource;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.entities.EntityType;
 
-public class Document extends AbstractDigitalResource {
+import javax.annotation.Nullable;
+import java.util.List;
+
+/**
+ * This class provides a skeletal implementation of the Resource interface
+ * in order to minimize the effort required to implement the interface.
+ */
+public abstract class AbstractMediaObject extends AbstractDigitalResource implements CaliperMediaObject {
+
+    @JsonProperty("duration")
+    private String duration;
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected Document(Builder<?> builder) {
+    protected AbstractMediaObject(Builder<?> builder) {
         super(builder);
+
+        this.duration = builder.duration;
+    }
+
+    /**
+     * @return duration
+     */
+    @Nullable
+    public String getDuration() {
+        return duration;
     }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder.
+     * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T>  {
+        private String duration;
 
-        /**
+        /*
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.DOCUMENT);
+            super.type(EntityType.MEDIA_OBJECT);
         }
 
         /**
-         * Client invokes build method in order to create an immutable object.
-         * @return a new instance of the Document.
+         * @param duration
+         * @return duration
          */
-        public Document build() {
-            return new Document(this);
+        public T duration(String duration) {
+            this.duration = duration;
+            return self();
         }
     }
 
@@ -59,13 +82,5 @@ public class Document extends AbstractDigitalResource {
         protected Builder2 self() {
             return this;
         }
-    }
-
-    /**
-     * Static factory method.
-     * @return a new instance of the builder.
-     */
-    public static Builder<?> builder() {
-        return new Builder2();
     }
 }

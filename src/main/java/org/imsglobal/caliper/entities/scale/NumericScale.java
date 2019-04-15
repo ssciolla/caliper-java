@@ -20,12 +20,13 @@ package org.imsglobal.caliper.entities.scale;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 
 import javax.annotation.Nullable;
 
-public class NumericScale extends Entity implements CaliperScale {
+public class NumericScale extends AbstractEntity implements CaliperScale {
 
     @JsonProperty("maxLabel")
     private final String maxLabel;
@@ -103,7 +104,7 @@ public class NumericScale extends Entity implements CaliperScale {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private String maxLabel;
         private String minLabel;
         private double maxValue;

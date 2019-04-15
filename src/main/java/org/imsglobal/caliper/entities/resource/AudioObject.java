@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 /**
  * An audio object embedded in a web page.
  */
-public class AudioObject extends MediaObject {
+public class AudioObject extends AbstractMediaObject implements CaliperMediaObject {
 
     @JsonProperty("volumeMin")
     private String volumeMin;
@@ -89,7 +89,7 @@ public class AudioObject extends MediaObject {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends MediaObject.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractMediaObject.Builder<T>  {
         private String volumeMin;
         private String volumeMax;
         private String volumeLevel;
@@ -134,7 +134,7 @@ public class AudioObject extends MediaObject {
          * @return builder
          */
         public T muted (boolean muted) {
-            this.muted = new Boolean(muted);
+            this.muted = muted;
             return self();
         }
 

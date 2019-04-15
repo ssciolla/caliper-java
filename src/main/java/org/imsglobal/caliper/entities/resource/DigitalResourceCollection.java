@@ -27,7 +27,7 @@ import org.imsglobal.caliper.entities.EntityType;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class DigitalResourceCollection extends DigitalResource implements CaliperCollection<CaliperDigitalResource> {
+public class DigitalResourceCollection extends AbstractDigitalResource implements CaliperCollection<CaliperDigitalResource> {
 
     @JsonProperty("items")
     private final ImmutableList<CaliperDigitalResource> items;
@@ -55,7 +55,7 @@ public class DigitalResourceCollection extends DigitalResource implements Calipe
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends DigitalResource.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T> {
         private List<CaliperDigitalResource> items = Lists.newArrayList();
 
         /**

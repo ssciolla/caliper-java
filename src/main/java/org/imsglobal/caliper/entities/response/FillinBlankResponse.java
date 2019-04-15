@@ -29,7 +29,7 @@ import java.util.List;
  * Represents response text or integer/decimal/scientific numbers that completes a question
  * designed with one or more "fill in the blank" option prompts.
  */
-public class FillinBlankResponse extends Response {
+public class FillinBlankResponse extends AbstractResponse {
 
     @JsonProperty("values")
     private ImmutableList<String> values;
@@ -54,7 +54,7 @@ public class FillinBlankResponse extends Response {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Response.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractResponse.Builder<T>  {
         private List<String> values = Lists.newArrayList();
 
         /**

@@ -21,7 +21,10 @@ package org.imsglobal.caliper.entities.outcome;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.imsglobal.caliper.entities.*;
+import org.imsglobal.caliper.entities.AbstractEntity;
+import org.imsglobal.caliper.entities.CaliperGeneratable;
+import org.imsglobal.caliper.entities.EntityType;
+import org.imsglobal.caliper.entities.TimePeriod;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
 import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
 import org.imsglobal.caliper.validators.EntityValidator;
@@ -33,7 +36,7 @@ import javax.annotation.Nullable;
  * Representation of an Attempt. Attempts are generated as part of or
  * are the object of an interaction represented by an AssignableEvent.
  */
-public class Attempt extends Entity implements CaliperGeneratable {
+public class Attempt extends AbstractEntity implements CaliperGeneratable {
 
     @JsonProperty("assignable")
     private final CaliperDigitalResource assignable;
@@ -129,7 +132,7 @@ public class Attempt extends Entity implements CaliperGeneratable {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private CaliperDigitalResource assignable;
         private CaliperAgent assignee;
         private Attempt isPartOf;

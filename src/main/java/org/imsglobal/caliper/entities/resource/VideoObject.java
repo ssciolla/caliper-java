@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * A Video object embedded in a web page.
  */
-public class VideoObject extends MediaObject {
+public class VideoObject extends AbstractMediaObject implements CaliperMediaObject {
 
     /**
      * @param builder apply builder object properties to the VideoObject object.
@@ -38,7 +38,7 @@ public class VideoObject extends MediaObject {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends MediaObject.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractMediaObject.Builder<T>  {
 
         /**
          * Initialize type with default value.  Required if builder().type() is not set by user.

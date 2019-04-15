@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 /**
  * Caliper representation of an Assessment Item.  Part of the Assessment Metric Profile.
  */
-public class AssessmentItem extends AssignableDigitalResource implements CaliperAssessable {
+public class AssessmentItem extends AbstractAssignableDigitalResource implements CaliperAssessable {
 
     @JsonProperty("isTimeDependent")
     private final Boolean isTimeDependent;
@@ -59,7 +59,7 @@ public class AssessmentItem extends AssignableDigitalResource implements Caliper
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends AssignableDigitalResource.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractAssignableDigitalResource.Builder<T>  {
         private Boolean isTimeDependent;
 
         /**

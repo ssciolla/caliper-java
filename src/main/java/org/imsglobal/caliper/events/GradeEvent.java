@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @SupportedActions({ Action.GRADED })
-public class GradeEvent extends Event {
+public class GradeEvent extends AbstractEvent {
 
     @JsonProperty("object")
     private final Attempt object;
@@ -84,7 +84,7 @@ public class GradeEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Attempt object;
         private Score generated;
 

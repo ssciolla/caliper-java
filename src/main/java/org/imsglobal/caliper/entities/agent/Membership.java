@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.AbstractEntity;
-import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 
 import javax.annotation.Nonnull;
@@ -35,7 +34,7 @@ import java.util.List;
  * and Group, all of which implement the Joinable marker interface. Only a Membership object can be a memberId.
  */
 @SupportedStatuses({Status.ACTIVE, Status.INACTIVE})
-public class Membership extends Entity {
+public class Membership extends AbstractEntity {
 
     @JsonProperty("member")
     private final CaliperAgent member;
@@ -97,7 +96,7 @@ public class Membership extends Entity {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private CaliperAgent member;
         private CaliperOrganization organization;
         private List<Role> roles = Lists.newArrayList();

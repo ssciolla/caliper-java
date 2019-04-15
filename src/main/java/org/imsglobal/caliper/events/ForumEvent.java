@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
     Action.SUBSCRIBED,
     Action.UNSUBSCRIBED
 })
-public class ForumEvent extends Event {
+public class ForumEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
@@ -86,7 +86,7 @@ public class ForumEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
         private Forum object;
 

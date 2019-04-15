@@ -45,7 +45,7 @@ import javax.annotation.Nonnull;
     Action.UNPUBLISHED,
     Action.UPLOADED
 })
-public class ResourceManagementEvent extends Event {
+public class ResourceManagementEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
@@ -112,7 +112,7 @@ public class ResourceManagementEvent extends Event {
      * Initialize default parameter values in the builder.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends Event.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
         private CaliperDigitalResource object;
         private CaliperDigitalResource generated;

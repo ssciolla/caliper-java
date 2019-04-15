@@ -16,7 +16,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p2.entities;
+package org.imsglobal.caliper.v1p1.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
@@ -28,7 +28,6 @@ import org.imsglobal.caliper.entities.agent.CourseOffering;
 import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
 import org.imsglobal.caliper.entities.resource.VideoObject;
 import org.joda.time.DateTime;
@@ -81,7 +80,6 @@ public class DigitalResourceCollectionTest {
             .id(BASE_IRI.concat("/videos/1225"))
             .mediaType("video/ogg")
             .name("Introduction to IMS Caliper")
-            .storageName("caliper-intro.ogg")
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .duration("PT1H12M27S")
             .version("1.1")
@@ -91,7 +89,6 @@ public class DigitalResourceCollectionTest {
             .id(BASE_IRI.concat("/videos/5629"))
             .mediaType("video/ogg")
             .name("IMS Caliper Activity Profiles")
-            .storageName("caliper-activity-profiles.ogg")
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .duration("PT55M13S")
             .version("1.1.1")
@@ -102,7 +99,7 @@ public class DigitalResourceCollectionTest {
         resources.add(video2);
 
         entity = DigitalResourceCollection.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
             .id(SECTION_IRI.concat("/resources/2"))
             .name("Video Collection")
             .keywords(keywords)
@@ -118,7 +115,7 @@ public class DigitalResourceCollectionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEntityDigitalResourceCollection.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEntityDigitalResourceCollection.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

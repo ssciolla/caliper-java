@@ -21,6 +21,7 @@ package org.imsglobal.caliper.entities.use;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 import org.imsglobal.caliper.entities.TimePeriod;
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * Representation of an AggregateMeasure.
  */
-public class AggregateMeasure extends Entity {
+public class AggregateMeasure extends AbstractEntity {
 
     @JsonProperty("metric")
     private CaliperMetric metric;
@@ -107,7 +108,7 @@ public class AggregateMeasure extends Entity {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private CaliperMetric metric;
         private double metricValue;
         private double maxMetricValue;

@@ -24,7 +24,7 @@ import org.imsglobal.caliper.selectors.Selector;
 
 import javax.annotation.Nullable;
 
-public class HighlightAnnotation extends Annotation {
+public class HighlightAnnotation extends AbstractAnnotation {
 
     @JsonProperty("selection")
     private Selector selection;
@@ -53,7 +53,7 @@ public class HighlightAnnotation extends Annotation {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Annotation.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractAnnotation.Builder<T> {
         private Selector selection;
         private String selectionText;
 

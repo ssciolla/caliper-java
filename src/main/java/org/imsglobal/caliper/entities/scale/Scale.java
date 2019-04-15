@@ -22,7 +22,7 @@ import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.Entity;
 import org.imsglobal.caliper.entities.EntityType;
 
-public class Scale extends Entity implements CaliperScale {
+public class Scale extends AbstractEntity implements CaliperScale {
 
     /**
      * @param builder apply builder object properties to the object.
@@ -35,7 +35,7 @@ public class Scale extends Entity implements CaliperScale {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
 
         /**
          * Constructor

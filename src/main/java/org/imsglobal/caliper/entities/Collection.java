@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Concrete implementation of a generic Collection.
  */
-public class Collection extends Entity implements CaliperCollection<CaliperEntity> {
+public class Collection extends AbstractEntity implements CaliperCollection<CaliperEntity> {
 
     @JsonProperty("items")
     private final ImmutableList<CaliperEntity> items;
@@ -54,7 +54,7 @@ public class Collection extends Entity implements CaliperCollection<CaliperEntit
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private List<CaliperEntity> items = Lists.newArrayList();
 
         /**

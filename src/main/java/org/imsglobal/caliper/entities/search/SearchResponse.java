@@ -27,7 +27,7 @@ import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SearchResponse extends Entity implements CaliperGeneratable {
+public class SearchResponse extends AbstractEntity implements CaliperGeneratable {
 
     @JsonProperty("searchProvider")
     private final SoftwareApplication searchProvider;
@@ -100,7 +100,7 @@ public class SearchResponse extends Entity implements CaliperGeneratable {
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends Entity.Builder<T> {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private SoftwareApplication searchProvider;
         private CaliperEntity searchTarget;
         private Query query;

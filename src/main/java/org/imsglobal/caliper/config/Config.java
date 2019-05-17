@@ -44,7 +44,7 @@ public class Config {
     /**
      * Default test fixtures directory path
      */
-    public static final String TEST_FIXTURES_BASE_DIR = "../caliper-common-fixtures/src/test/resources/fixtures/";
+    public static final String TEST_FIXTURES_BASE_DIR = "../caliper-common-fixtures";
 
     /**
      * Default UUID version to use when minting Event UUIDs.

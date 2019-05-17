@@ -19,13 +19,14 @@
 package org.imsglobal.caliper.entities.survey;
 
 import org.imsglobal.caliper.entities.CaliperEntity;
+import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
 
 /**
  * The question interface marks an object type that servers an interrogative purpose.  The interface allows Caliper
  * to catch errors at compile time for instances of the marked class rather than at runtime if a marker
  * annotation was defined instead.
  */
-public interface CaliperQuestion extends CaliperEntity {
+public interface CaliperQuestion extends CaliperDigitalResource {
 
     String getQuestionPosed();
 }

@@ -1,3 +1,5 @@
+[![Develop Build Status](https://img.shields.io/travis/IMSGlobal/caliper-java/develop.svg?label=develop)](https://travis-ci.org/IMSGlobal/caliper-java)
+
 # IMS Global Learning Consortium, Inc.
 
 # caliper-java
@@ -46,7 +48,7 @@ ln -s /Path/to/caliper-common-fixtures/v1p2 src/test/resources/fixtures/v1p2
 Then from your local *caliper-java* directory run:
 
 ```
-mvn clean install
+./mvnw clean install
 ```
 
 You can also build a jar with all the dependencies compiled by invoking the `uber-jar` build 
@@ -65,7 +67,7 @@ You can specify *caliper-java* as a project or module dependency in the appropri
 <dependency>
     <groupId>org.imsglobal.caliper</groupId>
     <artifactId>caliper-java</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
 </dependency>
 ```  
 

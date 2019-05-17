@@ -1,1 +1,18 @@
 language: java
+jdk: oraclejdk8
+
+install: true
+script: ./mvnw clean install
+
+branches:
+  only:
+    - develop
+
+cache:
+  directories:
+    - $HOME/.m2
+
+before_script:
+  - wget https://github.com/IMSGlobal/caliper-common-fixtures/archive/develop.zip
+  - unzip develop.zip -d ./tests
+  - mv ./tests/caliper-common-fixtures-develop ./tests/fixtures

@@ -1,3 +1,4 @@
+[![Master Build Status](https://img.shields.io/travis/IMSGlobal/caliper-java.svg?label=master)](https://travis-ci.org/IMSGlobal/caliper-java)
 [![Develop Build Status](https://img.shields.io/travis/IMSGlobal/caliper-java/develop.svg?label=develop)](https://travis-ci.org/IMSGlobal/caliper-java/develop)
 
 # IMS Global Learning Consortium, Inc.

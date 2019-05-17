@@ -6,6 +6,7 @@ script: ./mvnw clean install
 
 branches:
   only:
+    - master
     - develop
 
 cache:

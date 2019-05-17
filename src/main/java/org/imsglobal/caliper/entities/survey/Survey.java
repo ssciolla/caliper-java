@@ -18,66 +18,81 @@
 
 package org.imsglobal.caliper.entities.survey;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.AbstractEntity;
-import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.agent.CaliperAgent;
-import org.imsglobal.caliper.entities.resource.AbstractDigitalResource;
-import org.joda.time.DateTime;
+import org.imsglobal.caliper.entities.CaliperCollection;
+import org.imsglobal.caliper.entities.survey.Questionnaire;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-/**
- * This class provides a skeletal implementation of the Question interface
- * in order to minimize the effort required to implement the interface.
- */
-public abstract class AbstractQuestion extends AbstractDigitalResource implements CaliperQuestion {
+public class Survey extends AbstractEntity implements CaliperCollection<Questionnaire> {
 
-    @JsonProperty("questionPosed")
-    private final String questionPosed;
+    @JsonProperty("items")
+    private final ImmutableList<Questionnaire> items;
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected AbstractQuestion(Builder<?> builder) {
+    protected Survey(Builder<?> builder) {
         super(builder);
-
-        this.questionPosed = builder.questionPosed;
+        this.items = ImmutableList.copyOf(builder.items);
     }
 
     /**
-     * @return the questionPosed
+     * Return an immutable list of the Collection's items.
+     * @return the items
      */
+    @Override
     @Nullable
-    public String getQuestionPosed() {
-        return questionPosed;
+    public ImmutableList<Questionnaire> getItems() {
+        return items;
     }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder
+     * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T>  {
-        private String questionPosed;
+    public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
+        private List<Questionnaire> items = Lists.newArrayList();
 
-        /*
+        /**
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.QUESTION);
+            super.type(EntityType.SURVEY);
         }
 
         /**
-         * @param questionPosed
+         * @param items
          * @return builder.
          */
-        public T questionPosed(String questionPosed) {
-            this.questionPosed = questionPosed;
+        public T items(List<Questionnaire> items) {
+            if(items != null) {
+                this.items.addAll(items);
+            }
             return self();
+        }
+
+        /**
+         * @param item
+         * @return builder.
+         */
+        public T item(Questionnaire item) {
+            this.items.add(item);
+            return self();
+        }
+
+        /**
+         * Client invokes build method in order to create an immutable object.
+         * @return a new instance of the Survey.
+         */
+        public Survey build() {
+            return new Survey(this);
         }
     }
 
@@ -89,5 +104,13 @@ public abstract class AbstractQuestion extends AbstractDigitalResource implement
         protected Builder2 self() {
             return this;
         }
+    }
+
+    /**
+     * Static factory method.
+     * @return a new instance of the builder.
+     */
+    public static Builder<?> builder() {
+        return new Builder2();
     }
 }

@@ -16,5 +16,6 @@ before_script:
   - wget https://github.com/IMSGlobal/caliper-common-fixtures/archive/develop.zip
   - unzip develop.zip -d ..
   - mv ../caliper-common-fixtures-develop ../caliper-common-fixtures
-  - ln -s ../caliper-common-fixtures/src/test/resources/fixtures src/test/resources/fixtures
+  - ln -s ../caliper-common-fixtures/v1p1 src/test/resources/fixtures/v1p1
+  - ln -s ../caliper-common-fixtures/v1p2 src/test/resources/fixtures/v1p2
 

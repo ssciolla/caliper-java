@@ -14,8 +14,8 @@ cache:
     - $HOME/.m2
 
 before_script:
-  - wget https://github.com/IMSGlobal/caliper-common-fixtures/archive/develop.zip
+  - wget https://github.com/IMSGlobal/caliper-spec/archive/develop.zip
   - unzip develop.zip -d ..
   - mkdir -p src/test/resources/fixtures
-  - mv ../caliper-common-fixtures-develop/v1p1 src/test/resources/fixtures
-  - mv ../caliper-common-fixtures-develop/v1p2 src/test/resources/fixtures
+  - mv ../caliper-spec/fixtures-develop/v1p1 src/test/resources/fixtures
+  - mv ../caliper-spec/fixtures-develop/v1p2 src/test/resources/fixtures

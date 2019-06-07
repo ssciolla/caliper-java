@@ -50,10 +50,6 @@ public class SearchResponseTest {
     private SoftwareApplication target;
     private Query query;
     private SearchResponse entity;
-    private List<CaliperEntity> results;
-    private Document epub;
-    private Document pdf;
-    private VideoObject video;
 
     private static final String BASE_IRI = "https://example.edu";
     private static final String BASE_CATALOG_IRI = "https://example.edu/catalog";
@@ -73,26 +69,6 @@ public class SearchResponseTest {
             .dateCreated(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .build();
 
-        pdf = Document.builder()
-            .id(BASE_CATALOG_IRI.concat("/record/01234?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
-            .mediaType("application/pdf")
-            .build();
-
-        video = VideoObject.builder()
-            .id(BASE_CATALOG_IRI.concat("/record/09876?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
-            .mediaType("video/ogg")
-            .build();
-
-        epub = Document.builder()
-            .id(BASE_CATALOG_IRI.concat("/record/05432?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
-            .mediaType("application/epub+zip")
-            .build();
-
-        results = Lists.newArrayList();
-        results.add(pdf);
-        results.add(video);
-        results.add(epub);
-
         entity = SearchResponse.builder()
             .context(JsonldStringContext.create(CaliperJsonldContext.V1P1_SEARCH.value()))
             .id(BASE_IRI.concat("/users/554433/response?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
@@ -100,7 +76,6 @@ public class SearchResponseTest {
             .query(query)
             .searchTarget(target)
             .searchResultsItemCount(3)
-            .searchResults(results)
             .dateCreated(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .build();
     }

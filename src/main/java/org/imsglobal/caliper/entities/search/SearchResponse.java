@@ -41,9 +41,6 @@ public class SearchResponse extends AbstractEntity implements CaliperGeneratable
     @JsonProperty("searchResultsItemCount")
     private final int searchResultsItemCount;
 
-    @JsonProperty("searchResults")
-    private final ImmutableList<CaliperEntity> searchResults;
-
     /**
      * @param builder apply builder object properties to the object.
      */
@@ -53,7 +50,6 @@ public class SearchResponse extends AbstractEntity implements CaliperGeneratable
         this.searchTarget = builder.searchTarget;
         this.query = builder.query;
         this.searchResultsItemCount = builder.searchResultsItemCount;
-        this.searchResults = ImmutableList.copyOf(builder.searchResults);
     }
 
     /**
@@ -89,14 +85,6 @@ public class SearchResponse extends AbstractEntity implements CaliperGeneratable
     }
 
     /**
-     * @return the search results
-     */
-    @Nullable
-    public ImmutableList<CaliperEntity> getSearchResults() {
-        return searchResults;
-    }
-
-    /**
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
@@ -105,7 +93,6 @@ public class SearchResponse extends AbstractEntity implements CaliperGeneratable
         private CaliperEntity searchTarget;
         private Query query;
         private int searchResultsItemCount;
-        private List<CaliperEntity> searchResults = Lists.newArrayList();
 
         /**
          * Constructor
@@ -147,26 +134,6 @@ public class SearchResponse extends AbstractEntity implements CaliperGeneratable
          */
         public T searchResultsItemCount(int searchResultsItemCount) {
             this.searchResultsItemCount = searchResultsItemCount;
-            return self();
-        }
-
-        /**
-         * @param searchResults
-         * @return builder.
-         */
-        public T searchResults(List<CaliperEntity> searchResults) {
-            if(searchResults != null) {
-                this.searchResults.addAll(searchResults);
-            }
-            return self();
-        }
-
-        /**
-         * @param searchResult
-         * @return builder.
-         */
-        public T searchResult(CaliperEntity searchResult) {
-            this.searchResults.add(searchResult);
             return self();
         }
 

@@ -52,7 +52,7 @@ import java.util.Map;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ViewEventViewedFedSessionTest {
+public class ViewEventViewedDocumentFedSessionTest {
     private JsonldContext context;
     private String id;
     private Person actor;
@@ -81,7 +81,7 @@ public class ViewEventViewedFedSessionTest {
             .id(BASE_IRI_COM.concat("/lti/reader/202.epub"))
             .mediaType("application/epub+zip")
             .name("Caliper Case Studies")
-            .dateCreated(new DateTime(2016, 8, 1, 9, 0, 0, 0, DateTimeZone.UTC))
+            .dateCreated(new DateTime(2018, 8, 1, 9, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         edApp = SoftwareApplication.builder().id(BASE_IRI_COM).coercedToId(true).build();
@@ -90,23 +90,23 @@ public class ViewEventViewedFedSessionTest {
         groupExtensions.put("edu_example_course_section_instructor", "https://example.edu/faculty/1234");
 
         group = CourseSection.builder()
-            .id(BASE_IRI_EDU.concat("/terms/201601/courses/7/sections/1"))
+            .id(BASE_IRI_EDU.concat("/terms/201801/courses/7/sections/1"))
             .extensions(groupExtensions)
             .build();
 
         membership = Membership.builder()
-            .id(BASE_IRI_EDU.concat("/terms/201601/courses/7/sections/1/rosters/1"))
+            .id(BASE_IRI_EDU.concat("/terms/201801/courses/7/sections/1/rosters/1"))
             .member(actorToId)
             .organization(CourseSection.builder().id(group.getId()).coercedToId(true).build())
             .status(Status.ACTIVE)
             .role(Role.LEARNER)
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         session = Session.builder()
             .id(BASE_IRI_COM.concat("/sessions/c25fd3da-87fa-45f5-8875-b682113fa5ee"))
-            .dateCreated(new DateTime(2016, 11, 15, 10, 20, 0, 0, DateTimeZone.UTC))
-            .startedAtTime(new DateTime(2016, 11, 15, 10, 20, 0, 0, DateTimeZone.UTC))
+            .dateCreated(new DateTime(2018, 11, 15, 10, 20, 0, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2018, 11, 15, 10, 20, 0, 0, DateTimeZone.UTC))
             .build();
 
         Map<String, Object> messageParameters = Maps.newHashMap();
@@ -130,7 +130,7 @@ public class ViewEventViewedFedSessionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventViewViewedFedSession.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventViewViewedDocumentFedSession.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -157,7 +157,7 @@ public class ViewEventViewedFedSessionTest {
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2016, 11, 15, 10, 20, 0, 0, DateTimeZone.UTC))
+            .eventTime(new DateTime(2018, 11, 15, 10, 20, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)
             .membership(membership)
@@ -234,8 +234,8 @@ public class ViewEventViewedFedSessionTest {
 
         LisClaim lisClaim = LisClaim.builder()
             .personSourcedId("example.edu:71ee7e42-f6d2-414a-80db-b69ac2defd4")
-            .courseOfferingSourcedId("example.edu:SI182-F16")
-            .courseSectionSourcedId("example.edu:SI182-001-F16")
+            .courseOfferingSourcedId("example.edu:SI182-F18")
+            .courseSectionSourcedId("example.edu:SI182-001-F18")
             .build();
         params.put("https://purl.imsglobal.org/spec/lti/claim/lis", lisClaim);
 

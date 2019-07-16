@@ -44,7 +44,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class NavigationEventNavigatedToTest {
+public class NavigationEventNavigatedToWebPageTest {
     private JsonldContext context;
     private String id;
     private Person actor;
@@ -106,7 +106,7 @@ public class NavigationEventNavigatedToTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventNavigationNavigatedTo.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventNavigationNavigatedToWebPage.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

@@ -26,10 +26,12 @@ import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.imsglobal.caliper.entities.resource.WebPage;
+import org.imsglobal.caliper.entities.agent.Status;
+import org.imsglobal.caliper.entities.resource.Document;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.NavigationEvent;
+import org.imsglobal.caliper.events.ViewEvent;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -42,69 +44,74 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class NavigationEventNavigatedToThinnedTest {
+public class ViewEventViewedDocumentTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private WebPage object;
+    private Document object;
     private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
-    private WebPage referrer;
     private Session session;
-    private NavigationEvent event;
+    private ViewEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.getDefault();
 
-        id = "urn:uuid:71657137-8e6e-44f8-8499-e1c3df6810d2";
+        id = "urn:uuid:cd088ca7-c044-405c-bb41-0b2a8506f907";
 
-        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build();
+        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        object = WebPage.builder()
-            .id(SECTION_IRI.concat("/pages/2"))
-            .coercedToId(true)
-            .build();
-
-        referrer = WebPage.builder()
-            .id(SECTION_IRI.concat("/pages/1"))
-            .coercedToId(true)
+        object = Document.builder()
+            .id(BASE_IRI.concat("/etexts/201.epub"))
+            .name("IMS Caliper Implementation Guide")
+            .version("1.1")
+            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .datePublished(new DateTime(2016, 10, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
 
-        group = CourseSection.builder().id(SECTION_IRI).coercedToId(true).build();
+        group = CourseSection.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1"))
+            .courseNumber("CPS 435-01")
+            .academicSession("Fall 2016")
+            .build();
 
         membership = Membership.builder()
-            .id(SECTION_IRI.concat("/rosters/1"))
-            .coercedToId(true)
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/rosters/1"))
+            .member(Person.builder().id(actor.getId()).coercedToId(true).build())
+            .organization(CourseSection.builder().id(group.getId()).coercedToId(true).build())
+            .status(Status.ACTIVE)
+            .role(Role.LEARNER)
+            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         session = Session.builder()
             .id(BASE_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
-            .coercedToId(true)
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         // Build event
-        event = buildEvent(Action.NAVIGATED_TO);
+        event = buildEvent(Action.VIEWED);
     }
 
     @Test
     public void caliperEventSerializesToJSON() throws Exception {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
+
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventNavigationNavigatedToThinned.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventViewViewedDocument.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void navigationEventRejectsViewedAction() {
-        buildEvent(Action.VIEWED);
+    public void viewEventRejectsNavigatedToAction() {
+        buildEvent(Action.NAVIGATED_TO);
     }
 
     @After
@@ -113,19 +120,18 @@ public class NavigationEventNavigatedToThinnedTest {
     }
 
     /**
-     * Build Navigation event
+     * Build View event
      * @param action
      * @return event
      */
-    private NavigationEvent buildEvent(Action action) {
-        return NavigationEvent.builder()
+    private ViewEvent buildEvent(Action action) {
+        return ViewEvent.builder()
             .context(context)
             .id(id)
             .actor(actor)
             .action(action)
             .object(object)
             .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .referrer(referrer)
             .edApp(edApp)
             .group(group)
             .membership(membership)

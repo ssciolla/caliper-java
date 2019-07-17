@@ -48,7 +48,7 @@ import java.util.Map;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ViewEventViewedExtendedTest {
+public class ViewEventViewedDocumentExtendedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
@@ -112,7 +112,7 @@ public class ViewEventViewedExtendedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventViewViewedExtended.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEventViewViewedDocumentExtended.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

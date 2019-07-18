@@ -16,64 +16,64 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.survey;
+package org.imsglobal.caliper.entities.question;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.scale.CaliperScale;
-import org.imsglobal.caliper.entities.scale.Scale;
+import org.imsglobal.caliper.entities.resource.AbstractDigitalResource;
+import org.joda.time.DateTime;
 
 import javax.annotation.Nullable;
 
-public class RatingScaleQuestion extends AbstractQuestion {
+/**
+ * This class provides a skeletal implementation of the Question interface
+ * in order to minimize the effort required to implement the interface.
+ */
+public abstract class AbstractQuestion extends AbstractDigitalResource implements CaliperQuestion {
 
-    @JsonProperty("scale")
-    private final CaliperScale scale;
+    @JsonProperty("questionPosed")
+    private final String questionPosed;
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected RatingScaleQuestion(Builder<?> builder) {
+    protected AbstractQuestion(Builder<?> builder) {
         super(builder);
-        this.scale = builder.scale;
+
+        this.questionPosed = builder.questionPosed;
     }
 
     /**
-     * @return the scale
+     * @return the questionPosed
      */
     @Nullable
-    public CaliperScale getScale() { return scale; }
+    public String getQuestionPosed() {
+        return questionPosed;
+    }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder.
+     * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractQuestion.Builder<T> {
-        private CaliperScale scale;
+    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T>  {
+        private String questionPosed;
 
-        /**
+        /*
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.RATING_SCALE_QUESTION);
+            super.type(EntityType.QUESTION);
         }
 
         /**
-         * @param scale
+         * @param questionPosed
          * @return builder.
          */
-        public T scale(CaliperScale scale) {
-            this.scale = scale;
+        public T questionPosed(String questionPosed) {
+            this.questionPosed = questionPosed;
             return self();
-        }
-
-        /**
-         * Client invokes build method in order to create an immutable object.
-         * @return a new instance of the RatingScaleQuestion.
-         */
-        public RatingScaleQuestion build() {
-            return new RatingScaleQuestion(this);
         }
     }
 
@@ -85,13 +85,5 @@ public class RatingScaleQuestion extends AbstractQuestion {
         protected Builder2 self() {
             return this;
         }
-    }
-
-    /**
-     * Static factory method.
-     * @return a new instance of the builder.
-     */
-    public static Builder<?> builder() {
-        return new Builder2();
     }
 }

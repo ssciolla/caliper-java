@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.EntityType;
+import org.imsglobal.caliper.entities.question.Question;
 import org.imsglobal.caliper.entities.resource.AbstractDigitalResource;
 
 import javax.annotation.Nullable;

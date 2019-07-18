@@ -16,55 +16,31 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.survey;
+package org.imsglobal.caliper.entities.question;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import org.imsglobal.caliper.entities.AbstractEntity;
-import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.agent.CaliperAgent;
-import org.imsglobal.caliper.entities.resource.AbstractDigitalResource;
-import org.joda.time.DateTime;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
-/**
- * This class provides a skeletal implementation of the Question interface
- * in order to minimize the effort required to implement the interface.
- */
-public abstract class AbstractQuestion extends AbstractDigitalResource implements CaliperQuestion {
-
-    @JsonProperty("questionPosed")
-    private final String questionPosed;
+public class Question extends AbstractQuestion {
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected AbstractQuestion(Builder<?> builder) {
+    protected Question(Builder<?> builder) {
         super(builder);
-
-        this.questionPosed = builder.questionPosed;
-    }
-
-    /**
-     * @return the questionPosed
-     */
-    @Nullable
-    public String getQuestionPosed() {
-        return questionPosed;
     }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder
+     * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T>  {
+    public static abstract class Builder<T extends Builder<T>> extends AbstractQuestion.Builder<T> {
         private String questionPosed;
 
-        /*
+        /**
          * Constructor
          */
         public Builder() {
@@ -72,12 +48,11 @@ public abstract class AbstractQuestion extends AbstractDigitalResource implement
         }
 
         /**
-         * @param questionPosed
-         * @return builder.
+         * Client invokes build method in order to create an immutable object.
+         * @return a new instance of the Question.
          */
-        public T questionPosed(String questionPosed) {
-            this.questionPosed = questionPosed;
-            return self();
+        public Question build() {
+            return new Question(this);
         }
     }
 
@@ -89,5 +64,13 @@ public abstract class AbstractQuestion extends AbstractDigitalResource implement
         protected Builder2 self() {
             return this;
         }
+    }
+
+    /**
+     * Static factory method.
+     * @return a new instance of the builder.
+     */
+    public static Builder<?> builder() {
+        return new Builder2();
     }
 }

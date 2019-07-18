@@ -43,14 +43,14 @@ public class CourseOfferingTest {
     public void setUp() throws Exception {
 
         entity = CourseOffering.builder()
-                .context(JsonldStringContext.getDefault())
-                .id(BASE_IRI.concat("/terms/201601/courses/7"))
-                .courseNumber("CPS 435")
-                .academicSession("Fall 2016")
-                .name("CPS 435 Learning Analytics")
-                .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-                .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
-                .build();
+            .context(JsonldStringContext.getDefault())
+            .id(BASE_IRI.concat("/terms/201601/courses/7"))
+            .courseNumber("CPS 435")
+            .academicSession("Fall 2016")
+            .name("CPS 435 Learning Analytics")
+            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
+            .build();
     }
 
     @Test

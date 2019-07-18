@@ -19,12 +19,14 @@
 package org.imsglobal.caliper.v1p1.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.fest.util.Lists;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.scale.LikertScale;
-import org.imsglobal.caliper.entities.question.RatingScaleQuestion;
+import org.imsglobal.caliper.entities.agent.CaliperAgent;
+import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.agent.Group;
+import org.imsglobal.caliper.entities.agent.CourseOffering;
+import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -39,42 +41,48 @@ import java.util.List;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class RatingScaleQuestionTest {
-    private RatingScaleQuestion entity;
-    private LikertScale scale;
-    private List<String> labels;
-    private List<String> values;
+public class GroupTest {
+    private Group entity;
+    private List<CaliperAgent> people;
+    private CourseOffering courseOffering;
+    private CourseSection courseSection;
 
     private static final String BASE_IRI = "https://example.edu";
 
     @Before
     public void setUp() throws Exception {
 
-        labels = Lists.newArrayList();
-        labels.add("Strongly Disagree");
-        labels.add("Disagree");
-        labels.add("Agree");
-        labels.add("Strongly Agree");
+        String[] iriEndings = {
+            "/users/554433",
+            "/users/778899",
+            "/users/445566",
+            "/users/667788",
+            "/users/889900"
+        };
 
-        values = Lists.newArrayList();
-        values.add("-2");
-        values.add("-1");
-        values.add("1");
-        values.add("2");
+        Person person;
+        people = Lists.newArrayList();
+        for (String iriEnding: iriEndings) {
+            person = Person.builder().id(BASE_IRI.concat(iriEnding)).build();
+            people.add(person);
+        }
 
-        scale = LikertScale.builder()
-            .id(BASE_IRI.concat("/scale/2"))
-            .scalePoints(4)
-            .itemLabels(labels)
-            .itemValues(values)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+        courseOffering = CourseOffering.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7"))
             .build();
 
-        entity = RatingScaleQuestion.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1_FEEDBACK.value()))
-            .id(BASE_IRI.concat("/question/2"))
-            .questionPosed("Do you agree with the opinion presented?")
-            .scale(scale)
+        courseSection = CourseSection.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1"))
+            .subOrganizationOf(courseOffering)
+            .build();
+
+        entity = Group.builder()
+            .context(JsonldStringContext.getDefault())
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/groups/2"))
+            .name("Discussion Group 2")
+            .subOrganizationOf(courseSection)
+            .members(people)
+            .dateCreated(new DateTime(2016, 11, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
     }
 
@@ -83,7 +91,7 @@ public class RatingScaleQuestionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityRatingScaleQuestion.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEntityGroup.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

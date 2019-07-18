@@ -16,43 +16,63 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.survey;
+package org.imsglobal.caliper.entities.question;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.entities.EntityType;
+import org.imsglobal.caliper.entities.scale.CaliperScale;
 
 import javax.annotation.Nullable;
 
-public class Question extends AbstractQuestion {
+public class RatingScaleQuestion extends AbstractQuestion {
+
+    @JsonProperty("scale")
+    private final CaliperScale scale;
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected Question(Builder<?> builder) {
+    protected RatingScaleQuestion(Builder<?> builder) {
         super(builder);
+        this.scale = builder.scale;
     }
+
+    /**
+     * @return the scale
+     */
+    @Nullable
+    public CaliperScale getScale() { return scale; }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
     public static abstract class Builder<T extends Builder<T>> extends AbstractQuestion.Builder<T> {
-        private String questionPosed;
+        private CaliperScale scale;
 
         /**
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.QUESTION);
+            super.type(EntityType.RATING_SCALE_QUESTION);
+        }
+
+        /**
+         * @param scale
+         * @return builder.
+         */
+        public T scale(CaliperScale scale) {
+            this.scale = scale;
+            return self();
         }
 
         /**
          * Client invokes build method in order to create an immutable object.
-         * @return a new instance of the Question.
+         * @return a new instance of the RatingScaleQuestion.
          */
-        public Question build() {
-            return new Question(this);
+        public RatingScaleQuestion build() {
+            return new RatingScaleQuestion(this);
         }
     }
 

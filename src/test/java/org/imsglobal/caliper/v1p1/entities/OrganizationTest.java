@@ -21,13 +21,8 @@ package org.imsglobal.caliper.v1p1.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.CaliperAgent;
-import org.imsglobal.caliper.entities.agent.CourseOffering;
-import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.agent.Group;
-import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.agent.Organization;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -42,48 +37,25 @@ import java.util.List;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class GroupTest {
-    private Group entity;
-    private List<CaliperAgent> people;
-    private CourseOffering courseOffering;
-    private CourseSection courseSection;
+public class OrganizationTest {
+    private Organization entity;
+    private Organization college;
 
     private static final String BASE_IRI = "https://example.edu";
 
     @Before
     public void setUp() throws Exception {
 
-        String[] iriEndings = {
-            "/users/554433",
-            "/users/778899",
-            "/users/445566",
-            "/users/667788",
-            "/users/889900"
-        };
-
-        Person person;
-        people = Lists.newArrayList();
-        for (String iriEnding: iriEndings) {
-            person = Person.builder().id(BASE_IRI.concat(iriEnding)).build();
-            people.add(person);
-        }
-
-        courseOffering = CourseOffering.builder()
-            .id(BASE_IRI.concat("/terms/201601/courses/7"))
+        college = Organization.builder()
+            .id(BASE_IRI.concat("/colleges/1"))
+            .name("College of Engineering")
             .build();
 
-        courseSection = CourseSection.builder()
-            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1"))
-            .subOrganizationOf(courseOffering)
-            .build();
-
-        entity = Group.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
-            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/groups/2"))
-            .name("Discussion Group 2")
-            .subOrganizationOf(courseSection)
-            .members(people)
-            .dateCreated(new DateTime(2016, 11, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+        entity = Organization.builder()
+            .context(JsonldStringContext.getDefault())
+            .id(BASE_IRI.concat("/colleges/1/depts/1"))
+            .name("Computer Science Department")
+            .subOrganizationOf(college)
             .build();
     }
 
@@ -92,7 +64,7 @@ public class GroupTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityGroup.json");
+        String fixture = jsonFixture("fixtures/v1p1/caliperEntityOrganization.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

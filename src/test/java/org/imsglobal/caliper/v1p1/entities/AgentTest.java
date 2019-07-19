@@ -43,11 +43,11 @@ public class AgentTest {
     public void setUp() throws Exception {
 
         entity = Agent.builder()
-                .context(JsonldStringContext.getDefault())
-                .id(BASE_IRI.concat("/agents/99999"))
-                .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-                .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
-                .build();
+            .context(JsonldStringContext.getDefault())
+            .id(BASE_IRI.concat("/agents/99999"))
+            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
+            .build();
     }
 
     @Test

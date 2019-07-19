@@ -16,7 +16,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.entities;
+package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
@@ -44,7 +44,7 @@ public class DateTimeQuestionTest {
     public void setUp() throws Exception {
 
         entity = DateTimeQuestion.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1_SURVEY.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
             .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/3/question"))
             .questionPosed("When would you be available for an exam next term?")
             .minDateTime(new DateTime(2018, 9, 1, 6, 0, 0, 0, DateTimeZone.UTC))
@@ -59,7 +59,7 @@ public class DateTimeQuestionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityDateTimeQuestion.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityDateTimeQuestion.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

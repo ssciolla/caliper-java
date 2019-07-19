@@ -23,7 +23,7 @@ import org.fest.util.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.*;
@@ -75,7 +75,7 @@ public class FeedbackEventRankedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P2.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
         id = "urn:uuid:a502e4fc-24c1-11e9-ab14-d663bd873d93";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
         creators = new ArrayList<CaliperAgent>();

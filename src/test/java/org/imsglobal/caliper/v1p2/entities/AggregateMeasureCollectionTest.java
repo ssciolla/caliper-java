@@ -21,7 +21,7 @@ package org.imsglobal.caliper.v1p2.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fest.util.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.use.AggregateMeasure;
 import org.imsglobal.caliper.entities.use.AggregateMeasureCollection;
@@ -75,7 +75,7 @@ public class AggregateMeasureCollectionTest {
         measures.add(unitsCompleted);
 
         entity = AggregateMeasureCollection.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id("urn:uuid:60b4db01-f1e5-4a7f-add9-6a8f761625b1")
             .items(measures)
             .build();

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
@@ -63,7 +63,7 @@ public class MediaEventPausedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P1.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value());
 
         id = "urn:uuid:956b4a02-8de0-4991-b8c5-b6eebb6b4cab";
 

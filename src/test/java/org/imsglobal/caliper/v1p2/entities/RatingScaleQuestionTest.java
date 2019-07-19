@@ -21,7 +21,7 @@ package org.imsglobal.caliper.v1p2.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fest.util.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.scale.LikertScale;
 import org.imsglobal.caliper.entities.question.RatingScaleQuestion;
@@ -71,7 +71,7 @@ public class RatingScaleQuestionTest {
             .build();
 
         entity = RatingScaleQuestion.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(BASE_IRI.concat("/question/2"))
             .questionPosed("Do you agree with the opinion presented?")
             .scale(scale)

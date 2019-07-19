@@ -21,7 +21,7 @@ package org.imsglobal.caliper.v1p1.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
 import org.imsglobal.caliper.entities.agent.CourseSection;
@@ -73,7 +73,7 @@ public class DigitalResourceTest {
             .build();
 
         entity = DigitalResource.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value()))
             .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
             .name("Course Syllabus")
             .mediaType("application/pdf")

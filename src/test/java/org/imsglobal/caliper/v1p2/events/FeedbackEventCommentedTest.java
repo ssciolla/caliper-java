@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.*;
@@ -42,7 +42,6 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
@@ -68,7 +67,7 @@ public class FeedbackEventCommentedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P2.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
         id = "urn:uuid:0c81f804-62ee-4953-81c5-62d9579c4369";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
         section = CourseSection.builder().id(SECTION_IRI).build();

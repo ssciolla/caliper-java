@@ -20,7 +20,7 @@ package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.use.AggregateMeasure;
 import org.imsglobal.caliper.entities.use.Metric;
@@ -32,8 +32,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
@@ -47,7 +45,7 @@ public class AggregateMeasureTest {
     public void setUp() throws Exception {
 
         entity = AggregateMeasure.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id("urn:uuid:c3ba4c01-1f17-46e0-85dd-1e366e6ebb81")
             .metric(Metric.UNITS_COMPLETED)
             .name("Units Completed")

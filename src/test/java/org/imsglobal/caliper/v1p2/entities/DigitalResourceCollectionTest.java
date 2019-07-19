@@ -21,14 +21,13 @@ package org.imsglobal.caliper.v1p2.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
 import org.imsglobal.caliper.entities.agent.CourseOffering;
 import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
 import org.imsglobal.caliper.entities.resource.VideoObject;
 import org.joda.time.DateTime;
@@ -102,7 +101,7 @@ public class DigitalResourceCollectionTest {
         resources.add(video2);
 
         entity = DigitalResourceCollection.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(SECTION_IRI.concat("/resources/2"))
             .name("Video Collection")
             .keywords(keywords)

@@ -21,11 +21,10 @@ package org.imsglobal.caliper.v1p2.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.Collection;
-import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
 import org.imsglobal.caliper.entities.resource.VideoObject;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -78,7 +77,7 @@ public class CollectionTest {
         items.add(video2);
 
         entity = Collection.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(SECTION_IRI.concat("/resources/2"))
             .items(items)
             .dateCreated(new DateTime(2019, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))

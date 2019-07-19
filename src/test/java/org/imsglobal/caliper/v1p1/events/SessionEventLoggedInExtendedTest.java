@@ -24,7 +24,7 @@ import com.google.common.collect.Maps;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.Person;
@@ -59,7 +59,7 @@ public class SessionEventLoggedInExtendedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P1.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value());
 
         id = "urn:uuid:4ec2c31e-3ec0-4fe1-a017-b81561b075d7";
 

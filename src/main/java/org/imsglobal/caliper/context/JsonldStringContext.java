@@ -36,9 +36,8 @@ public class JsonldStringContext implements JsonldContext, CaliperCoercible {
     /**
      * Constructor.  Rendered private to force use of factory methods.
      */
-    private JsonldStringContext(String context) {
-        this.id = context;
-
+    private JsonldStringContext(String id) {
+        this.id = id;
     }
 
     /**

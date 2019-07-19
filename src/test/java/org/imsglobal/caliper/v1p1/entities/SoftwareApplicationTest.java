@@ -19,21 +19,16 @@
 package org.imsglobal.caliper.v1p1.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
@@ -47,7 +42,7 @@ public class SoftwareApplicationTest {
     public void setUp() throws Exception {
 
         entity = SoftwareApplication.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value()))
             .id(BASE_IRI.concat("/autograder"))
             .name("Auto Grader")
             .description("Automates assignment scoring.")

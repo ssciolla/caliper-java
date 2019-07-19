@@ -21,7 +21,7 @@ package org.imsglobal.caliper.v1p1.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.resource.Assessment;
 import org.imsglobal.caliper.entities.resource.AssessmentItem;
@@ -54,7 +54,7 @@ public class AssessmentTest {
         items.add(AssessmentItem.builder().id(SECTION_IRI.concat("/assess/1/items/3")).build());
 
         entity = Assessment.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value()))
             .id(SECTION_IRI.concat("/assess/1"))
             .name("Quiz One")
             .items(items)

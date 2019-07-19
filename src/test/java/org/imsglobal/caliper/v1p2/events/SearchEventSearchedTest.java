@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.CaliperEntity;
@@ -73,7 +73,7 @@ public class SearchEventSearchedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P2.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
         id = "urn:uuid:cb3878ed-8240-4c6d-9fee-77221810f5e4";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
         creator = Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build();

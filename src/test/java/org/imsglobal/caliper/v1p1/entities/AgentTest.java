@@ -20,7 +20,7 @@ package org.imsglobal.caliper.v1p1.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.Agent;
 import org.joda.time.DateTime;
@@ -44,7 +44,7 @@ public class AgentTest {
     public void setUp() throws Exception {
 
         entity = Agent.builder()
-                .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
+                .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value()))
                 .id(BASE_IRI.concat("/agents/99999"))
                 .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
                 .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))

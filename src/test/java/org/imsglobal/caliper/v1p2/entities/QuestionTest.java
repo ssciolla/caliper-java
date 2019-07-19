@@ -20,11 +20,9 @@ package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.question.Question;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +42,7 @@ public class QuestionTest {
     public void setUp() throws Exception {
 
         entity = Question.builder()
-                .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+                .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
                 .id(BASE_IRI.concat("/question/1"))
                 .questionPosed("How would you rate this?")
                 .build();

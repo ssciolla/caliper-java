@@ -16,20 +16,27 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.events;
+package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.fest.util.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
+import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.*;
 import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
+import org.imsglobal.caliper.entities.scale.LikertScale;
 import org.imsglobal.caliper.entities.session.Session;
 import org.imsglobal.caliper.entities.survey.Comment;
+import org.imsglobal.caliper.entities.survey.Rating;
+import org.imsglobal.caliper.entities.question.RatingScaleQuestion;
 import org.imsglobal.caliper.events.FeedbackEvent;
+import org.imsglobal.caliper.profiles.CaliperProfile;
+import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -45,17 +52,20 @@ import java.util.List;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class FeedbackEventCommentedTest {
+public class FeedbackEventRankedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
     private CourseSection section;
     private DigitalResource object;
-    private Comment generated;
+    private Rating generated;
     private DigitalResourceCollection collection;
     private CourseSection group;
     private List<CaliperAgent> creators;
     private Membership membership;
+    private RatingScaleQuestion question;
+    private Comment ratingComment;
+    private LikertScale scale;
     private FeedbackEvent event;
     private Session session;
     private SoftwareApplication edApp;
@@ -65,9 +75,11 @@ public class FeedbackEventCommentedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P1_FEEDBACK.value());
-        id = "urn:uuid:0c81f804-62ee-4953-81c5-62d9579c4369";
+        context = JsonldStringContext.create(CaliperJsonldContext.V1P2.value());
+        id = "urn:uuid:a502e4fc-24c1-11e9-ab14-d663bd873d93";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
+        creators = new ArrayList<CaliperAgent>();
+        creators.add(actor);
         section = CourseSection.builder().id(SECTION_IRI).build();
 
         collection = DigitalResourceCollection.builder()
@@ -79,16 +91,52 @@ public class FeedbackEventCommentedTest {
         object = DigitalResource.builder()
             .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
             .name("Course Syllabus")
+            //.creators(creators)
             .mediaType("application/pdf")
             .isPartOf(collection)
             .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
             .build();
 
-        generated = Comment.builder()
+        List<String> itemLabels = Lists.newArrayList();
+        itemLabels.add("Strongly Disagree");
+        itemLabels.add("Disagree");
+        itemLabels.add("Agree");
+        itemLabels.add("Strongly Agree");
+
+        List<String> itemValues = Lists.newArrayList();
+        itemValues.add("-2");
+        itemValues.add("-1");
+        itemValues.add("1");
+        itemValues.add("2");
+
+        scale = LikertScale.builder()
+            .id(BASE_IRI.concat("/scale/2"))
+            .scalePoints(4)
+            .itemLabels(itemLabels)
+            .itemValues(itemValues)
+            .build();
+
+        question = RatingScaleQuestion.builder()
+            .id(BASE_IRI.concat("/question/2"))
+            .questionPosed("Do you agree with the opinion presented?")
+            .scale(scale)
+            .build();
+
+        ratingComment = Comment.builder()
             .id(SECTION_IRI.concat("/assess/1/items/6/users/665544/responses/1/comment/1"))
             .commenter(actor)
             .commentedOn(object)
             .value("I like what you did here but you need to improve on...")
+            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .build();
+
+        generated = Rating.builder()
+            .id(BASE_IRI.concat("/users/554433/rating/1"))
+            .rater(actor)
+            .rated(object)
+            .question(question)
+            .selection("1")
+            .ratingComment(ratingComment)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
@@ -115,7 +163,7 @@ public class FeedbackEventCommentedTest {
             .build();
 
         // Build event
-        event = buildEvent(Action.COMMENTED);
+        event = buildEvent(Profile.FEEDBACK, Action.RANKED);
     }
 
     @Test
@@ -123,7 +171,7 @@ public class FeedbackEventCommentedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventFeedbackCommented.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventFeedbackRanked.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -137,9 +185,10 @@ public class FeedbackEventCommentedTest {
      * @param action
      * @return event
      */
-    private FeedbackEvent buildEvent(Action action) {
+    private FeedbackEvent buildEvent(CaliperProfile profile, CaliperAction action) {
         return FeedbackEvent.builder()
             .context(context)
+            .profile(profile)
             .id(id)
             .actor(actor)
             .action(action)

@@ -16,14 +16,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.entities;
+package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.agent.CourseOffering;
+import org.imsglobal.caliper.entities.question.Question;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -36,30 +35,19 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class CourseSectionTest {
-    private CourseSection entity;
-    private CourseOffering courseOffering;
+public class QuestionTest {
+    private Question entity;
 
     private static final String BASE_IRI = "https://example.edu";
 
     @Before
     public void setUp() throws Exception {
 
-        courseOffering = CourseOffering.builder()
-            .id(BASE_IRI.concat("/terms/201601/courses/7"))
-            .courseNumber("CPS 435")
-            .build();
-
-        entity = CourseSection.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
-            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1"))
-            .academicSession("Fall 2016")
-            .courseNumber("CPS 435-01")
-            .name("CPS 435 Learning Analytics, Section 01")
-            .category("seminar")
-            .subOrganizationOf(courseOffering)
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .build();
+        entity = Question.builder()
+                .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+                .id(BASE_IRI.concat("/question/1"))
+                .questionPosed("How would you rate this?")
+                .build();
     }
 
     @Test
@@ -67,7 +55,7 @@ public class CourseSectionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityCourseSection.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityQuestion.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

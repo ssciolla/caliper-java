@@ -21,6 +21,8 @@ package org.imsglobal.caliper.v1p1.events;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
+import org.imsglobal.caliper.actions.CaliperAction;
+import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
@@ -57,7 +59,7 @@ public class GradeEventGradedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.getDefault();
+        context = JsonldStringContext.create(CaliperJsonldContext.V1P1.value());
 
         id = "urn:uuid:a50ca17f-5971-47bb-8fca-4e6e6879001d";
 
@@ -122,7 +124,7 @@ public class GradeEventGradedTest {
      * @param action
      * @return event
      */
-    private GradeEvent buildEvent(Action action) {
+    private GradeEvent buildEvent(CaliperAction action) {
         return GradeEvent.builder()
             .context(context)
             .id(id)

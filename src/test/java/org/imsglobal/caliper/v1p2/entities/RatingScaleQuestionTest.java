@@ -16,16 +16,15 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.entities;
+package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fest.util.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.use.AggregateMeasure;
-import org.imsglobal.caliper.entities.use.AggregateMeasureCollection;
-import org.imsglobal.caliper.entities.use.Metric;
+import org.imsglobal.caliper.entities.scale.LikertScale;
+import org.imsglobal.caliper.entities.question.RatingScaleQuestion;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -40,46 +39,43 @@ import java.util.List;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class AggregateMeasureCollectionTest {
-    private AggregateMeasureCollection entity;
-    private AggregateMeasure unitsCompleted;
-    private AggregateMeasure minutesOnTask;
+public class RatingScaleQuestionTest {
+    private RatingScaleQuestion entity;
+    private LikertScale scale;
+    private List<String> labels;
+    private List<String> values;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
 
-        minutesOnTask = AggregateMeasure.builder()
-            .id("urn:uuid:21c3f9f2-a9ef-4f65-bf9a-0699ed85e2c7")
-            .metric(Metric.MINUTES_0N_TASK)
-            .name("Minutes On Task")
-            .metricValue(873.0)
-            .startedAtTime(new DateTime(2019, 8, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .endedAtTime(new DateTime(2019, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+        labels = Lists.newArrayList();
+        labels.add("Strongly Disagree");
+        labels.add("Disagree");
+        labels.add("Agree");
+        labels.add("Strongly Agree");
+
+        values = Lists.newArrayList();
+        values.add("-2");
+        values.add("-1");
+        values.add("1");
+        values.add("2");
+
+        scale = LikertScale.builder()
+            .id(BASE_IRI.concat("/scale/2"))
+            .scalePoints(4)
+            .itemLabels(labels)
+            .itemValues(values)
+            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
-        unitsCompleted = AggregateMeasure.builder()
-            .id("urn:uuid:c3ba4c01-1f17-46e0-85dd-1e366e6ebb81")
-            .metric(Metric.UNITS_COMPLETED)
-            .name("Units Completed")
-            .metricValue(12.0)
-            .maxMetricValue(25.0)
-            .startedAtTime(new DateTime(2019, 8, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .endedAtTime(new DateTime(2019, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+        entity = RatingScaleQuestion.builder()
+            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .id(BASE_IRI.concat("/question/2"))
+            .questionPosed("Do you agree with the opinion presented?")
+            .scale(scale)
             .build();
-
-        List<AggregateMeasure> measures = Lists.newArrayList();
-        measures.add(minutesOnTask);
-        measures.add(unitsCompleted);
-
-        entity = AggregateMeasureCollection.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1_TOOL_USE.value()))
-            .id("urn:uuid:60b4db01-f1e5-4a7f-add9-6a8f761625b1")
-            .items(measures)
-            .build();
-
     }
 
     @Test
@@ -87,7 +83,7 @@ public class AggregateMeasureCollectionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityAggregateMeasureCollection.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityRatingScaleQuestion.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

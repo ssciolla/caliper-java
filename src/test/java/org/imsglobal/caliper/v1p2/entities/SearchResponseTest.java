@@ -16,15 +16,19 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.entities;
+package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
+import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
+import org.imsglobal.caliper.entities.resource.*;
 import org.imsglobal.caliper.entities.search.Query;
+import org.imsglobal.caliper.entities.search.SearchResponse;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -39,25 +43,39 @@ import java.util.List;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class QueryTest {
+public class SearchResponseTest {
     private Person creator;
     private SoftwareApplication catalog;
-    private Query entity;
+    private SoftwareApplication provider;
+    private SoftwareApplication target;
+    private Query query;
+    private SearchResponse entity;
 
     private static final String BASE_IRI = "https://example.edu";
     private static final String BASE_CATALOG_IRI = "https://example.edu/catalog";
 
     @Before
     public void setUp() throws Exception {
-        catalog = SoftwareApplication.builder().id(BASE_CATALOG_IRI).build();
+        catalog = SoftwareApplication.builder().id(BASE_CATALOG_IRI).coercedToId(true).build();
         creator = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
+        provider = SoftwareApplication.builder().id(BASE_IRI).build();
+        target = SoftwareApplication.builder().id(BASE_CATALOG_IRI).build();
 
-        entity = Query.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1_SEARCH.value()))
+        query = Query.builder()
             .id(BASE_IRI.concat("/users/554433/search?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
             .creator(creator)
             .searchTarget(catalog)
             .searchTerms("IMS AND (Caliper OR Analytics)")
+            .dateCreated(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .build();
+
+        entity = SearchResponse.builder()
+            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .id(BASE_IRI.concat("/users/554433/response?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
+            .searchProvider(provider)
+            .query(query)
+            .searchTarget(target)
+            .searchResultsItemCount(3)
             .dateCreated(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .build();
     }
@@ -67,7 +85,7 @@ public class QueryTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityQuery.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntitySearchResponse.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -76,3 +94,5 @@ public class QueryTest {
         entity = null;
     }
 }
+
+

@@ -31,6 +31,7 @@ import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.session.LtiSession;
 import org.imsglobal.caliper.entities.session.Session;
+import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.joda.time.DateTime;
 import java.util.Map;
 
@@ -45,6 +46,12 @@ public interface CaliperEvent extends CaliperSendable {
      * @return the context IRI.
      */
     JsonldContext getContext();
+
+    /**
+     * Specifies the profile that governs this Event.
+     * @return the identifier.
+     */
+    CaliperProfile getProfile();
 
     /**
      * Identifier that MUST be set either by the emitting service or the receiving endpoint.

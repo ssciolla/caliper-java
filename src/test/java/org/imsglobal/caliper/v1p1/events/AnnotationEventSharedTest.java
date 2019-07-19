@@ -21,6 +21,8 @@ package org.imsglobal.caliper.v1p1.events;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
+import org.imsglobal.caliper.actions.CaliperAction;
+import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
@@ -68,7 +70,7 @@ public class AnnotationEventSharedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.getDefault();
+        context = JsonldStringContext.create(CaliperJsonldContext.V1P1.value());
 
         id = "urn:uuid:3bdab9e6-11cd-4a0f-9d09-8e363994176b";
 
@@ -146,7 +148,7 @@ public class AnnotationEventSharedTest {
      * @param action
      * @return event
      */
-    private AnnotationEvent buildEvent(Action action) {
+    private AnnotationEvent buildEvent(CaliperAction action) {
         return AnnotationEvent.builder()
             .context(context)
             .id(id)

@@ -29,6 +29,7 @@ import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.clients.HttpClient;
 import org.imsglobal.caliper.clients.HttpClientOptions;
 import org.imsglobal.caliper.config.Config;
+import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
@@ -79,7 +80,7 @@ public class EnvelopeEventSingleTest {
 
     @Before
     public void setup() {
-        context = JsonldStringContext.getDefault();
+        context = JsonldStringContext.create(CaliperJsonldContext.V1P1.value());
 
         id = "urn:uuid:c51570e4-f8ed-4c18-bb3a-dfe51b2cc594";
 

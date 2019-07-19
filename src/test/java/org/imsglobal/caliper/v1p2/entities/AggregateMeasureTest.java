@@ -16,7 +16,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.entities;
+package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
@@ -47,7 +47,7 @@ public class AggregateMeasureTest {
     public void setUp() throws Exception {
 
         entity = AggregateMeasure.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1_TOOL_USE.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
             .id("urn:uuid:c3ba4c01-1f17-46e0-85dd-1e366e6ebb81")
             .metric(Metric.UNITS_COMPLETED)
             .name("Units Completed")
@@ -63,7 +63,7 @@ public class AggregateMeasureTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityAggregateMeasure.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityAggregateMeasure.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

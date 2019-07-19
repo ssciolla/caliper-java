@@ -44,19 +44,11 @@ public class AgentTest {
     public void setUp() throws Exception {
 
         entity = Agent.builder()
-<<<<<<< HEAD
                 .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
                 .id(BASE_IRI.concat("/agents/99999"))
                 .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
                 .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
                 .build();
-=======
-            .context(JsonldStringContext.getDefault())
-            .id(BASE_IRI.concat("/agents/99999"))
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
-            .build();
->>>>>>> d1890e27977356d4ad6e0e804e1d41599b0d7b42
     }
 
     @Test

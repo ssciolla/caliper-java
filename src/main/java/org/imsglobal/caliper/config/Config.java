@@ -39,11 +39,6 @@ public class Config {
     public static final String DATA_VERSION = "http://purl.imsglobal.org/ctx/caliper/v1p1";
 
     /**
-     * Default IMS Caliper external context document IRI.
-     */
-    public static final String JSONLD_EXTERNAL_CALIPER_CONTEXT = "http://purl.imsglobal.org/ctx/caliper/v1p1";
-
-    /**
      * Default UUID version to use when minting Event UUIDs.
      */
     public static final int UUID_VERSION = 4;

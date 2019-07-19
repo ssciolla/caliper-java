@@ -21,6 +21,7 @@ package org.imsglobal.caliper.v1p1.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
+import org.imsglobal.caliper.context.CaliperJsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.Organization;
 import org.joda.time.DateTime;
@@ -52,7 +53,7 @@ public class OrganizationTest {
             .build();
 
         entity = Organization.builder()
-            .context(JsonldStringContext.getDefault())
+            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1.value()))
             .id(BASE_IRI.concat("/colleges/1/depts/1"))
             .name("Computer Science Department")
             .subOrganizationOf(college)

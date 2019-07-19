@@ -30,6 +30,7 @@ public enum CaliperJsonldContext {
     V1P1_FEEDBACK("http://purl.imsglobal.org/ctx/caliper/v1p1/FeedbackProfile-extension"),
     V1P1_RESOURCE_MANAGEMENT("http://purl.imsglobal.org/ctx/caliper/v1p1/ResourceManagementProfile-extension"),
     V1P1_SEARCH("http://purl.imsglobal.org/ctx/caliper/v1p1/SearchProfile-extension"),
+    V1P1_SURVEY("http://purl.imsglobal.org/ctx/caliper/v1p1/SurveyProfile-extension"),
     V1P1_TOOL_LAUNCH("http://purl.imsglobal.org/ctx/caliper/v1p1/ToolLaunchProfile-extension"),
     V1P1_TOOL_USE("http://purl.imsglobal.org/ctx/caliper/v1p1/ToolUseProfile-extension"),
     V1P2("http://purl.imsglobal.org/ctx/caliper/v1p2");

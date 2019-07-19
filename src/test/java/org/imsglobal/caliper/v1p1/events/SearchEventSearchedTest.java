@@ -19,8 +19,6 @@
 package org.imsglobal.caliper.v1p1.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import jdk.jfr.events.SocketReadEvent;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.CaliperJsonldContext;
@@ -33,7 +31,6 @@ import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.entities.search.Query;
 import org.imsglobal.caliper.entities.search.SearchResponse;
 import org.imsglobal.caliper.entities.session.Session;

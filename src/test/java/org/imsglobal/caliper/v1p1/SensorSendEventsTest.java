@@ -16,8 +16,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper;
+package org.imsglobal.caliper.v1p1;
 
+import org.imsglobal.caliper.CaliperSendable;
+import org.imsglobal.caliper.Envelope;
+import org.imsglobal.caliper.Sensor;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.clients.HttpClient;
 import org.imsglobal.caliper.clients.HttpClientOptions;

@@ -21,6 +21,8 @@ package org.imsglobal.caliper.v1p1.events;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
+import org.imsglobal.caliper.actions.CaliperAction;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.Person;
@@ -50,7 +52,7 @@ public class SessionEventTimedOutTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.getDefault();
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value());
 
         id = "urn:uuid:4e61cf6c-ffbe-45bc-893f-afe7ad4079dc";
 
@@ -96,7 +98,7 @@ public class SessionEventTimedOutTest {
      * @param action
      * @return event
      */
-    private SessionEvent buildEvent(Action action) {
+    private SessionEvent buildEvent(CaliperAction action) {
         return SessionEvent.builder()
             .context(context)
             .id(id)

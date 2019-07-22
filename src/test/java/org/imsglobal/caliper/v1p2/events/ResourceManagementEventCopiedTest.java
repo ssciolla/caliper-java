@@ -16,12 +16,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.events;
+package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.actions.CaliperAction;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.*;
@@ -29,6 +30,8 @@ import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
 import org.imsglobal.caliper.entities.session.Session;
 import org.imsglobal.caliper.events.ResourceManagementEvent;
+import org.imsglobal.caliper.profiles.CaliperProfile;
+import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -64,7 +67,7 @@ public class ResourceManagementEventCopiedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P1_RESOURCE_MANAGEMENT.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
         id = "urn:uuid:d3543a73-e307-4190-a755-5ce7b3187bc5";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
         creators = new ArrayList<CaliperAgent>();
@@ -118,7 +121,7 @@ public class ResourceManagementEventCopiedTest {
             .build();
 
         // Build event
-        event = buildEvent(Action.COPIED);
+        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.COPIED);
     }
 
     @Test
@@ -126,7 +129,7 @@ public class ResourceManagementEventCopiedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventResourceManagementCopied.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCopied.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -140,9 +143,10 @@ public class ResourceManagementEventCopiedTest {
      * @param action
      * @return event
      */
-    private ResourceManagementEvent buildEvent(Action action) {
+    private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
         return ResourceManagementEvent.builder()
                 .context(context)
+                .profile(profile)
                 .id(id)
                 .actor(actor)
                 .action(action)

@@ -21,6 +21,7 @@ package org.imsglobal.caliper.v1p1.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseOffering;
 import org.imsglobal.caliper.entities.agent.CourseSection;
@@ -69,7 +70,7 @@ public class MembershipTest {
         roles.add(Role.LEARNER);
 
         entity = Membership.builder()
-            .context(JsonldStringContext.getDefault())
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value()))
             .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/rosters/1/members/554433"))
             .member(person)
             .organization(courseSection)

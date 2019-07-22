@@ -16,13 +16,14 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.events;
+package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fest.util.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.actions.CaliperAction;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.*;
@@ -31,6 +32,8 @@ import org.imsglobal.caliper.entities.use.AggregateMeasure;
 import org.imsglobal.caliper.entities.use.AggregateMeasureCollection;
 import org.imsglobal.caliper.entities.use.Metric;
 import org.imsglobal.caliper.events.ToolUseEvent;
+import org.imsglobal.caliper.profiles.CaliperProfile;
+import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -64,7 +67,7 @@ public class ToolUseEventUsedWithProgressTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P1_TOOL_USE.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
 
         id = "urn:uuid:7e10e4f3-a0d8-4430-95bd-783ffae4d916";
 
@@ -138,7 +141,7 @@ public class ToolUseEventUsedWithProgressTest {
             .build();
 
         // Build event
-        event = buildEvent(Action.USED);
+        event = buildEvent(Profile.TOOL_USE, Action.USED);
     }
 
     @Test
@@ -146,13 +149,13 @@ public class ToolUseEventUsedWithProgressTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventToolUseUsedWithProgress.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventToolUseUsedWithProgress.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void viewEventRejectsNavigatedToAction() {
-        buildEvent(Action.NAVIGATED_TO);
+        buildEvent(Profile.TOOL_USE, Action.NAVIGATED_TO);
     }
 
     @After
@@ -165,9 +168,10 @@ public class ToolUseEventUsedWithProgressTest {
      * @param action
      * @return event
      */
-    private ToolUseEvent buildEvent(Action action) {
+    private ToolUseEvent buildEvent(CaliperProfile profile, CaliperAction action) {
         return ToolUseEvent.builder()
             .context(context)
+            .profile(profile)
             .id(id)
             .actor(actor)
             .action(action)

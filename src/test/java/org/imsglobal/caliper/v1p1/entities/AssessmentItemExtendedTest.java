@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import org.imsglobal.caliper.TestUtils;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.resource.Assessment;
 import org.imsglobal.caliper.entities.resource.AssessmentItem;
@@ -62,7 +63,7 @@ public class AssessmentItemExtendedTest {
         extensions.put("correctResponse", question.getCorrectResponse());
 
         entity = AssessmentItem.builder()
-            .context(JsonldStringContext.getDefault())
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value()))
             .id(SECTION_IRI.concat("/assess/1/items/3"))
             .isPartOf(assessment)
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))

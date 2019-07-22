@@ -16,17 +16,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.entities;
+package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.Person;
-import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.imsglobal.caliper.entities.search.Query;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import org.imsglobal.caliper.entities.question.Question;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,32 +30,22 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class QueryTest {
-    private Person creator;
-    private SoftwareApplication catalog;
-    private Query entity;
+public class QuestionTest {
+    private Question entity;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String BASE_CATALOG_IRI = "https://example.edu/catalog";
 
     @Before
     public void setUp() throws Exception {
-        catalog = SoftwareApplication.builder().id(BASE_CATALOG_IRI).build();
-        creator = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        entity = Query.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1_SEARCH.value()))
-            .id(BASE_IRI.concat("/users/554433/search?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
-            .creator(creator)
-            .searchTarget(catalog)
-            .searchTerms("IMS AND (Caliper OR Analytics)")
-            .dateCreated(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
-            .build();
+        entity = Question.builder()
+                .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
+                .id(BASE_IRI.concat("/question/1"))
+                .questionPosed("How would you rate this?")
+                .build();
     }
 
     @Test
@@ -67,7 +53,7 @@ public class QueryTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityQuery.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityQuestion.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

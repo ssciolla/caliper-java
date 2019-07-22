@@ -34,6 +34,7 @@ import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.session.LtiSession;
 import org.imsglobal.caliper.entities.session.Session;
+import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,9 @@ public abstract class AbstractEvent implements CaliperEvent {
 
     @JsonProperty("type")
     private final CaliperEventType type;
+
+    @JsonProperty("profile")
+    private final CaliperProfile profile;
 
     @JsonProperty("id")
     private final String id;
@@ -111,6 +115,7 @@ public abstract class AbstractEvent implements CaliperEvent {
     protected AbstractEvent(Builder<?> builder) {
         this.context = builder.context;
         this.type = builder.type;
+        this.profile = builder.profile;
         this.id = builder.id;
         this.actor = builder.actor;
         this.action = builder.action;
@@ -137,21 +142,29 @@ public abstract class AbstractEvent implements CaliperEvent {
     }
 
     /**
-     * Identifier that must be set either by emitting service or the receiving endpoint.
-     * @return the id
-     */
-    @Nullable
-    public String getId() {
-        return id;
-    }
-
-    /**
      * Required.
      * @return the type
      */
     @Nonnull
     public CaliperEventType getType() {
         return type;
+    }
+
+    /**
+     * Optional (though recommended).
+     * @return the profile that governs this Event.
+     */
+    public CaliperProfile getProfile() {
+        return profile;
+    }
+
+    /**
+     * Identifier that must be set either by emitting service or the receiving endpoint.
+     * @return the id
+     */
+    @Nullable
+    public String getId() {
+        return id;
     }
 
     /**
@@ -279,8 +292,9 @@ public abstract class AbstractEvent implements CaliperEvent {
      */
     public static abstract class Builder<T extends Builder<T>> {
         private JsonldContext context;
-        private String id;
         private CaliperEventType type;
+        private CaliperProfile profile;
+        private String id;
         private CaliperAgent actor;
         private CaliperAction action;
         private CaliperEntity object;
@@ -315,20 +329,29 @@ public abstract class AbstractEvent implements CaliperEvent {
         }
 
         /**
-         * @param id
-         * @return builder.
-         */
-        public T id(String id) {
-            this.id = id;
-            return self();
-        }
-
-        /**
          * @param type
          * @return builder.
          */
         public T type(CaliperEventType type) {
             this.type = type;
+            return self();
+        }
+
+        /**
+         * @param profile
+         * @return builder.
+         */
+        public T profile(CaliperProfile profile) {
+            this.profile = profile;
+            return self();
+        }
+
+        /**
+         * @param id
+         * @return builder.
+         */
+        public T id(String id) {
+            this.id = id;
             return self();
         }
 

@@ -16,12 +16,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.events;
+package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.actions.CaliperAction;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.CaliperEntity;
@@ -35,6 +36,8 @@ import org.imsglobal.caliper.entities.search.Query;
 import org.imsglobal.caliper.entities.search.SearchResponse;
 import org.imsglobal.caliper.entities.session.Session;
 import org.imsglobal.caliper.events.SearchEvent;
+import org.imsglobal.caliper.profiles.CaliperProfile;
+import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -70,7 +73,7 @@ public class SearchEventSearchedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P1_SEARCH.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
         id = "urn:uuid:cb3878ed-8240-4c6d-9fee-77221810f5e4";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
         creator = Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build();
@@ -115,7 +118,7 @@ public class SearchEventSearchedTest {
             .build();
 
         // Build event
-        event = buildEvent(Action.SEARCHED);
+        event = buildEvent(Profile.SEARCH, Action.SEARCHED);
     }
 
     @Test
@@ -124,13 +127,13 @@ public class SearchEventSearchedTest {
 
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventSearchSearched.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventSearchSearched.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void viewEventRejectsNavigatedToAction() {
-        buildEvent(Action.NAVIGATED_TO);
+        buildEvent(Profile.SEARCH, Action.NAVIGATED_TO);
     }
 
     @After
@@ -143,9 +146,10 @@ public class SearchEventSearchedTest {
      * @param action
      * @return event
      */
-    private SearchEvent buildEvent(Action action) {
+    private SearchEvent buildEvent(CaliperProfile profile, CaliperAction action) {
         return SearchEvent.builder()
                 .context(context)
+                .profile(profile)
                 .id(id)
                 .actor(actor)
                 .action(action)

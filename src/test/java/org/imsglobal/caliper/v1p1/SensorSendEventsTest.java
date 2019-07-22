@@ -25,6 +25,7 @@ import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.clients.HttpClient;
 import org.imsglobal.caliper.clients.HttpClientOptions;
 import org.imsglobal.caliper.config.Config;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Membership;
@@ -62,7 +63,7 @@ public class SensorSendEventsTest {
 
         // Fire event test - Send 50 envelopes containing the above event
         for (int i = 0 ; i < 50 ; i++) {
-            JsonldStringContext context = JsonldStringContext.getDefault();
+            JsonldStringContext context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value());
 
             String id = "urn:id:" + UUID.randomUUID().toString();
 

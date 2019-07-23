@@ -16,14 +16,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.survey;
+package org.imsglobal.caliper.entities.resource;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.EntityType;
 import org.imsglobal.caliper.entities.question.Question;
-import org.imsglobal.caliper.entities.resource.AbstractDigitalResource;
 
 import javax.annotation.Nullable;
 import java.util.List;

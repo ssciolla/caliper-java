@@ -36,7 +36,6 @@ public class RatingScaleResponse extends AbstractResponse {
     private RatingScaleResponse(Builder<?> builder) {
         super(builder);
         this.selections = ImmutableList.copyOf(builder.selections);
-
     }
 
     /**

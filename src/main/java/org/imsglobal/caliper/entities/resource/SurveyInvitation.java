@@ -29,16 +29,16 @@ import javax.annotation.Nullable;
 public class SurveyInvitation extends AbstractDigitalResource {
 
     @JsonProperty("rater")
-    private Person rater;
+    private final Person rater;
 
     @JsonProperty("survey")
-    private Survey survey;
+    private final Survey survey;
 
     @JsonProperty("sentCount")
-    private int sentCount;
+    private final int sentCount;
 
     @JsonProperty("dateSent")
-    private DateTime dateSent;
+    private final DateTime dateSent;
 
     /**
      * @param builder apply builder object properties to the object.

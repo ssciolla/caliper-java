@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.EntityType;
 import org.imsglobal.caliper.entities.CaliperCollection;
-import org.imsglobal.caliper.entities.survey.Questionnaire;
+import org.imsglobal.caliper.entities.resource.Questionnaire;
 
 import javax.annotation.Nullable;
 import java.util.List;

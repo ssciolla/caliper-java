@@ -20,6 +20,7 @@ package org.imsglobal.caliper.v1p1.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseOffering;
 import org.joda.time.DateTime;
@@ -43,14 +44,14 @@ public class CourseOfferingTest {
     public void setUp() throws Exception {
 
         entity = CourseOffering.builder()
-            .context(JsonldStringContext.getDefault())
-            .id(BASE_IRI.concat("/terms/201601/courses/7"))
-            .courseNumber("CPS 435")
-            .academicSession("Fall 2016")
-            .name("CPS 435 Learning Analytics")
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
-            .build();
+                .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value()))
+                .id(BASE_IRI.concat("/terms/201601/courses/7"))
+                .courseNumber("CPS 435")
+                .academicSession("Fall 2016")
+                .name("CPS 435 Learning Analytics")
+                .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+                .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
+                .build();
     }
 
     @Test

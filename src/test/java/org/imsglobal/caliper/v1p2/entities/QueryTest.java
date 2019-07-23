@@ -16,15 +16,15 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.entities;
+package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.fest.util.Lists;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.scale.LikertScale;
-import org.imsglobal.caliper.entities.question.RatingScaleQuestion;
+import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.agent.SoftwareApplication;
+import org.imsglobal.caliper.entities.search.Query;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -34,47 +34,29 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class RatingScaleQuestionTest {
-    private RatingScaleQuestion entity;
-    private LikertScale scale;
-    private List<String> labels;
-    private List<String> values;
+public class QueryTest {
+    private Person creator;
+    private SoftwareApplication catalog;
+    private Query entity;
 
     private static final String BASE_IRI = "https://example.edu";
+    private static final String BASE_CATALOG_IRI = "https://example.edu/catalog";
 
     @Before
     public void setUp() throws Exception {
+        catalog = SoftwareApplication.builder().id(BASE_CATALOG_IRI).build();
+        creator = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        labels = Lists.newArrayList();
-        labels.add("Strongly Disagree");
-        labels.add("Disagree");
-        labels.add("Agree");
-        labels.add("Strongly Agree");
-
-        values = Lists.newArrayList();
-        values.add("-2");
-        values.add("-1");
-        values.add("1");
-        values.add("2");
-
-        scale = LikertScale.builder()
-            .id(BASE_IRI.concat("/scale/2"))
-            .scalePoints(4)
-            .itemLabels(labels)
-            .itemValues(values)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .build();
-
-        entity = RatingScaleQuestion.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P1_FEEDBACK.value()))
-            .id(BASE_IRI.concat("/question/2"))
-            .questionPosed("Do you agree with the opinion presented?")
-            .scale(scale)
+        entity = Query.builder()
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
+            .id(BASE_IRI.concat("/users/554433/search?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
+            .creator(creator)
+            .searchTarget(catalog)
+            .searchTerms("IMS AND (Caliper OR Analytics)")
+            .dateCreated(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .build();
     }
 
@@ -83,7 +65,7 @@ public class RatingScaleQuestionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEntityRatingScaleQuestion.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityQuery.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

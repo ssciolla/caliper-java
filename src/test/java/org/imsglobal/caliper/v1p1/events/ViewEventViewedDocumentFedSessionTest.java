@@ -23,6 +23,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
+import org.imsglobal.caliper.actions.CaliperAction;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
@@ -70,7 +72,7 @@ public class ViewEventViewedDocumentFedSessionTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.getDefault();
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value());
 
         id = "urn:uuid:4be6d29d-5728-44cd-8a8f-3d3f07e46b61";
 
@@ -150,7 +152,7 @@ public class ViewEventViewedDocumentFedSessionTest {
      * @param action
      * @return event
      */
-    private ViewEvent buildEvent(Action action) {
+    private ViewEvent buildEvent(CaliperAction action) {
         return ViewEvent.builder()
             .context(context)
             .id(id)

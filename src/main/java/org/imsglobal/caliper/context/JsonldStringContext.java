@@ -36,9 +36,8 @@ public class JsonldStringContext implements JsonldContext, CaliperCoercible {
     /**
      * Constructor.  Rendered private to force use of factory methods.
      */
-    private JsonldStringContext(String context) {
-        this.id = context;
-
+    private JsonldStringContext(String id) {
+        this.id = id;
     }
 
     /**
@@ -64,13 +63,5 @@ public class JsonldStringContext implements JsonldContext, CaliperCoercible {
      */
     public static JsonldStringContext create(String id) {
         return new JsonldStringContext(id);
-    }
-
-    /**
-     * Factory method that returns the default IMS Caliper external context IRI.
-     * @return
-     */
-    public static JsonldStringContext getDefault() {
-        return new JsonldStringContext(Config.JSONLD_EXTERNAL_CALIPER_CONTEXT);
     }
 }

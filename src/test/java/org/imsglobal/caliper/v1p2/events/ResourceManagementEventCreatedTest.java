@@ -16,20 +16,22 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.events;
+package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.actions.CaliperAction;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.*;
 import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.entities.survey.Comment;
-import org.imsglobal.caliper.events.FeedbackEvent;
+import org.imsglobal.caliper.events.ResourceManagementEvent;
+import org.imsglobal.caliper.profiles.CaliperProfile;
+import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -45,18 +47,17 @@ import java.util.List;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class FeedbackEventCommentedTest {
+public class ResourceManagementEventCreatedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
     private CourseSection section;
     private DigitalResource object;
-    private Comment generated;
     private DigitalResourceCollection collection;
     private CourseSection group;
     private List<CaliperAgent> creators;
     private Membership membership;
-    private FeedbackEvent event;
+    private ResourceManagementEvent event;
     private Session session;
     private SoftwareApplication edApp;
 
@@ -65,9 +66,11 @@ public class FeedbackEventCommentedTest {
 
     @Before
     public void setUp() throws Exception {
-        context = JsonldStringContext.create(CaliperJsonldContext.V1P1_FEEDBACK.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
         id = "urn:uuid:0c81f804-62ee-4953-81c5-62d9579c4369";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
+        creators = new ArrayList<CaliperAgent>();
+        creators.add(actor);
         section = CourseSection.builder().id(SECTION_IRI).build();
 
         collection = DigitalResourceCollection.builder()
@@ -79,17 +82,10 @@ public class FeedbackEventCommentedTest {
         object = DigitalResource.builder()
             .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
             .name("Course Syllabus")
+            .creators(creators)
             .mediaType("application/pdf")
             .isPartOf(collection)
             .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
-            .build();
-
-        generated = Comment.builder()
-            .id(SECTION_IRI.concat("/assess/1/items/6/users/665544/responses/1/comment/1"))
-            .commenter(actor)
-            .commentedOn(object)
-            .value("I like what you did here but you need to improve on...")
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
@@ -105,7 +101,7 @@ public class FeedbackEventCommentedTest {
             .member(Person.builder().id(actor.getId()).coercedToId(true).build())
             .organization(CourseSection.builder().id(group.getId()).coercedToId(true).build())
             .status(Status.ACTIVE)
-            .role(Role.LEARNER)
+            .role(Role.INSTRUCTOR)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
@@ -115,7 +111,7 @@ public class FeedbackEventCommentedTest {
             .build();
 
         // Build event
-        event = buildEvent(Action.COMMENTED);
+        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.CREATED);
     }
 
     @Test
@@ -123,7 +119,7 @@ public class FeedbackEventCommentedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEventFeedbackCommented.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCreated.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -137,19 +133,19 @@ public class FeedbackEventCommentedTest {
      * @param action
      * @return event
      */
-    private FeedbackEvent buildEvent(Action action) {
-        return FeedbackEvent.builder()
-            .context(context)
-            .id(id)
-            .actor(actor)
-            .action(action)
-            .object(object)
-            .generated(generated)
-            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
-            .edApp(edApp)
-            .group(group)
-            .membership(membership)
-            .session(session)
-            .build();
+    private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return ResourceManagementEvent.builder()
+                .context(context)
+                .profile(profile)
+                .id(id)
+                .actor(actor)
+                .action(action)
+                .object(object)
+                .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+                .edApp(edApp)
+                .group(group)
+                .membership(membership)
+                .session(session)
+                .build();
     }
 }

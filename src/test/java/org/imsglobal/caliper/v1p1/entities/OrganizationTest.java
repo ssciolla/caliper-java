@@ -19,20 +19,16 @@
 package org.imsglobal.caliper.v1p1.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.Organization;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
@@ -52,7 +48,7 @@ public class OrganizationTest {
             .build();
 
         entity = Organization.builder()
-            .context(JsonldStringContext.getDefault())
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value()))
             .id(BASE_IRI.concat("/colleges/1/depts/1"))
             .name("Computer Science Department")
             .subOrganizationOf(college)

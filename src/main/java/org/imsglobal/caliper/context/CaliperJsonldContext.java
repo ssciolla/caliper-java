@@ -18,59 +18,14 @@
 
 package org.imsglobal.caliper.context;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.google.common.collect.ImmutableMap;
-
-import java.util.HashMap;
-import java.util.Map;
-
-public enum CaliperJsonldContext {
-    V1P0("http://purl.imsglobal.org/ctx/caliper/v1/Context"),
-    V1P1("http://purl.imsglobal.org/ctx/caliper/v1p1"),
-    V1P1_FEEDBACK("http://purl.imsglobal.org/ctx/caliper/v1p1/FeedbackProfile-extension"),
-    V1P1_RESOURCE_MANAGEMENT("http://purl.imsglobal.org/ctx/caliper/v1p1/ResourceManagementProfile-extension"),
-    V1P1_SEARCH("http://purl.imsglobal.org/ctx/caliper/v1p1/SearchProfile-extension"),
-    V1P1_SURVEY("http://purl.imsglobal.org/ctx/caliper/v1p1/SurveyProfile-extension"),
-    V1P1_TOOL_LAUNCH("http://purl.imsglobal.org/ctx/caliper/v1p1/ToolLaunchProfile-extension"),
-    V1P1_TOOL_USE("http://purl.imsglobal.org/ctx/caliper/v1p1/ToolUseProfile-extension"),
-    V1P2("http://purl.imsglobal.org/ctx/caliper/v1p2");
-
-    private final String value;
-    private static Map<String, CaliperJsonldContext> lookup;
+/**
+ * Marker interface.
+ */
+public interface CaliperJsonldContext {
 
     /**
-     * Create reverse lookup hash map
+     * Action string.
+     * @return JSON-LD Context IRI value
      */
-    static {
-        Map<String, CaliperJsonldContext> map = new HashMap<String, CaliperJsonldContext>();
-        for (CaliperJsonldContext constants : CaliperJsonldContext.values()) {
-            map.put(constants.value(), constants);
-        }
-        lookup = ImmutableMap.copyOf(map);
-    }
-
-    /**
-     * Private constructor
-     *
-     * @param value
-     */
-    private CaliperJsonldContext(final String value) {
-        this.value = value;
-    }
-
-    /**
-     * @param key
-     * @return true if lookup returns a key match; false otherwise.
-     */
-    public static boolean hasKey(String key) {
-        return lookup.containsKey(key);
-    }
-
-    /**
-     * @return the URI value
-     */
-    @JsonValue
-    public String value() {
-        return value;
-    }
+    String value();
 }

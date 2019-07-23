@@ -20,7 +20,7 @@ package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
-import org.imsglobal.caliper.context.CaliperJsonldContext;
+import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.question.DateTimeQuestion;
 import org.joda.time.DateTime;
@@ -44,7 +44,7 @@ public class DateTimeQuestionTest {
     public void setUp() throws Exception {
 
         entity = DateTimeQuestion.builder()
-            .context(JsonldStringContext.create(CaliperJsonldContext.V1P2.value()))
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/3/question"))
             .questionPosed("When would you be available for an exam next term?")
             .minDateTime(new DateTime(2018, 9, 1, 6, 0, 0, 0, DateTimeZone.UTC))

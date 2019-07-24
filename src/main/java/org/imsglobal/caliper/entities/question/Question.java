@@ -38,7 +38,6 @@ public class Question extends AbstractQuestion {
      * @param <T> builder.
      */
     public static abstract class Builder<T extends Builder<T>> extends AbstractQuestion.Builder<T> {
-        private String questionPosed;
 
         /**
          * Constructor

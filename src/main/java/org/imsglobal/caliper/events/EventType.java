@@ -32,6 +32,8 @@ public enum EventType implements CaliperEventType {
     MESSAGE("MessageEvent"),
     NAVIGATION("NavigationEvent"),
     GRADE("GradeEvent"),
+    QUESTIONNAIRE("QuestionnaireEvent"),
+    QUESTIONNAIRE_ITEM("QuestionnaireItemEvent"),
     READING("ReadingEvent"),
     RESOURCEMANAGEMENT("ResourceManagementEvent"),
     SEARCH("SearchEvent"),

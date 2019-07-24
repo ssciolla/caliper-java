@@ -42,10 +42,10 @@ public class QuestionTest {
     public void setUp() throws Exception {
 
         entity = Question.builder()
-                .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
-                .id(BASE_IRI.concat("/question/1"))
-                .questionPosed("How would you rate this?")
-                .build();
+            .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
+            .id(BASE_IRI.concat("/question/1"))
+            .questionPosed("How would you rate this?")
+            .build();
     }
 
     @Test

@@ -18,11 +18,12 @@
 
 package org.imsglobal.caliper.entities.resource;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.question.Question;
+import org.imsglobal.caliper.entities.question.CaliperQuestion;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,8 +36,8 @@ public class QuestionnaireItem extends AbstractDigitalResource {
     @JsonProperty("categories")
     private final ImmutableList<String> categories;
 
-    @JsonProperty("categories")
-    private final Question question;
+    @JsonProperty("question")
+    private final CaliperQuestion question;
 
     @JsonProperty("weight")
     private final double weight;
@@ -63,12 +64,13 @@ public class QuestionnaireItem extends AbstractDigitalResource {
      * @return the question posed
      */
     @Nullable
-    public Question getQuestion() { return question; }
+    public CaliperQuestion getQuestion() { return question; }
 
     /**
      * @return the weight
      */
     @Nullable
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public double getWeight() {
         return weight;
     }
@@ -79,14 +81,14 @@ public class QuestionnaireItem extends AbstractDigitalResource {
      */
     public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T>  {
         private List<String> categories = Lists.newArrayList();
-        private Question question;
+        private CaliperQuestion question;
         private double weight;
 
         /**
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.ASSESSMENT_ITEM);
+            super.type(EntityType.QUESTIONNAIRE_ITEM);
         }
 
         /**
@@ -113,7 +115,7 @@ public class QuestionnaireItem extends AbstractDigitalResource {
          * @param question
          * @return builder.
          */
-        public T question(Question question) {
+        public T question(CaliperQuestion question) {
             this.question = question;
             return self();
         }

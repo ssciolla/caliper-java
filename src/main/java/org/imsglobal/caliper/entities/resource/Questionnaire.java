@@ -62,7 +62,7 @@ public class Questionnaire extends AbstractDigitalResource implements CaliperCol
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.FORUM);
+            super.type(EntityType.QUESTIONNAIRE);
         }
 
         /**

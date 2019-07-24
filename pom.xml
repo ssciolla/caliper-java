@@ -36,6 +36,16 @@
 
     <developers>
         <developer>
+            <id>arwhyte</id>
+            <name>Anthony Whyte</name>
+            <email>arwhyte@umich.edu</email>
+        </developer>
+        <developer>
+            <id>ssciolla</id>
+            <name>Sam Sciolla</name>
+            <email>ssciolla@umich.edu</email>
+        </developer>
+        <developer>
             <id>pfgray</id>
             <name>Paul Gray</name>
             <email>pfbgray@gmail.com</email>
@@ -46,11 +56,7 @@
             <name>Prashant Nayak</name>
             <email>prashant@intellifylearning.com</email>
         </developer>
-        <developer>
-            <id>arwhyte</id>
-            <name>Anthony Whyte</name>
-            <email>arwhyte@umich.edu</email>
-        </developer>
+
     </developers>
 
     <scm>

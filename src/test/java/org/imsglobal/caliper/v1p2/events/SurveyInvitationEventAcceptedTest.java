@@ -19,17 +19,23 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.*;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
+import org.imsglobal.caliper.entities.agent.CourseSection;
+import org.imsglobal.caliper.entities.agent.Membership;
+import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.agent.Role;
+import org.imsglobal.caliper.entities.agent.SoftwareApplication;
+import org.imsglobal.caliper.entities.agent.Status;
+import org.imsglobal.caliper.entities.resource.SurveyInvitation;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.ResourceManagementEvent;
+import org.imsglobal.caliper.entities.survey.Survey;
+import org.imsglobal.caliper.events.SurveyInvitationEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -41,26 +47,21 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ResourceManagementEventCopiedTest {
+public class SurveyInvitationEventAcceptedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private CourseSection section;
-    private DigitalResource object;
-    private DigitalResource generated;
-    private DigitalResourceCollection collection;
+    private SurveyInvitation object;
     private CourseSection group;
-    private List<CaliperAgent> creators;
-    private Membership membership;
-    private ResourceManagementEvent event;
-    private Session session;
     private SoftwareApplication edApp;
+    private Membership membership;
+    private Session session;
+    private SurveyInvitationEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
     private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
@@ -68,34 +69,20 @@ public class ResourceManagementEventCopiedTest {
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:d3543a73-e307-4190-a755-5ce7b3187bc5";
+        id = "urn:uuid:534afa10-3564-11e9-b210-d663bd873d93";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
-        creators = new ArrayList<CaliperAgent>();
-        creators.add(actor);
-        section = CourseSection.builder().id(SECTION_IRI).build();
 
-        collection = DigitalResourceCollection.builder()
-            .id(SECTION_IRI.concat("/resources/1"))
-            .name("Course Assets")
-            .isPartOf(section)
-            .build();
+        Person rater = Person.builder().id(BASE_IRI.concat("/users/112233")).build();
 
-        object = DigitalResource.builder()
-            .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
-            .name("Course Syllabus")
-            .creators(creators)
-            .mediaType("application/pdf")
-            .isPartOf(collection)
-            .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
-            .build();
+        Survey survey = Survey.builder().id(BASE_IRI.concat("/survey/1")).build();
 
-        generated = DigitalResource.builder()
-            .id(SECTION_IRI.concat("/resources/1/syllabus_copy.pdf"))
-            .name("Course Syllabus (copy)")
-            .creators(creators)
-            .mediaType("application/pdf")
-            .isPartOf(collection)
-            .dateCreated(new DateTime(2018, 11, 15, 10, 05, 0, 0, DateTimeZone.UTC))
+        object = SurveyInvitation.builder()
+            .id(BASE_IRI.concat("/surveys/100/invitations/users/112233"))
+            .sentCount(1)
+            .dateSent(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .rater(rater)
+            .survey(survey)
+            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
@@ -106,12 +93,15 @@ public class ResourceManagementEventCopiedTest {
             .academicSession("Fall 2018")
             .build();
 
+        List<Role> roles = Lists.newArrayList();
+        roles.add(Role.LEARNER);
+
         membership = Membership.builder()
-            .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1/rosters/1"))
-            .member(Person.builder().id(actor.getId()).coercedToId(true).build())
-            .organization(CourseSection.builder().id(group.getId()).coercedToId(true).build())
+            .id(SECTION_IRI.concat("/rosters/1"))
+            .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
+            .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
+            .roles(roles)
             .status(Status.ACTIVE)
-            .role(Role.INSTRUCTOR)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
@@ -121,7 +111,7 @@ public class ResourceManagementEventCopiedTest {
             .build();
 
         // Build event
-        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.COPIED);
+        event = buildEvent(Profile.SURVEY, Action.ACCEPTED);
     }
 
     @Test
@@ -129,7 +119,7 @@ public class ResourceManagementEventCopiedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCopied.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventSurveyInvitationAccepted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -139,19 +129,18 @@ public class ResourceManagementEventCopiedTest {
     }
 
     /**
-     * Build Media event.
-     * @param action
+     * Build SurveyInvitationEvent.
+     * @param profile, action
      * @return event
      */
-    private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ResourceManagementEvent.builder()
+    private SurveyInvitationEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return SurveyInvitationEvent.builder()
             .context(context)
-            .profile(profile)
             .id(id)
+            .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .generated(generated)
             .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)

@@ -22,60 +22,41 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.entities.agent.Person;
-import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
+import org.imsglobal.caliper.entities.resource.Questionnaire;
 import org.imsglobal.caliper.validators.EventValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 
-@SupportedActions({
-    Action.ARCHIVED,
-    Action.COPIED,
-    Action.CREATED,
-    Action.DELETED,
-    Action.DESCRIBED,
-    Action.DOWNLOADED,
-    Action.MODIFIED,
-    Action.PRINTED,
-    Action.PUBLISHED,
-    Action.RESTORED,
-    Action.RETRIEVED,
-    Action.SAVED,
-    Action.UNPUBLISHED,
-    Action.UPLOADED
-})
-public class ResourceManagementEvent extends AbstractEvent {
+@SupportedActions({ Action.STARTED, Action.SUBMITTED })
+public class QuestionnaireEvent extends AbstractEvent {
 
     @JsonProperty("actor")
     private final Person actor;
 
     @JsonProperty("object")
-    private final CaliperDigitalResource object;
-
-    @JsonProperty("generated")
-    private final CaliperDigitalResource generated;
+    private final Questionnaire object;
 
     @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(ResourceManagementEvent.class);
+    private static final Logger log = LoggerFactory.getLogger(QuestionnaireEvent.class);
 
     /**
-     * Utilize builder to construct ResourceManagementEvent.  Validate ResourceManagement object copy rather than the
-     * ResourceManagement builder.  This approach protects the class against parameter changes from another
+     * Utilize builder to construct QuestionnaireEvent. Validate object copy rather than the
+     * builder. This approach protects the class against parameter changes from another
      * thread during the "window of vulnerability" between the time the parameters are checked
      * until when they are copied.
      *
      * @param builder
      */
-    protected ResourceManagementEvent(Builder<?> builder) {
+    private QuestionnaireEvent(Builder<?> builder) {
         super(builder);
 
-        EventValidator.checkType(this.getType(), EventType.RESOURCE_MANAGEMENT);
-        EventValidator.checkAction(this.getAction(), ResourceManagementEvent.class);
+        EventValidator.checkType(this.getType(), EventType.QUESTIONNAIRE);
+        EventValidator.checkAction(this.getAction(), QuestionnaireEvent.class);
 
         this.actor = builder.actor;
         this.object = builder.object;
-        this.generated = builder.generated;
     }
 
     /**
@@ -94,18 +75,8 @@ public class ResourceManagementEvent extends AbstractEvent {
      */
     @Override
     @Nonnull
-    public CaliperDigitalResource getObject() {
+    public Questionnaire getObject() {
         return object;
-    }
-
-    /**
-     * Required.
-     * @return the generated object
-     */
-    @Override
-    @Nonnull
-    public CaliperDigitalResource getGenerated() {
-        return generated;
     }
 
     /**
@@ -114,14 +85,13 @@ public class ResourceManagementEvent extends AbstractEvent {
      */
     public static abstract class Builder<T extends Builder<T>> extends AbstractEvent.Builder<T>  {
         private Person actor;
-        private CaliperDigitalResource object;
-        private CaliperDigitalResource generated;
+        private Questionnaire object;
 
         /*
          * Constructor
          */
         public Builder() {
-            super.type(EventType.RESOURCE_MANAGEMENT);
+            super.type(EventType.QUESTIONNAIRE);
         }
 
         /**
@@ -137,26 +107,17 @@ public class ResourceManagementEvent extends AbstractEvent {
          * @param object
          * @return builder.
          */
-        public T object(CaliperDigitalResource object) {
+        public T object(Questionnaire object) {
             this.object = object;
             return self();
         }
 
         /**
-         * @param generated
-         * @return builder.
-         */
-        public T generated(CaliperDigitalResource generated) {
-            this.generated = generated;
-            return self();
-        }
-
-        /**
          * Client invokes build method in order to create an immutable profile object.
-         * @return a new ResourceManagementEvent instance.
+         * @return a new QuestionnaireEvent instance.
          */
-        public ResourceManagementEvent build() {
-            return new ResourceManagementEvent(this);
+        public QuestionnaireEvent build() {
+            return new QuestionnaireEvent(this);
         }
     }
 

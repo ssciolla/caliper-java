@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum Action implements CaliperAction {
     ABANDONED("Abandoned"),
+    ACCEPTED("Accepted"),
     ACTIVATED("Activated"),
     ADDED("Added"),
     ARCHIVED("Archived"),
@@ -41,6 +42,7 @@ public enum Action implements CaliperAction {
     COPIED("Copied"),
     CREATED("Created"),
     DEACTIVATED("Deactivated"),
+    DECLINED("Declined"),
     DELETED("Deleted"),
     DESCRIBED("Described"),
     DISABLED_CLOSED_CAPTIONING("DisabledClosedCaptioning"),
@@ -66,6 +68,8 @@ public enum Action implements CaliperAction {
     MUTED("Muted"),
     NAVIGATED_TO("NavigatedTo"),
     OPENED_POPOUT("OpenedPopout"),
+    OPTED_IN("OptedIn"),
+    OPTED_OUT("OptedOut"),
     PAUSED("Paused"),
     POSTED("Posted"),
     PRINTED("Printed"),
@@ -84,6 +88,7 @@ public enum Action implements CaliperAction {
     REWOUND("Rewound"),
     SAVED("Saved"),
     SEARCHED("Searched"),
+    SENT("Sent"),
     SHARED("Shared"),
     SHOWED("Showed"),
     SKIPPED("Skipped"),

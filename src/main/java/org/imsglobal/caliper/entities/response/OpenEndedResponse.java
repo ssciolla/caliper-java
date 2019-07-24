@@ -16,63 +16,56 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.entities.question;
+package org.imsglobal.caliper.entities.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.resource.AbstractDigitalResource;
-import org.joda.time.DateTime;
-
 import javax.annotation.Nullable;
 
-/**
- * This class provides a skeletal implementation of the Question interface
- * in order to minimize the effort required to implement the interface.
- */
-public abstract class AbstractQuestion extends AbstractDigitalResource implements CaliperQuestion {
+public class OpenEndedResponse extends AbstractResponse {
 
-    @JsonProperty("questionPosed")
-    private final String questionPosed;
+    @JsonProperty("value")
+    private final String value;
 
     /**
-     * @param builder apply builder object properties to the object.
+     * @param builder apply builder object properties to the OpenEndedResponse object.
      */
-    protected AbstractQuestion(Builder<?> builder) {
+    private OpenEndedResponse(Builder<?> builder) {
         super(builder);
-        this.questionPosed = builder.questionPosed;
+        this.value = builder.value;
     }
 
     /**
-     * @return the questionPosed
+     * @return value (String) of the OpenEndedResponse
      */
     @Nullable
-    public String getQuestionPosed() {
-        return questionPosed;
-    }
+    public String getValue() { return value; }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T>  {
-        private String questionPosed;
+    public static abstract class Builder<T extends Builder<T>> extends AbstractResponse.Builder<T>  {
+        private String value;
 
-        /*
-         * Constructor
+        /**
+         * Initialize type with default value.
          */
         public Builder() {
-            super.type(EntityType.QUESTION);
+            super.type(EntityType.OPEN_ENDED_RESPONSE);
+        }
+
+        public T value(String value) {
+            this.value = value;
+            return self();
         }
 
         /**
-         * @param questionPosed
-         * @return builder.
+         * Client invokes build method in order to create an immutable object.
+         * @return a new instance of OpenEndedResponse.
          */
-        public T questionPosed(String questionPosed) {
-            this.questionPosed = questionPosed;
-            return self();
+        public OpenEndedResponse build() {
+            return new OpenEndedResponse(this);
         }
     }
 
@@ -84,5 +77,13 @@ public abstract class AbstractQuestion extends AbstractDigitalResource implement
         protected Builder2 self() {
             return this;
         }
+    }
+
+    /**
+     * Static factory method.
+     * @return a new instance of the builder.
+     */
+    public static Builder<?> builder() {
+        return new Builder2();
     }
 }

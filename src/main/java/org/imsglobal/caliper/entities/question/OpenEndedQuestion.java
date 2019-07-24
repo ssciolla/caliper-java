@@ -18,61 +18,36 @@
 
 package org.imsglobal.caliper.entities.question;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.resource.AbstractDigitalResource;
-import org.joda.time.DateTime;
 
-import javax.annotation.Nullable;
-
-/**
- * This class provides a skeletal implementation of the Question interface
- * in order to minimize the effort required to implement the interface.
- */
-public abstract class AbstractQuestion extends AbstractDigitalResource implements CaliperQuestion {
-
-    @JsonProperty("questionPosed")
-    private final String questionPosed;
+public class OpenEndedQuestion extends AbstractQuestion {
 
     /**
-     * @param builder apply builder object properties to the object.
+     * @param builder apply builder object properties to the OpenEndedQuestion object.
      */
-    protected AbstractQuestion(Builder<?> builder) {
+    private OpenEndedQuestion(Builder<?> builder) {
         super(builder);
-        this.questionPosed = builder.questionPosed;
-    }
-
-    /**
-     * @return the questionPosed
-     */
-    @Nullable
-    public String getQuestionPosed() {
-        return questionPosed;
     }
 
     /**
      * Builder class provides a fluid interface for setting object properties.
-     * @param <T> builder
+     * @param <T> builder.
      */
-    public static abstract class Builder<T extends Builder<T>> extends AbstractDigitalResource.Builder<T>  {
-        private String questionPosed;
+    public static abstract class Builder<T extends Builder<T>> extends AbstractQuestion.Builder<T> {
 
-        /*
+        /**
          * Constructor
          */
         public Builder() {
-            super.type(EntityType.QUESTION);
+            super.type(EntityType.OPEN_ENDED_QUESTION);
         }
 
         /**
-         * @param questionPosed
-         * @return builder.
+         * Client invokes build method in order to create an immutable object.
+         * @return a new instance of the OpenEndedQuestion.
          */
-        public T questionPosed(String questionPosed) {
-            this.questionPosed = questionPosed;
-            return self();
+        public OpenEndedQuestion build() {
+            return new OpenEndedQuestion(this);
         }
     }
 
@@ -84,5 +59,13 @@ public abstract class AbstractQuestion extends AbstractDigitalResource implement
         protected Builder2 self() {
             return this;
         }
+    }
+
+    /**
+     * Static factory method.
+     * @return a new instance of the builder.
+     */
+    public static Builder<?> builder() {
+        return new Builder2();
     }
 }

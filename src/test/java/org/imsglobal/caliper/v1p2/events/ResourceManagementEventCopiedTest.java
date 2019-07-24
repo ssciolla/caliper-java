@@ -145,18 +145,18 @@ public class ResourceManagementEventCopiedTest {
      */
     private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
         return ResourceManagementEvent.builder()
-                .context(context)
-                .profile(profile)
-                .id(id)
-                .actor(actor)
-                .action(action)
-                .object(object)
-                .generated(generated)
-                .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
-                .edApp(edApp)
-                .group(group)
-                .membership(membership)
-                .session(session)
-                .build();
+            .context(context)
+            .profile(profile)
+            .id(id)
+            .actor(actor)
+            .action(action)
+            .object(object)
+            .generated(generated)
+            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .edApp(edApp)
+            .group(group)
+            .membership(membership)
+            .session(session)
+            .build();
     }
 }

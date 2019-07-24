@@ -32,10 +32,10 @@ import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.Questionnaire;
-import org.imsglobal.caliper.entities.resource.QuestionnaireItem;
+import org.imsglobal.caliper.entities.resource.SurveyInvitation;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.QuestionnaireEvent;
+import org.imsglobal.caliper.entities.survey.Survey;
+import org.imsglobal.caliper.events.SurveyInvitationEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -52,16 +52,16 @@ import java.util.List;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class QuestionnaireEventStartedTest {
+public class SurveyInvitationEventAcceptedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private Questionnaire object;
+    private SurveyInvitation object;
     private CourseSection group;
     private SoftwareApplication edApp;
     private Membership membership;
     private Session session;
-    private QuestionnaireEvent event;
+    private SurveyInvitationEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
     private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
@@ -69,26 +69,23 @@ public class QuestionnaireEventStartedTest {
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:23995ed4-3c6b-11e9-b210-d663bd873d93";
+        id = "urn:uuid:534afa10-3564-11e9-b210-d663bd873d93";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        QuestionnaireItem itemOne = QuestionnaireItem.builder()
-            .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/1"))
-            .build();
+        Person rater = Person.builder().id(BASE_IRI.concat("/users/112233")).build();
 
-        QuestionnaireItem itemTwo = QuestionnaireItem.builder()
-            .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/2"))
-            .build();
+        Survey survey = Survey.builder().id(BASE_IRI.concat("/survey/1")).build();
 
-        List<QuestionnaireItem> items = Lists.newArrayList();
-        items.add(itemOne);
-        items.add(itemTwo);
-
-        object = Questionnaire.builder()
-            .id(BASE_IRI.concat("/surveys/100/questionnaires/30"))
-            .items(items)
+        object = SurveyInvitation.builder()
+            .id(BASE_IRI.concat("/surveys/100/invitations/users/112233"))
+            .sentCount(1)
+            .dateSent(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .rater(rater)
+            .survey(survey)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
+
+        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
 
         group = CourseSection.builder()
             .id(SECTION_IRI)
@@ -101,22 +98,20 @@ public class QuestionnaireEventStartedTest {
 
         membership = Membership.builder()
             .id(SECTION_IRI.concat("/rosters/1"))
-            .roles(roles)
             .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
             .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
+            .roles(roles)
             .status(Status.ACTIVE)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         session = Session.builder()
-            .id(BASE_IRI.concat("/sessions/f095bbd391ea4a5dd639724a40b606e98a631823"))
-            .startedAtTime(new DateTime(2018, 11, 12, 10, 0, 0, 0, DateTimeZone.UTC))
+            .id(BASE_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
+            .startedAtTime(new DateTime(2018, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
-
         // Build event
-        event = buildEvent(Profile.SURVEY, Action.STARTED);
+        event = buildEvent(Profile.SURVEY, Action.ACCEPTED);
     }
 
     @Test
@@ -124,7 +119,7 @@ public class QuestionnaireEventStartedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventQuestionnaireStarted.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventSurveyInvitationAccepted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -134,19 +129,19 @@ public class QuestionnaireEventStartedTest {
     }
 
     /**
-     * Build QuestionnaireEvent.
+     * Build SurveyInvitationEvent.
      * @param profile, action
      * @return event
      */
-    private QuestionnaireEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return QuestionnaireEvent.builder()
+    private SurveyInvitationEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return SurveyInvitationEvent.builder()
             .context(context)
             .id(id)
             .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 12, 10, 15, 0, 0, DateTimeZone.UTC))
+            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)
             .membership(membership)

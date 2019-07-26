@@ -16,47 +16,53 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.events;
+package org.imsglobal.caliper.entities.resource;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.collect.ImmutableMap;
 
-public enum EventType implements CaliperEventType {
-    ANNOTATION("AnnotationEvent"),
-    ASSESSMENT("AssessmentEvent"),
-    ASSESSMENT_ITEM("AssessmentItemEvent"),
-    ASSIGNABLE("AssignableEvent"),
-    EVENT("Event"),
-    FEEDBACK("FeedbackEvent"),
-    FORUM("ForumEvent"),
-    MEDIA("MediaEvent"),
-    MESSAGE("MessageEvent"),
-    NAVIGATION("NavigationEvent"),
-    GRADE("GradeEvent"),
-    QUESTIONNAIRE("QuestionnaireEvent"),
-    QUESTIONNAIRE_ITEM("QuestionnaireItemEvent"),
-    READING("ReadingEvent"),
-    RESOURCE_MANAGEMENT("ResourceManagementEvent"),
-    SEARCH("SearchEvent"),
-    SESSION("SessionEvent"),
-    SURVEY("SurveyEvent"),
-    SURVEY_INVITATION("SurveyInvitationEvent"),
-    THREAD("ThreadEvent"),
-    TOOL_LAUNCH("ToolLaunchEvent"),
-    TOOL_USE("ToolUseEvent"),
-    VIEW("ViewEvent");
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * IMS LTI Message Types
+ */
+public enum LtiMessageType {
+    LTI_DEEP_LINKING_REQUEST("LtiDeepLinkingRequest"),
+    LTI_RESOURCE_LINK_REQUEST("LtiResourceLinkRequest");
 
     private final String value;
+    private static Map<String, LtiMessageType> lookup;
+
+    /**
+     * Create reverse lookup hash map
+     */
+    static {
+        Map<String, LtiMessageType> map = new HashMap<String, LtiMessageType>();
+        for (LtiMessageType constant : LtiMessageType.values()) {
+            map.put(constant.value(), constant);
+        }
+        lookup = ImmutableMap.copyOf(map);
+    }
 
     /**
      * Private constructor
      * @param value
      */
-    private EventType(final String value) {
+    private LtiMessageType(final String value) {
         this.value = value;
     }
 
     /**
-     * @return URI string
+     * @param key
+     * @return true if lookup returns a key match; false otherwise.
+     */
+    public static boolean hasKey(String key) {
+        return lookup.containsKey(key);
+    }
+
+    /**
+     * @return the URI value
      */
     @JsonValue
     public String value() {

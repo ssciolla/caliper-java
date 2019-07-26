@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.EntityType;
 import org.imsglobal.caliper.entities.TimePeriod;
 import javax.annotation.Nullable;
+
 import java.util.List;
 
 /**

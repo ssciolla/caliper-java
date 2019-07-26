@@ -22,34 +22,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.TimePeriod;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
-/**
- * Representation of a response to a multiple choice question that permits one or more
- * options to be selected.
- */
-public class MultipleResponseResponse extends AbstractResponse {
+public class MultiselectResponse extends AbstractResponse {
 
-    @JsonProperty("values")
-    private ImmutableList<String> values;
+    @JsonProperty("selections")
+    private final ImmutableList<String> selections;
 
     /**
-     * @param builder apply builder object properties to the Response object.
+     * @param builder apply builder object properties to the MultiselectResponse object.
      */
-    protected MultipleResponseResponse(Builder<?> builder) {
+    private MultiselectResponse(Builder<?> builder) {
         super(builder);
-        this.values = ImmutableList.copyOf(builder.values);
+        this.selections = ImmutableList.copyOf(builder.selections);
     }
 
     /**
-     * @return response values
+     * @return the rater's selected responses
      */
     @Nullable
-    public ImmutableList<String> getValues() {
-        return values;
+    public ImmutableList<String> getSelections() {
+        return selections;
     }
 
     /**
@@ -57,42 +51,28 @@ public class MultipleResponseResponse extends AbstractResponse {
      * @param <T> builder
      */
     public static abstract class Builder<T extends Builder<T>> extends AbstractResponse.Builder<T>  {
-        private List<String> values = Lists.newArrayList();
-        private TimePeriod timePeriod = new TimePeriod();
+        private List<String> selections = Lists.newArrayList();
 
         /**
          * Initialize type with default value.
          */
         public Builder() {
-            super.type(EntityType.MULTIPLERESPONSE);
+            super.type(EntityType.MULTISELECT_RESPONSE);
         }
 
-        /**
-         * @param values
-         * @return builder.
-         */
-        public T values(List<String> values) {
-            if(values != null) {
-                this.values.addAll(values);
+        public T selections(List<String> selections) {
+            if(selections != null) {
+                this.selections.addAll(selections);
             }
             return self();
         }
 
         /**
-         * @param value
-         * @return builder.
-         */
-        public T value(String value) {
-            this.values.add(value);
-            return self();
-        }
-
-        /**
          * Client invokes build method in order to create an immutable object.
-         * @return a new instance of MultipleResponseResponse.
+         * @return a new instance of MultiselectResponse.
          */
-        public MultipleResponseResponse build() {
-            return new MultipleResponseResponse(this);
+        public MultiselectResponse build() {
+            return new MultiselectResponse(this);
         }
     }
 

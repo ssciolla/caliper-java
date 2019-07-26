@@ -50,8 +50,8 @@ public class MultiselectQuestion extends AbstractQuestion {
     /**
      * @return number of points on MultiselectQuestion
      */
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Nullable
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public int getPoints() {
         return points;
     }

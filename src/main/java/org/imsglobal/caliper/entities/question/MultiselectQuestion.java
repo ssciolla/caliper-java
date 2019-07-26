@@ -18,6 +18,7 @@
 
 package org.imsglobal.caliper.entities.question;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -49,6 +50,7 @@ public class MultiselectQuestion extends AbstractQuestion {
     /**
      * @return number of points on MultiselectQuestion
      */
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Nullable
     public int getPoints() {
         return points;

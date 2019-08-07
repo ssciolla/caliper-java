@@ -70,7 +70,7 @@ public class Score extends AbstractEntity implements CaliperGeneratable {
      */
     @Nullable
     // @JsonSerialize(using=DoubleSerializer.class)
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public double getMaxScore() {
         return maxScore;
     }
@@ -80,7 +80,7 @@ public class Score extends AbstractEntity implements CaliperGeneratable {
      */
     @Nullable
     // @JsonSerialize(using=DoubleSerializer.class)
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public double getScoreGiven() {
         return scoreGiven;
     }

@@ -20,12 +20,16 @@ package org.imsglobal.caliper.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.context.JsonldContext;
+import org.imsglobal.caliper.identifiers.SystemIdentifier;
 import org.imsglobal.caliper.validators.EntityValidator;
 import org.joda.time.DateTime;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +62,9 @@ public abstract class AbstractEntity implements CaliperEntity, CaliperCoercible 
     @JsonProperty("dateModified")
     private final DateTime dateModified;
 
+    @JsonProperty("otherIdentifiers")
+    private final ImmutableList<SystemIdentifier> otherIdentifiers;
+
     @JsonProperty("extensions")
     private final Map<String, Object> extensions;
 
@@ -76,6 +83,7 @@ public abstract class AbstractEntity implements CaliperEntity, CaliperCoercible 
         this.description = builder.description;
         this.dateCreated = builder.dateCreated;
         this.dateModified = builder.dateModified;
+        this.otherIdentifiers = ImmutableList.copyOf(builder.otherIdentifiers);
         this.extensions = builder.extensions;
     }
 
@@ -144,6 +152,14 @@ public abstract class AbstractEntity implements CaliperEntity, CaliperCoercible 
     }
 
     /**
+     * @return the array of SystemIdentifiers
+     */
+    @Nullable
+    public ImmutableList<SystemIdentifier> getOtherIdentifiers() {
+        return otherIdentifiers;
+    }
+
+    /**
      * @return custom extensions object.
      */
     @Nullable
@@ -164,6 +180,7 @@ public abstract class AbstractEntity implements CaliperEntity, CaliperCoercible 
         private String description;
         private DateTime dateCreated;
         private DateTime dateModified;
+        private List<SystemIdentifier> otherIdentifiers = Lists.newArrayList();
         private Map<String, Object> extensions;
 
         /**
@@ -245,6 +262,17 @@ public abstract class AbstractEntity implements CaliperEntity, CaliperCoercible 
          */
         public T dateModified(DateTime dateModified) {
             this.dateModified = dateModified;
+            return self();
+        }
+
+        /**
+         * @param otherIdentifiers
+         * @return builder.
+         */
+        public T otherIdentifiers(List<SystemIdentifier> otherIdentifiers) {
+            if(otherIdentifiers != null) {
+                this.otherIdentifiers.addAll(otherIdentifiers);
+            }
             return self();
         }
 

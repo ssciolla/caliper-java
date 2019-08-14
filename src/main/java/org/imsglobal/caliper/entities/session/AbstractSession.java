@@ -24,6 +24,7 @@ import org.imsglobal.caliper.entities.AbstractEntity;
 import org.imsglobal.caliper.entities.EntityType;
 import org.imsglobal.caliper.entities.TimePeriod;
 import org.imsglobal.caliper.entities.agent.CaliperAgent;
+import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.validators.EntityValidator;
 import org.joda.time.DateTime;
 
@@ -38,6 +39,9 @@ public abstract class AbstractSession extends AbstractEntity implements CaliperS
     @JsonProperty("user")
     private final CaliperAgent user;
 
+    @JsonProperty("client")
+    private SoftwareApplication client;
+
     @JsonIgnore
     private TimePeriod timePeriod = new TimePeriod();
 
@@ -51,6 +55,7 @@ public abstract class AbstractSession extends AbstractEntity implements CaliperS
         EntityValidator.checkDuration(builder.timePeriod.getDuration());
 
         this.user = builder.user;
+        this.client = builder.client;
         this.timePeriod.setStartedAtTime(builder.timePeriod.getStartedAtTime());
         this.timePeriod.setEndedAtTime(builder.timePeriod.getEndedAtTime());
         this.timePeriod.setDuration(builder.timePeriod.getDuration());
@@ -62,6 +67,14 @@ public abstract class AbstractSession extends AbstractEntity implements CaliperS
     @Nullable
     public CaliperAgent getUser() {
         return user;
+    }
+
+    /**
+     * @return client
+     */
+    @Nullable
+    public SoftwareApplication getClient() {
+        return client;
     }
 
     /**
@@ -94,6 +107,7 @@ public abstract class AbstractSession extends AbstractEntity implements CaliperS
      */
     public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T>  {
         private CaliperAgent user;
+        private SoftwareApplication client;
         private TimePeriod timePeriod = new TimePeriod();
 
         /**
@@ -109,6 +123,15 @@ public abstract class AbstractSession extends AbstractEntity implements CaliperS
          */
         public T user(CaliperAgent user) {
             this.user = user;
+            return self();
+        }
+
+        /**
+         * @param client
+         * @return builder.
+         */
+        public T client(SoftwareApplication client) {
+            this.client = client;
             return self();
         }
 

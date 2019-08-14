@@ -27,15 +27,27 @@ import javax.annotation.Nullable;
 
 public class SoftwareApplication extends AbstractEntity implements CaliperAgent, CaliperReferable {
 
+    @JsonProperty("host")
+    private final String host;
+
+    @JsonProperty("ipAddress")
+    private final String ipAddress;
+
+    @JsonProperty("userAgent")
+    private final String userAgent;
+
     @JsonProperty("version")
     private final String version;
 
     /**
      * @param builder apply builder object properties to the object.
      */
-    protected SoftwareApplication(Builder<?> builder) {
+    private SoftwareApplication(Builder<?> builder) {
         super(builder);
         this.version = builder.version;
+        this.host = builder.host;
+        this.ipAddress = builder.ipAddress;
+        this.userAgent = builder.userAgent;
     }
 
     /**
@@ -47,11 +59,38 @@ public class SoftwareApplication extends AbstractEntity implements CaliperAgent,
     }
 
     /**
+     * @return the host
+     */
+    @Nullable
+    public String getHost() {
+        return host;
+    }
+
+    /**
+     * @return the ipAddress
+     */
+    @Nullable
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    /**
+     * @return the userAgent
+     */
+    @Nullable
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    /**
      * Builder class provides a fluid interface for setting object properties.
      * @param <T> builder.
      */
     public static abstract class Builder<T extends Builder<T>> extends AbstractEntity.Builder<T> {
         private String version;
+        private String host;
+        private String ipAddress;
+        private String userAgent;
 
         /**
          * Constructor
@@ -66,6 +105,33 @@ public class SoftwareApplication extends AbstractEntity implements CaliperAgent,
          */
         public T version(String version) {
             this.version = version;
+            return self();
+        }
+
+        /**
+         * @param host
+         * @return builder.
+         */
+        public T host(String host) {
+            this.host = host;
+            return self();
+        }
+
+        /**
+         * @param ipAddress
+         * @return builder.
+         */
+        public T ipAddress(String ipAddress) {
+            this.ipAddress = ipAddress;
+            return self();
+        }
+
+        /**
+         * @param userAgent
+         * @return builder.
+         */
+        public T userAgent(String userAgent) {
+            this.userAgent = userAgent;
             return self();
         }
 

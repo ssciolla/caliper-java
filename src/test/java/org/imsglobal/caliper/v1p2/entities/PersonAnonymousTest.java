@@ -37,16 +37,12 @@ import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 public class PersonAnonymousTest {
     private Person entity;
 
-    private static final String BASE_IRI = "https://example.edu";
-    private static final String BASE_TERM_IRI = "http://purl.imsglobal.org/caliper/";
-
-
     @Before
     public void setUp() throws Exception {
 
         entity = Person.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
-            .id(BASE_TERM_IRI.concat(EntityType.PERSON.value()))
+            .id(EntityType.PERSON.expandToIRI())
             .build();
     }
 

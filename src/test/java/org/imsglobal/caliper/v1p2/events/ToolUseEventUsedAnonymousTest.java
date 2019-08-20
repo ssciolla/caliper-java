@@ -57,16 +57,15 @@ public class ToolUseEventUsedAnonymousTest {
     private ToolUseEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String BASE_TERM_IRI = "http://purl.imsglobal.org/caliper/";
 
     @Before
     public void setUp() throws Exception {
 
         CourseSection anonymousSection = CourseSection.builder()
-            .id(BASE_TERM_IRI.concat(EntityType.COURSE_SECTION.value()))
+            .id(EntityType.COURSE_SECTION.expandToIRI())
             .build();
 
-        Person anonymousPerson = Person.builder().id(BASE_TERM_IRI.concat(EntityType.PERSON.value())).build();
+        Person anonymousPerson = Person.builder().id(EntityType.PERSON.expandToIRI()).build();
 
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
 
@@ -81,7 +80,7 @@ public class ToolUseEventUsedAnonymousTest {
         group = anonymousSection;
 
         membership = Membership.builder()
-            .id(BASE_TERM_IRI.concat(EntityType.MEMBERSHIP.value()))
+            .id(EntityType.MEMBERSHIP.expandToIRI())
             .member(anonymousPerson)
             .organization(anonymousSection)
             .status(Status.ACTIVE)

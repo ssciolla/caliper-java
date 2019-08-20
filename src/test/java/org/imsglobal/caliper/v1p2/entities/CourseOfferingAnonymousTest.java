@@ -38,14 +38,13 @@ public class CourseOfferingAnonymousTest {
     private CourseOffering entity;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String BASE_TERM_IRI = "http://purl.imsglobal.org/caliper/";
 
     @Before
     public void setUp() throws Exception {
 
         entity = CourseOffering.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
-            .id(BASE_TERM_IRI.concat(EntityType.COURSE_OFFERING.value()))
+            .id(EntityType.COURSE_OFFERING.expandToIRI())
             .build();
     }
 

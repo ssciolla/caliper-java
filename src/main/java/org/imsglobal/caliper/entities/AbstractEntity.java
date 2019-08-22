@@ -277,6 +277,15 @@ public abstract class AbstractEntity implements CaliperEntity, CaliperCoercible 
         }
 
         /**
+         * @param otherIdentifier
+         * @return builder.
+         */
+        public T otherIdentifier(SystemIdentifier otherIdentifier) {
+            this.otherIdentifiers.add(otherIdentifier);
+            return self();
+        }
+
+        /**
          * @param extensions
          * @return builder.
          */

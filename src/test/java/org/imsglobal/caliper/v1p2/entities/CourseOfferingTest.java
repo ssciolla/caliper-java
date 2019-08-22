@@ -53,16 +53,13 @@ public class CourseOfferingTest {
             .identifierType(SystemIdentifierType.LIS_SOURCED_ID)
             .build();
 
-        List<SystemIdentifier> otherIdentifiers = Lists.newArrayList();
-        otherIdentifiers.add(systemIdentifier);
-
         entity = CourseOffering.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(BASE_IRI.concat("/terms/201601/courses/7"))
             .courseNumber("CPS 435")
             .academicSession("Fall 2016")
             .name("CPS 435 Learning Analytics")
-            .otherIdentifiers(otherIdentifiers)
+            .otherIdentifier(systemIdentifier)
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
             .build();

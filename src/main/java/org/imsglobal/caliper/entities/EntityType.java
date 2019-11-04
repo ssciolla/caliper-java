@@ -19,6 +19,7 @@
 package org.imsglobal.caliper.entities;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import org.imsglobal.caliper.Namespace;
 
 public enum EntityType implements CaliperEntityType {
     AGENT("Agent"),
@@ -108,10 +109,15 @@ public enum EntityType implements CaliperEntityType {
     }
 
     /**
-     * @return URI string
+     * @return term string for Entity type
      */
     @JsonValue
     public String value() {
         return value;
     }
+
+    /**
+     * @return full IRI for the Caliper Entity type
+     */
+    public String expandToIRI() {return Namespace.CALIPER.value().concat(this.value());}
 }

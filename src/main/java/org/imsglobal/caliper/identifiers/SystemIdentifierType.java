@@ -16,35 +16,23 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.events;
+package org.imsglobal.caliper.identifiers;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.imsglobal.caliper.Namespace;
 
-public enum EventType implements CaliperEventType {
-    ANNOTATION("AnnotationEvent"),
-    ASSESSMENT("AssessmentEvent"),
-    ASSESSMENT_ITEM("AssessmentItemEvent"),
-    ASSIGNABLE("AssignableEvent"),
-    EVENT("Event"),
-    FEEDBACK("FeedbackEvent"),
-    FORUM("ForumEvent"),
-    MEDIA("MediaEvent"),
-    MESSAGE("MessageEvent"),
-    NAVIGATION("NavigationEvent"),
-    GRADE("GradeEvent"),
-    QUESTIONNAIRE("QuestionnaireEvent"),
-    QUESTIONNAIRE_ITEM("QuestionnaireItemEvent"),
-    READING("ReadingEvent"),
-    RESOURCE_MANAGEMENT("ResourceManagementEvent"),
-    SEARCH("SearchEvent"),
-    SESSION("SessionEvent"),
-    SURVEY("SurveyEvent"),
-    SURVEY_INVITATION("SurveyInvitationEvent"),
-    THREAD("ThreadEvent"),
-    TOOL_LAUNCH("ToolLaunchEvent"),
-    TOOL_USE("ToolUseEvent"),
-    VIEW("ViewEvent");
+public enum SystemIdentifierType {
+    ACCOUNT_USER_NAME("AccountUserName"),
+    EMAIL_ADDRESS("EmailAddress"),
+    LIS_SOURCED_ID("LisSourcedId"),
+    LTI_CONTEXT_ID("LtiContextId"),
+    LTI_DEPLOYMENT_ID("LtiDeploymentId"),
+    LTI_PLATFORM_ID("LtiPlatformId"),
+    LTI_TOOL_ID("LtiToolId"),
+    LTI_USER_ID("LtiUserId"),
+    ONE_ROSTER_SOURCED_ID("OneRosterSourcedId"),
+    OTHER("Other"),
+    SIS_SOURCED_ID("SisSourcedId"),
+    SYSTEM_ID("SystemId");
 
     private final String value;
 
@@ -52,20 +40,15 @@ public enum EventType implements CaliperEventType {
      * Private constructor
      * @param value
      */
-    private EventType(final String value) {
+    private SystemIdentifierType(final String value) {
         this.value = value;
     }
 
     /**
-     * @return term string for Event type
+     * @return URI string
      */
     @JsonValue
     public String value() {
         return value;
     }
-
-    /**
-     * @return full IRI for the Caliper Event type
-     */
-    public String expandToIRI() {return Namespace.CALIPER.value().concat(this.value());}
 }

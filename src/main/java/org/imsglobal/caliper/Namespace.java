@@ -16,35 +16,12 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.events;
+package org.imsglobal.caliper;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.imsglobal.caliper.Namespace;
 
-public enum EventType implements CaliperEventType {
-    ANNOTATION("AnnotationEvent"),
-    ASSESSMENT("AssessmentEvent"),
-    ASSESSMENT_ITEM("AssessmentItemEvent"),
-    ASSIGNABLE("AssignableEvent"),
-    EVENT("Event"),
-    FEEDBACK("FeedbackEvent"),
-    FORUM("ForumEvent"),
-    MEDIA("MediaEvent"),
-    MESSAGE("MessageEvent"),
-    NAVIGATION("NavigationEvent"),
-    GRADE("GradeEvent"),
-    QUESTIONNAIRE("QuestionnaireEvent"),
-    QUESTIONNAIRE_ITEM("QuestionnaireItemEvent"),
-    READING("ReadingEvent"),
-    RESOURCE_MANAGEMENT("ResourceManagementEvent"),
-    SEARCH("SearchEvent"),
-    SESSION("SessionEvent"),
-    SURVEY("SurveyEvent"),
-    SURVEY_INVITATION("SurveyInvitationEvent"),
-    THREAD("ThreadEvent"),
-    TOOL_LAUNCH("ToolLaunchEvent"),
-    TOOL_USE("ToolUseEvent"),
-    VIEW("ViewEvent");
+public enum Namespace {
+    CALIPER("http://purl.imsglobal.org/caliper/");
 
     private final String value;
 
@@ -52,20 +29,15 @@ public enum EventType implements CaliperEventType {
      * Private constructor
      * @param value
      */
-    private EventType(final String value) {
+    private Namespace(final String value) {
         this.value = value;
     }
 
     /**
-     * @return term string for Event type
+     * @return IRI string for namespace
      */
     @JsonValue
     public String value() {
         return value;
     }
-
-    /**
-     * @return full IRI for the Caliper Event type
-     */
-    public String expandToIRI() {return Namespace.CALIPER.value().concat(this.value());}
 }

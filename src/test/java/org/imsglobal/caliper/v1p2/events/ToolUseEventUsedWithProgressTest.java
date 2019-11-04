@@ -26,7 +26,13 @@ import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.*;
+import org.imsglobal.caliper.entities.agent.CourseOffering;
+import org.imsglobal.caliper.entities.agent.CourseSection;
+import org.imsglobal.caliper.entities.agent.Membership;
+import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.agent.Role;
+import org.imsglobal.caliper.entities.agent.SoftwareApplication;
+import org.imsglobal.caliper.entities.agent.Status;
 import org.imsglobal.caliper.entities.session.Session;
 import org.imsglobal.caliper.entities.use.AggregateMeasure;
 import org.imsglobal.caliper.entities.use.AggregateMeasureCollection;
@@ -164,8 +170,8 @@ public class ToolUseEventUsedWithProgressTest {
     }
 
     /**
-     * Build View event
-     * @param action
+     * Build Tool Use Event
+     * @param profile, action
      * @return event
      */
     private ToolUseEvent buildEvent(CaliperProfile profile, CaliperAction action) {

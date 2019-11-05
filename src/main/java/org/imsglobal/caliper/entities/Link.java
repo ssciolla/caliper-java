@@ -21,7 +21,7 @@ package org.imsglobal.caliper.entities;
 /**
  * Implementation of a Link entity
  */
-public class Link extends AbstractEntity {
+public class Link extends AbstractEntity implements CaliperTargetable {
 
     /**
      * @param builder apply builder object properties to the Link object.

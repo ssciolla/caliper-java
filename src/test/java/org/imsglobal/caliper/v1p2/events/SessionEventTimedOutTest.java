@@ -25,14 +25,10 @@ import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Person;
-import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.events.ToolUseEvent;
+import org.imsglobal.caliper.entities.session.Session;
+import org.imsglobal.caliper.events.SessionEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -47,48 +43,36 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ToolUseEventUsedAnonymousTest {
+public class SessionEventTimedOutTest {
     private JsonldContext context;
     private String id;
-    private Person actor;
-    private SoftwareApplication object, edApp;
-    private CourseSection group;
-    private Membership membership;
-    private ToolUseEvent event;
+    private SoftwareApplication actor, edApp;
+    private Session object;
+    private SessionEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
 
     @Before
     public void setUp() throws Exception {
-
-        CourseSection anonymousSection = CourseSection.builder()
-            .id(EntityType.COURSE_SECTION.expandToIRI())
-            .build();
-
-        Person anonymousPerson = Person.builder().id(EntityType.PERSON.expandToIRI()).build();
-
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
 
-        id = "urn:uuid:7c0fc54b-cf2a-426f-9203-b2c97fb77bfd";
+        id = "urn:uuid:4e61cf6c-ffbe-45bc-893f-afe7ad4079dc";
 
-        actor = anonymousPerson;
+        actor = SoftwareApplication.builder().id(BASE_IRI).build();
 
-        object = SoftwareApplication.builder().id(BASE_IRI).build();
-
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
-
-        group = anonymousSection;
-
-        membership = Membership.builder()
-            .id(EntityType.MEMBERSHIP.expandToIRI())
-            .member(anonymousPerson)
-            .organization(anonymousSection)
-            .status(Status.ACTIVE)
-            .role(Role.LEARNER)
+        object = Session.builder()
+            .id(BASE_IRI.concat("/sessions/7d6b88adf746f0692e2e873308b78c60fb13a864"))
+            .user(Person.builder().id(BASE_IRI.concat("/users/112233")).build())
+            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .endedAtTime(new DateTime(2016, 11, 15, 11, 15, 0, 0, DateTimeZone.UTC))
+            .duration("PT3600S")
             .build();
 
+        edApp = SoftwareApplication.builder().id(actor.getId()).coercedToId(true).build();
+
         // Build event
-        event = buildEvent(Profile.TOOL_USE, Action.USED);
+        event = buildEvent(Profile.SESSION, Action.TIMED_OUT);
     }
 
     @Test
@@ -96,8 +80,13 @@ public class ToolUseEventUsedAnonymousTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventToolUseUsedAnonymous.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventSessionTimedOut.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void sessionEventRejectsLikedAction() {
+        buildEvent(Profile.SESSION, Action.LIKED);
     }
 
     @After
@@ -106,22 +95,21 @@ public class ToolUseEventUsedAnonymousTest {
     }
 
     /**
-     * Build ToolUseEvent.
-     * @params profile, action
+     * Build SessionEvent.
+     * Note that the actor is the edApp and the membership of the actor is not specified.
+     * @param profile, action
      * @return event
      */
-    private ToolUseEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ToolUseEvent.builder()
+    private SessionEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return SessionEvent.builder()
             .context(context)
             .id(id)
             .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .eventTime(new DateTime(2016, 11, 15, 11, 15, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
-            .group(group)
-            .membership(membership)
             .build();
     }
 }

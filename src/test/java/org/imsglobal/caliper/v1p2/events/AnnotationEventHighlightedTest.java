@@ -23,7 +23,6 @@ import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
-import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Membership;
@@ -31,12 +30,13 @@ import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
+import org.imsglobal.caliper.entities.annotation.HighlightAnnotation;
+import org.imsglobal.caliper.entities.resource.Document;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.ResourceManagementEvent;
+import org.imsglobal.caliper.events.AnnotationEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
+import org.imsglobal.caliper.selectors.TextPositionSelector;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -49,67 +49,74 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ResourceManagementEventCreatedTest {
-    private JsonldContext context;
+public class AnnotationEventHighlightedTest {
+    private JsonldStringContext context;
     private String id;
     private Person actor;
-    private CourseSection section;
-    private DigitalResource object;
-    private DigitalResourceCollection collection;
+    private Document object;
+    private HighlightAnnotation generated;
+    private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
-    private ResourceManagementEvent event;
     private Session session;
-    private SoftwareApplication edApp;
+    private AnnotationEvent event;
 
-    private static final String BASE_IRI = "https://example.edu";
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
+    private static final String BASE_EDU_IRI = "https://example.edu";
+    private static final String BASE_COM_IRI = "https://example.com";
+    private static final String SECTION_IRI = BASE_EDU_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:0c81f804-62ee-4953-81c5-62d9579c4369";
-        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        collection = DigitalResourceCollection.builder()
-            .id(SECTION_IRI.concat("/resources/1"))
-            .name("Course Assets")
-            .isPartOf(CourseSection.builder().id(SECTION_IRI).build())
+        id = "urn:uuid:0067a052-9bb4-4b49-9d1a-87cd43da488a";
+
+        actor = Person.builder().id(BASE_EDU_IRI.concat("/users/554433")).build();
+        Person annotator = Person.builder().id(actor.getId()).coercedToId(true).build();
+
+        object = Document.builder()
+            .id(BASE_COM_IRI.concat("/#/texts/imscaliperimplguide"))
+            .name("IMS Caliper Implementation Guide")
+            .dateCreated(new DateTime(2016, 10, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .version("1.1")
             .build();
 
-        object = DigitalResource.builder()
-            .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
-            .name("Course Syllabus")
-            .creator(actor)
-            .mediaType("application/pdf")
-            .isPartOf(collection)
-            .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
+        generated = HighlightAnnotation.builder()
+            .id(BASE_COM_IRI.concat("/users/554433/texts/imscaliperimplguide/highlights?start=2300&end=2370"))
+            .annotated(Document.builder().id(object.getId()).coercedToId(true).build())
+            .annotator(annotator)
+            .selection(new TextPositionSelector(2300, 2370))
+            .selectionText("ISO 8601 formatted date and time expressed with millisecond precision.")
+            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
+        edApp = SoftwareApplication.builder()
+            .id(BASE_COM_IRI.concat("/reader"))
+            .name("ePub Reader")
+            .version("1.2.3").build();
 
         group = CourseSection.builder()
-            .id(SECTION_IRI)
+            .id(BASE_EDU_IRI.concat("/terms/201601/courses/7/sections/1"))
             .courseNumber("CPS 435-01")
-            .academicSession("Fall 2018")
+            .academicSession("Fall 2016")
             .build();
 
         membership = Membership.builder()
-            .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1/rosters/1"))
-            .member(Person.builder().id(actor.getId()).coercedToId(true).build())
-            .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
+            .id(SECTION_IRI.concat("/rosters/1"))
+            .member(annotator)
+            .organization(CourseSection.builder().id(group.getId()).coercedToId(true).build())
             .status(Status.ACTIVE)
-            .role(Role.INSTRUCTOR)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .role(Role.LEARNER)
+            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         session = Session.builder()
-            .id(BASE_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
-            .startedAtTime(new DateTime(2018, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
+            .id(BASE_COM_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         // Build event
-        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.CREATED);
+        event = buildEvent(Profile.ANNOTATION, Action.HIGHLIGHTED);
     }
 
     @Test
@@ -117,14 +124,12 @@ public class ResourceManagementEventCreatedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCreated.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventAnnotationHighlighted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void resourceManagementEventRejectsLaunchedAction() {
-        buildEvent(Profile.SURVEY, Action.LAUNCHED);
-    }
+    public void annotationEventRejectsSearchedAction() { buildEvent(Profile.ANNOTATION, Action.SEARCHED); }
 
     @After
     public void teardown() {
@@ -132,19 +137,20 @@ public class ResourceManagementEventCreatedTest {
     }
 
     /**
-     * Build ResourceManagementEvent.
+     * Build AnnotationEvent.
      * @param profile, action
      * @return event
      */
-    private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ResourceManagementEvent.builder()
+    private AnnotationEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return AnnotationEvent.builder()
             .context(context)
-            .profile(profile)
             .id(id)
+            .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .generated(generated)
+            .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)
             .membership(membership)

@@ -142,8 +142,8 @@ public class SearchEventSearchedTest {
     }
 
     /**
-     * Build View event
-     * @param action
+     * Build SearchEvent.
+     * @param profile, action
      * @return event
      */
     private SearchEvent buildEvent(CaliperProfile profile, CaliperAction action) {

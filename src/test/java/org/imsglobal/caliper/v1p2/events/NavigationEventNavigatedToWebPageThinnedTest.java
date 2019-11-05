@@ -28,13 +28,10 @@ import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Person;
-import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
+import org.imsglobal.caliper.entities.resource.WebPage;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.ResourceManagementEvent;
+import org.imsglobal.caliper.events.NavigationEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -49,67 +46,55 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ResourceManagementEventCreatedTest {
+public class NavigationEventNavigatedToWebPageThinnedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private CourseSection section;
-    private DigitalResource object;
-    private DigitalResourceCollection collection;
+    private WebPage object;
+    private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
-    private ResourceManagementEvent event;
+    private WebPage referrer;
     private Session session;
-    private SoftwareApplication edApp;
+    private NavigationEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
+    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:0c81f804-62ee-4953-81c5-62d9579c4369";
-        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        collection = DigitalResourceCollection.builder()
-            .id(SECTION_IRI.concat("/resources/1"))
-            .name("Course Assets")
-            .isPartOf(CourseSection.builder().id(SECTION_IRI).build())
+        id = "urn:uuid:71657137-8e6e-44f8-8499-e1c3df6810d2";
+
+        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build();
+
+        object = WebPage.builder()
+            .id(SECTION_IRI.concat("/pages/2"))
+            .coercedToId(true)
             .build();
 
-        object = DigitalResource.builder()
-            .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
-            .name("Course Syllabus")
-            .creator(actor)
-            .mediaType("application/pdf")
-            .isPartOf(collection)
-            .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
+        referrer = WebPage.builder()
+            .id(SECTION_IRI.concat("/pages/1"))
+            .coercedToId(true)
             .build();
 
         edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
 
-        group = CourseSection.builder()
-            .id(SECTION_IRI)
-            .courseNumber("CPS 435-01")
-            .academicSession("Fall 2018")
-            .build();
+        group = CourseSection.builder().id(SECTION_IRI).coercedToId(true).build();
 
         membership = Membership.builder()
-            .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1/rosters/1"))
-            .member(Person.builder().id(actor.getId()).coercedToId(true).build())
-            .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
-            .status(Status.ACTIVE)
-            .role(Role.INSTRUCTOR)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .id(SECTION_IRI.concat("/rosters/1"))
+            .coercedToId(true)
             .build();
 
         session = Session.builder()
             .id(BASE_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
-            .startedAtTime(new DateTime(2018, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
+            .coercedToId(true)
             .build();
 
         // Build event
-        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.CREATED);
+        event = buildEvent(Profile.READING, Action.NAVIGATED_TO);
     }
 
     @Test
@@ -117,13 +102,13 @@ public class ResourceManagementEventCreatedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCreated.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventNavigationNavigatedToWebPageThinned.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void resourceManagementEventRejectsLaunchedAction() {
-        buildEvent(Profile.SURVEY, Action.LAUNCHED);
+    public void navigationEventRejectsViewedAction() {
+        buildEvent(Profile.READING, Action.VIEWED);
     }
 
     @After
@@ -132,19 +117,20 @@ public class ResourceManagementEventCreatedTest {
     }
 
     /**
-     * Build ResourceManagementEvent.
+     * Build NavigationEvent.
      * @param profile, action
      * @return event
      */
-    private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ResourceManagementEvent.builder()
+    private NavigationEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return NavigationEvent.builder()
             .context(context)
-            .profile(profile)
             .id(id)
+            .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .referrer(referrer)
             .edApp(edApp)
             .group(group)
             .membership(membership)

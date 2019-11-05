@@ -25,7 +25,12 @@ import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.*;
+import org.imsglobal.caliper.entities.agent.CourseSection;
+import org.imsglobal.caliper.entities.agent.Membership;
+import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.agent.Role;
+import org.imsglobal.caliper.entities.agent.SoftwareApplication;
+import org.imsglobal.caliper.entities.agent.Status;
 import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
 import org.imsglobal.caliper.entities.session.Session;
@@ -42,8 +47,6 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
@@ -56,7 +59,6 @@ public class FeedbackEventCommentedTest {
     private Comment generated;
     private DigitalResourceCollection collection;
     private CourseSection group;
-    private List<CaliperAgent> creators;
     private Membership membership;
     private FeedbackEvent event;
     private Session session;
@@ -129,14 +131,19 @@ public class FeedbackEventCommentedTest {
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void feedbackEventRejectsCopiedAction() {
+        buildEvent(Profile.FEEDBACK, Action.COPIED);
+    }
+
     @After
     public void teardown() {
         event = null;
     }
 
     /**
-     * Build Media event.
-     * @param action
+     * Build FeedbackEvent.
+     * @param profile, action
      * @return event
      */
     private FeedbackEvent buildEvent(CaliperProfile profile, CaliperAction action) {

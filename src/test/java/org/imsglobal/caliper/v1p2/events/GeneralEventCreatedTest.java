@@ -25,14 +25,9 @@ import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Person;
-import org.imsglobal.caliper.entities.agent.Role;
-import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.events.ToolUseEvent;
+import org.imsglobal.caliper.entities.resource.Document;
+import org.imsglobal.caliper.events.Event;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -47,48 +42,33 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ToolUseEventUsedAnonymousTest {
+public class GeneralEventCreatedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private SoftwareApplication object, edApp;
-    private CourseSection group;
-    private Membership membership;
-    private ToolUseEvent event;
+    private Document object;
+    private Event event;
 
     private static final String BASE_IRI = "https://example.edu";
+    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
-
-        CourseSection anonymousSection = CourseSection.builder()
-            .id(EntityType.COURSE_SECTION.expandToIRI())
-            .build();
-
-        Person anonymousPerson = Person.builder().id(EntityType.PERSON.expandToIRI()).build();
-
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
 
-        id = "urn:uuid:7c0fc54b-cf2a-426f-9203-b2c97fb77bfd";
+        id = "urn:uuid:3a648e68-f00d-4c08-aa59-8738e1884f2c";
 
-        actor = anonymousPerson;
+        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        object = SoftwareApplication.builder().id(BASE_IRI).build();
-
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
-
-        group = anonymousSection;
-
-        membership = Membership.builder()
-            .id(EntityType.MEMBERSHIP.expandToIRI())
-            .member(anonymousPerson)
-            .organization(anonymousSection)
-            .status(Status.ACTIVE)
-            .role(Role.LEARNER)
+        object = Document.builder()
+            .id(SECTION_IRI.concat("/resources/123"))
+            .name("Course Syllabus")
+            .dateCreated(new DateTime(2016, 11, 12, 7, 15, 0, 0, DateTimeZone.UTC))
+            .version("1")
             .build();
 
         // Build event
-        event = buildEvent(Profile.TOOL_USE, Action.USED);
+        event = buildEvent(Profile.GENERAL, Action.CREATED);
     }
 
     @Test
@@ -96,7 +76,7 @@ public class ToolUseEventUsedAnonymousTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventToolUseUsedAnonymous.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventGeneralCreated.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -106,22 +86,19 @@ public class ToolUseEventUsedAnonymousTest {
     }
 
     /**
-     * Build ToolUseEvent.
-     * @params profile, action
+     * Build Event.
+     * @param profile, action
      * @return event
      */
-    private ToolUseEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ToolUseEvent.builder()
+    private Event buildEvent(CaliperProfile profile, CaliperAction action) {
+        return Event.builder()
             .context(context)
             .id(id)
             .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .edApp(edApp)
-            .group(group)
-            .membership(membership)
+            .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .build();
     }
 }

@@ -170,7 +170,7 @@ public class ToolUseEventUsedWithProgressTest {
     }
 
     /**
-     * Build Tool Use Event
+     * Build ToolUseEvent.
      * @param profile, action
      * @return event
      */

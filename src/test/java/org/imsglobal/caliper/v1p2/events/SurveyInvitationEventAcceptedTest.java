@@ -19,7 +19,6 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -46,8 +45,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
@@ -93,14 +90,11 @@ public class SurveyInvitationEventAcceptedTest {
             .academicSession("Fall 2018")
             .build();
 
-        List<Role> roles = Lists.newArrayList();
-        roles.add(Role.LEARNER);
-
         membership = Membership.builder()
             .id(SECTION_IRI.concat("/rosters/1"))
             .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
             .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
-            .roles(roles)
+            .role(Role.LEARNER)
             .status(Status.ACTIVE)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
@@ -121,6 +115,11 @@ public class SurveyInvitationEventAcceptedTest {
 
         String fixture = jsonFixture("fixtures/v1p2/caliperEventSurveyInvitationAccepted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void surveyInvitationEventRejectsOptedOutAction() {
+        buildEvent(Profile.SURVEY, Action.OPTED_OUT);
     }
 
     @After

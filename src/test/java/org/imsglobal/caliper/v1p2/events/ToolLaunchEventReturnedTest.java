@@ -25,16 +25,17 @@ import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
+import org.imsglobal.caliper.entities.Link;
 import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
+import org.imsglobal.caliper.entities.resource.LtiLink;
+import org.imsglobal.caliper.entities.session.LtiSession;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.ResourceManagementEvent;
+import org.imsglobal.caliper.events.ToolLaunchEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -49,18 +50,19 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ResourceManagementEventCreatedTest {
+public class ToolLaunchEventReturnedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private CourseSection section;
-    private DigitalResource object;
-    private DigitalResourceCollection collection;
+    private SoftwareApplication object;
+    private LtiLink referrer;
     private CourseSection group;
-    private Membership membership;
-    private ResourceManagementEvent event;
-    private Session session;
     private SoftwareApplication edApp;
+    private Membership membership;
+    private Session session;
+    private Link target;
+    private LtiSession federatedSession;
+    private ToolLaunchEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
     private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
@@ -68,25 +70,18 @@ public class ResourceManagementEventCreatedTest {
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:0c81f804-62ee-4953-81c5-62d9579c4369";
+        id = "urn:uuid:a2e8b214-4d4a-4456-bb4c-099945749117";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        collection = DigitalResourceCollection.builder()
-            .id(SECTION_IRI.concat("/resources/1"))
-            .name("Course Assets")
-            .isPartOf(CourseSection.builder().id(SECTION_IRI).build())
+        object = SoftwareApplication.builder()
+            .id("https://example.com/lti/tool")
             .build();
 
-        object = DigitalResource.builder()
-            .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
-            .name("Course Syllabus")
-            .creator(actor)
-            .mediaType("application/pdf")
-            .isPartOf(collection)
-            .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
-            .build();
+        edApp = SoftwareApplication.builder().id(BASE_IRI).build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
+        referrer = LtiLink.builder()
+            .id("https://tool.com/lti/123")
+            .build();
 
         group = CourseSection.builder()
             .id(SECTION_IRI)
@@ -95,11 +90,11 @@ public class ResourceManagementEventCreatedTest {
             .build();
 
         membership = Membership.builder()
-            .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1/rosters/1"))
-            .member(Person.builder().id(actor.getId()).coercedToId(true).build())
+            .id(SECTION_IRI.concat("/rosters/1"))
+            .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
             .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
+            .role(Role.LEARNER)
             .status(Status.ACTIVE)
-            .role(Role.INSTRUCTOR)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
@@ -108,8 +103,17 @@ public class ResourceManagementEventCreatedTest {
             .startedAtTime(new DateTime(2018, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
+        target = Link.builder().id(SECTION_IRI.concat("/pages/1")).build();
+
+        federatedSession = LtiSession.builder()
+            .id(BASE_IRI.concat("/lti/sessions/b533eb02823f31024e6b7f53436c42fb99b31241"))
+            .user(actor)
+            .dateCreated(new DateTime(2018, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2018, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .build();
+
         // Build event
-        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.CREATED);
+        event = buildEvent(Profile.TOOL_LAUNCH, Action.RETURNED);
     }
 
     @Test
@@ -117,13 +121,13 @@ public class ResourceManagementEventCreatedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCreated.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventToolLaunchReturned.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void resourceManagementEventRejectsLaunchedAction() {
-        buildEvent(Profile.SURVEY, Action.LAUNCHED);
+    public void toolLaunchEventRejectsNavigatedToAction() {
+        buildEvent(Profile.TOOL_LAUNCH, Action.NAVIGATED_TO);
     }
 
     @After
@@ -132,23 +136,26 @@ public class ResourceManagementEventCreatedTest {
     }
 
     /**
-     * Build ResourceManagementEvent.
+     * Build ToolLaunchEvent.
      * @param profile, action
      * @return event
      */
-    private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ResourceManagementEvent.builder()
+    private ToolLaunchEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return ToolLaunchEvent.builder()
             .context(context)
-            .profile(profile)
             .id(id)
+            .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .eventTime(new DateTime(2018, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
+            .referrer(referrer)
             .group(group)
             .membership(membership)
             .session(session)
+            .target(target)
+            .federatedSession(federatedSession)
             .build();
     }
 }

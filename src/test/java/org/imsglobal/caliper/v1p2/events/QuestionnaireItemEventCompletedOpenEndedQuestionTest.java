@@ -19,7 +19,6 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -48,8 +47,6 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
@@ -75,10 +72,6 @@ public class QuestionnaireItemEventCompletedOpenEndedQuestionTest {
         id = "urn:uuid:590f1ff2-3c6d-11e9-b210-d663bd873d93";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        List<String> categories = Lists.newArrayList();
-        categories.add("teaching effectiveness");
-        categories.add("Course structure");
-
         OpenEndedQuestion question = OpenEndedQuestion.builder()
             .id(ITEM_IRI.concat("/question"))
             .questionPosed("What would you change about your course?")
@@ -87,7 +80,8 @@ public class QuestionnaireItemEventCompletedOpenEndedQuestionTest {
         object = QuestionnaireItem.builder()
             .id(ITEM_IRI)
             .question(question)
-            .categories(categories)
+            .category("teaching effectiveness")
+            .category("Course structure")
             .weight(1.0)
             .build();
 
@@ -108,12 +102,9 @@ public class QuestionnaireItemEventCompletedOpenEndedQuestionTest {
             .academicSession("Fall 2018")
             .build();
 
-        List<Role> roles = Lists.newArrayList();
-        roles.add(Role.LEARNER);
-
         membership = Membership.builder()
             .id(SECTION_IRI.concat("/rosters/1"))
-            .roles(roles)
+            .role(Role.LEARNER)
             .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
             .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
             .status(Status.ACTIVE)
@@ -136,6 +127,11 @@ public class QuestionnaireItemEventCompletedOpenEndedQuestionTest {
 
         String fixture = jsonFixture("fixtures/v1p2/caliperEventQuestionnaireItemCompletedOpenEndedQuestion.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void questionnaireItemEventRejectsTimedOutAction() {
+        buildEvent(Profile.SURVEY, Action.TIMED_OUT);
     }
 
     @After

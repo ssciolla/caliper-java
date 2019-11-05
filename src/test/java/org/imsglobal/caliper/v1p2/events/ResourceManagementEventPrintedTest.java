@@ -49,13 +49,12 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ResourceManagementEventCreatedTest {
+public class ResourceManagementEventPrintedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
     private CourseSection section;
     private DigitalResource object;
-    private DigitalResourceCollection collection;
     private CourseSection group;
     private Membership membership;
     private ResourceManagementEvent event;
@@ -68,10 +67,10 @@ public class ResourceManagementEventCreatedTest {
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:0c81f804-62ee-4953-81c5-62d9579c4369";
+        id = "urn:uuid:d3543a73-e307-4190-a755-5ce7b3187bc5";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        collection = DigitalResourceCollection.builder()
+        DigitalResourceCollection collection = DigitalResourceCollection.builder()
             .id(SECTION_IRI.concat("/resources/1"))
             .name("Course Assets")
             .isPartOf(CourseSection.builder().id(SECTION_IRI).build())
@@ -109,7 +108,7 @@ public class ResourceManagementEventCreatedTest {
             .build();
 
         // Build event
-        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.CREATED);
+        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.PRINTED);
     }
 
     @Test
@@ -117,7 +116,7 @@ public class ResourceManagementEventCreatedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCreated.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementPrinted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

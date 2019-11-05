@@ -31,10 +31,13 @@ import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
+import org.imsglobal.caliper.entities.outcome.Attempt;
+import org.imsglobal.caliper.entities.resource.Assessment;
+import org.imsglobal.caliper.entities.resource.AssessmentItem;
+import org.imsglobal.caliper.entities.response.CaliperResponse;
+import org.imsglobal.caliper.entities.response.FillinBlankResponse;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.ResourceManagementEvent;
+import org.imsglobal.caliper.events.AssessmentItemEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -46,80 +49,109 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ResourceManagementEventCopiedTest {
+public class AssessmentItemEventCompletedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private CourseSection section;
-    private DigitalResource object;
-    private DigitalResource generated;
-    private DigitalResourceCollection collection;
+    private AssessmentItem object;
+    private CaliperResponse generated;
+    private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
-    private ResourceManagementEvent event;
     private Session session;
-    private SoftwareApplication edApp;
+    private AssessmentItemEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
+    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:d3543a73-e307-4190-a755-5ce7b3187bc5";
+
+        id = "urn:uuid:e5891791-3d27-4df1-a272-091806a43dfb";
+
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        collection = DigitalResourceCollection.builder()
-            .id(SECTION_IRI.concat("/resources/1"))
-            .name("Course Assets")
-            .isPartOf(CourseSection.builder().id(SECTION_IRI).build())
+        object = AssessmentItem.builder()
+            .id(SECTION_IRI.concat("/assess/1/items/3"))
+            .name("Assessment Item 3")
+            .isPartOf(Assessment.builder().id(SECTION_IRI.concat("/assess/1")).build())
+            .version("1.0")
+            .dateToStartOn(new DateTime(2016, 11, 14, 5, 0, 0, 0, DateTimeZone.UTC))
+            .dateToSubmit(new DateTime(2016, 11, 18, 11, 59, 59, 0, DateTimeZone.UTC))
+            .maxAttempts(2)
+            .maxSubmits(2)
+            .maxScore(1)
+            .isTimeDependent(false)
+            .version("1.0")
             .build();
 
-        object = DigitalResource.builder()
-            .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
-            .name("Course Syllabus")
-            .creator(actor)
-            .mediaType("application/pdf")
-            .isPartOf(collection)
-            .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
+        Assessment assessment = Assessment.builder().id(SECTION_IRI.concat("/assess/1")).build();
+
+        Attempt assessmentAttempt = Attempt.builder()
+            .id(assessment.getId().concat("/users/554433/attempts/1"))
+            .coercedToId(true)
             .build();
 
-        generated = DigitalResource.builder()
-            .id(SECTION_IRI.concat("/resources/1/syllabus_copy.pdf"))
-            .name("Course Syllabus (copy)")
-            .creator(actor)
-            .mediaType("application/pdf")
-            .isPartOf(collection)
-            .dateCreated(new DateTime(2018, 11, 15, 10, 05, 0, 0, DateTimeZone.UTC))
+        Attempt attempt = Attempt.builder()
+            .id(SECTION_IRI.concat("/assess/1/items/3/users/554433/attempts/1"))
+            .assignee(Person.builder().id(actor.getId()).coercedToId(true).build())
+            .assignable(AssessmentItem.builder()
+                .id(object.getId())
+                .name(object.getName())
+                .isPartOf(assessment)
+                .build())
+            .isPartOf(assessmentAttempt)
+            .count(1)
+            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
+            .endedAtTime(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
             .build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
+        List<String> values = new ArrayList<String>();
+        values.add("subject");
+        values.add("object");
+        values.add("predicate");
+
+        generated = FillinBlankResponse.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/assess/1/items/3/users/554433/responses/1"))
+            .attempt(attempt)
+            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
+            .endedAtTime(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
+            .values(values)
+            .build();
+
+        edApp = SoftwareApplication.builder().id(BASE_IRI).version("v2").build();
 
         group = CourseSection.builder()
             .id(SECTION_IRI)
             .courseNumber("CPS 435-01")
-            .academicSession("Fall 2018")
+            .academicSession("Fall 2016")
             .build();
 
         membership = Membership.builder()
-            .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1/rosters/1"))
+            .id(SECTION_IRI.concat("/rosters/1"))
             .member(Person.builder().id(actor.getId()).coercedToId(true).build())
             .organization(CourseSection.builder().id(group.getId()).coercedToId(true).build())
             .status(Status.ACTIVE)
-            .role(Role.INSTRUCTOR)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .role(Role.LEARNER)
+            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         session = Session.builder()
             .id(BASE_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
-            .startedAtTime(new DateTime(2018, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         // Build event
-        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.COPIED);
+        event = buildEvent(Profile.ASSESSMENT, Action.COMPLETED);
     }
 
     @Test
@@ -127,13 +159,13 @@ public class ResourceManagementEventCopiedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCopied.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventAssessmentItemCompleted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void resourceManagementEventRejectsLaunchedAction() {
-        buildEvent(Profile.SURVEY, Action.LAUNCHED);
+    @Test(expected = IllegalArgumentException.class)
+    public void assessmentItemEventRejectsChangedSizeAction() {
+        buildEvent(Profile.ASSESSMENT, Action.CHANGED_SIZE);
     }
 
     @After
@@ -142,20 +174,21 @@ public class ResourceManagementEventCopiedTest {
     }
 
     /**
-     * Build ResourceManagementEvent.
+     * Build AssessmentItemEvent.
+     *
      * @param profile, action
      * @return event
      */
-    private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ResourceManagementEvent.builder()
+    private AssessmentItemEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return AssessmentItemEvent.builder()
             .context(context)
-            .profile(profile)
             .id(id)
             .actor(actor)
+            .profile(profile)
             .action(action)
             .object(object)
             .generated(generated)
-            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .eventTime(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)
             .membership(membership)

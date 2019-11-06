@@ -60,10 +60,23 @@ public class RatingScaleResponse extends AbstractResponse {
             super.type(EntityType.RATING_SCALE_RESPONSE);
         }
 
+        /**
+         * @param selections
+         * @return builder.
+         */
         public T selections(List<String> selections) {
             if (selections != null) {
                 this.selections.addAll(selections);
             }
+            return self();
+        }
+
+        /**
+         * @param selection
+         * @return builder.
+         */
+        public T selection(String selection) {
+            this.selections.add(selection);
             return self();
         }
 

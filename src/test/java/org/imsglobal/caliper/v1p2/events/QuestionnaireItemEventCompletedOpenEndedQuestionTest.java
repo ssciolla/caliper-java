@@ -75,19 +75,19 @@ public class QuestionnaireItemEventCompletedOpenEndedQuestionTest {
         id = "urn:uuid:590f1ff2-3c6d-11e9-b210-d663bd873d93";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        List<String> categories = Lists.newArrayList();
-        categories.add("teaching effectiveness");
-        categories.add("Course structure");
-
         OpenEndedQuestion question = OpenEndedQuestion.builder()
             .id(ITEM_IRI.concat("/question"))
             .questionPosed("What would you change about your course?")
             .build();
 
+        List<String> categories = Lists.newArrayList();
+        categories.add("teaching effectiveness");
+
         object = QuestionnaireItem.builder()
             .id(ITEM_IRI)
             .question(question)
             .categories(categories)
+            .category("Course structure")
             .weight(1.0)
             .build();
 
@@ -108,12 +108,9 @@ public class QuestionnaireItemEventCompletedOpenEndedQuestionTest {
             .academicSession("Fall 2018")
             .build();
 
-        List<Role> roles = Lists.newArrayList();
-        roles.add(Role.LEARNER);
-
         membership = Membership.builder()
             .id(SECTION_IRI.concat("/rosters/1"))
-            .roles(roles)
+            .role(Role.LEARNER)
             .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
             .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
             .status(Status.ACTIVE)
@@ -121,9 +118,9 @@ public class QuestionnaireItemEventCompletedOpenEndedQuestionTest {
             .build();
 
         session = Session.builder()
-                .id(BASE_IRI.concat("/sessions/f095bbd391ea4a5dd639724a40b606e98a631823"))
-                .startedAtTime(new DateTime(2018, 11, 12, 10, 0, 0, 0, DateTimeZone.UTC))
-                .build();
+            .id(BASE_IRI.concat("/sessions/f095bbd391ea4a5dd639724a40b606e98a631823"))
+            .startedAtTime(new DateTime(2018, 11, 12, 10, 0, 0, 0, DateTimeZone.UTC))
+            .build();
 
         // Build event
         event = buildEvent(Profile.SURVEY, Action.COMPLETED);
@@ -136,6 +133,11 @@ public class QuestionnaireItemEventCompletedOpenEndedQuestionTest {
 
         String fixture = jsonFixture("fixtures/v1p2/caliperEventQuestionnaireItemCompletedOpenEndedQuestion.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void questionnaireItemEventRejectsTimedOutAction() {
+        buildEvent(Profile.SURVEY, Action.TIMED_OUT);
     }
 
     @After

@@ -19,20 +19,17 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Person;
-import org.imsglobal.caliper.entities.agent.Role;
-import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.events.ToolUseEvent;
+import org.imsglobal.caliper.entities.resource.Document;
+import org.imsglobal.caliper.events.Event;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -44,51 +41,63 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ToolUseEventUsedAnonymousTest {
+public class GeneralEventModifiedExtendedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private SoftwareApplication object, edApp;
-    private CourseSection group;
-    private Membership membership;
-    private ToolUseEvent event;
+    private Document object;
+    private Map<String, Object> extensions;
+    private Event event;
 
     private static final String BASE_IRI = "https://example.edu";
+    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
-
-        CourseSection anonymousSection = CourseSection.builder()
-            .id(EntityType.COURSE_SECTION.expandToIRI())
-            .build();
-
-        Person anonymousPerson = Person.builder().id(EntityType.PERSON.expandToIRI()).build();
-
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
 
-        id = "urn:uuid:7c0fc54b-cf2a-426f-9203-b2c97fb77bfd";
+        DateTime dateCreated = new DateTime(2016, 11, 12, 7, 15, 0, 0, DateTimeZone.UTC);
 
-        actor = anonymousPerson;
+        id = "urn:uuid:5973dcd9-3126-4dcc-8fd8-8153a155361c";
 
-        object = SoftwareApplication.builder().id(BASE_IRI).build();
+        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
-
-        group = anonymousSection;
-
-        membership = Membership.builder()
-            .id(EntityType.MEMBERSHIP.expandToIRI())
-            .member(anonymousPerson)
-            .organization(anonymousSection)
-            .status(Status.ACTIVE)
-            .role(Role.LEARNER)
+        object = Document.builder()
+            .id(SECTION_IRI.concat("/resources/123?version=3"))
+            .name("Course Syllabus")
+            .dateCreated(dateCreated)
+            .dateModified(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .version("3")
             .build();
 
+        Document versionTwo = Document.builder()
+            .id("https://example.edu/terms/201601/courses/7/sections/1/resources/123?version=2")
+            .dateCreated(dateCreated)
+            .dateModified(new DateTime(2016, 11, 13, 11, 0, 0, 0, DateTimeZone.UTC))
+            .version("2")
+            .build();
+
+        Document versionOne = Document.builder()
+            .id("https://example.edu/terms/201601/courses/7/sections/1/resources/123?version=1")
+            .dateCreated(dateCreated)
+            .version("1")
+            .build();
+
+        Document[] versionArray = {versionOne, versionTwo};
+        List<Document> versions = Lists.newArrayList();
+        versions.addAll(Arrays.asList(versionArray));
+        extensions = Maps.newHashMap();
+        extensions.put("archive", versions);
+
         // Build event
-        event = buildEvent(Profile.TOOL_USE, Action.USED);
+        event = buildEvent(Profile.GENERAL, Action.MODIFIED);
     }
 
     @Test
@@ -96,13 +105,8 @@ public class ToolUseEventUsedAnonymousTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventToolUseUsedAnonymous.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventGeneralModifiedExtended.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void toolUseEventRejectsNavigatedToAction() {
-        buildEvent(Profile.TOOL_USE, Action.NAVIGATED_TO);
     }
 
     @After
@@ -111,22 +115,20 @@ public class ToolUseEventUsedAnonymousTest {
     }
 
     /**
-     * Build ToolUseEvent.
-     * @params profile, action
+     * Build Event.
+     * @param profile, action
      * @return event
      */
-    private ToolUseEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ToolUseEvent.builder()
+    private Event buildEvent(CaliperProfile profile, CaliperAction action) {
+        return Event.builder()
             .context(context)
             .id(id)
             .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .edApp(edApp)
-            .group(group)
-            .membership(membership)
+            .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+            .extensions(extensions)
             .build();
     }
 }

@@ -74,6 +74,15 @@ public class TagAnnotation extends AbstractAnnotation {
         }
 
         /**
+         * @param tag
+         * @return builder.
+         */
+        public T tag(String tag) {
+            this.tags.add(tag);
+            return self();
+        }
+
+        /**
          * Client invokes build method in order to create an immutable object.
          * @return a new instance of the TagAnnotation.
          */

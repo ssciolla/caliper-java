@@ -31,10 +31,13 @@ import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.search.Query;
-import org.imsglobal.caliper.entities.search.SearchResponse;
+import org.imsglobal.caliper.entities.outcome.Attempt;
+import org.imsglobal.caliper.entities.resource.Assessment;
+import org.imsglobal.caliper.entities.resource.AssessmentItem;
+import org.imsglobal.caliper.entities.response.CaliperResponse;
+import org.imsglobal.caliper.entities.response.FillinBlankResponse;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.SearchEvent;
+import org.imsglobal.caliper.events.AssessmentItemEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -46,90 +49,125 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class SearchEventSearchedTest {
+public class AssessmentItemEventCompletedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private Person creator;
-    private Query query;
-    private SoftwareApplication catalog;
-    private SoftwareApplication object;
-    private SearchResponse generated;
+    private AssessmentItem object;
+    private CaliperResponse generated;
     private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
     private Session session;
-    private SearchEvent event;
+    private AssessmentItemEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String BASE_CATALOG_IRI = "https://example.edu/catalog";
+    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:cb3878ed-8240-4c6d-9fee-77221810f5e4";
+
+        id = "urn:uuid:e5891791-3d27-4df1-a272-091806a43dfb";
+
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
-        creator = Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build();
-        object = SoftwareApplication.builder().id(BASE_CATALOG_IRI).build();
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
-        catalog = SoftwareApplication.builder().id(BASE_CATALOG_IRI).coercedToId(true).build();
 
-        query = Query.builder()
-            .id(BASE_IRI.concat("/users/554433/search?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
-            .creator(creator)
-            .searchTarget(catalog)
-            .searchTerms("IMS AND (Caliper OR Analytics)")
-            .dateCreated(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+        object = AssessmentItem.builder()
+            .id(SECTION_IRI.concat("/assess/1/items/3"))
+            .name("Assessment Item 3")
+            .isPartOf(Assessment.builder().id(SECTION_IRI.concat("/assess/1")).build())
+            .version("1.0")
+            .dateToStartOn(new DateTime(2016, 11, 14, 5, 0, 0, 0, DateTimeZone.UTC))
+            .dateToSubmit(new DateTime(2016, 11, 18, 11, 59, 59, 0, DateTimeZone.UTC))
+            .maxAttempts(2)
+            .maxSubmits(2)
+            .maxScore(1)
+            .isTimeDependent(false)
+            .version("1.0")
             .build();
 
-        generated = SearchResponse.builder()
-            .id(BASE_IRI.concat("/users/554433/response?query=IMS%20AND%20%28Caliper%20OR%20Analytics%29"))
-            .searchProvider(edApp)
-            .query(query)
-            .searchTarget(catalog)
-            .searchResultsItemCount(3)
+        Assessment assessment = Assessment.builder().id(SECTION_IRI.concat("/assess/1")).build();
+
+        Attempt assessmentAttempt = Attempt.builder()
+            .id(assessment.getId().concat("/users/554433/attempts/1"))
+            .coercedToId(true)
             .build();
+
+        Attempt attempt = Attempt.builder()
+            .id(SECTION_IRI.concat("/assess/1/items/3/users/554433/attempts/1"))
+            .assignee(Person.builder().id(actor.getId()).coercedToId(true).build())
+            .assignable(
+                AssessmentItem.builder()
+                .id(object.getId())
+                .name(object.getName())
+                .isPartOf(assessment)
+                .build()
+            )
+            .isPartOf(assessmentAttempt)
+            .count(1)
+            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
+            .endedAtTime(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
+            .build();
+
+        List<String> values = new ArrayList<String>();
+        values.add("subject");
+        values.add("object");
+
+        generated = FillinBlankResponse.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/assess/1/items/3/users/554433/responses/1"))
+            .attempt(attempt)
+            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
+            .endedAtTime(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
+            .values(values)
+            .value("predicate")
+            .build();
+
+        edApp = SoftwareApplication.builder().id(BASE_IRI).version("v2").build();
 
         group = CourseSection.builder()
-            .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1"))
+            .id(SECTION_IRI)
             .courseNumber("CPS 435-01")
-            .academicSession("Fall 2018")
+            .academicSession("Fall 2016")
             .build();
 
         membership = Membership.builder()
-            .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1/rosters/1"))
+            .id(SECTION_IRI.concat("/rosters/1"))
             .member(Person.builder().id(actor.getId()).coercedToId(true).build())
             .organization(CourseSection.builder().id(group.getId()).coercedToId(true).build())
             .status(Status.ACTIVE)
             .role(Role.LEARNER)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         session = Session.builder()
             .id(BASE_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
-            .startedAtTime(new DateTime(2018, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         // Build event
-        event = buildEvent(Profile.SEARCH, Action.SEARCHED);
+        event = buildEvent(Profile.ASSESSMENT, Action.COMPLETED);
     }
 
     @Test
     public void caliperEventSerializesToJSON() throws Exception {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
-
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventSearchSearched.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventAssessmentItemCompleted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void searchEventRejectsNavigatedToAction() {
-        buildEvent(Profile.SEARCH, Action.NAVIGATED_TO);
+    @Test(expected = IllegalArgumentException.class)
+    public void assessmentItemEventRejectsChangedSizeAction() {
+        buildEvent(Profile.ASSESSMENT, Action.CHANGED_SIZE);
     }
 
     @After
@@ -138,20 +176,20 @@ public class SearchEventSearchedTest {
     }
 
     /**
-     * Build SearchEvent.
+     * Build AssessmentItemEvent.
      * @param profile, action
      * @return event
      */
-    private SearchEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return SearchEvent.builder()
+    private AssessmentItemEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return AssessmentItemEvent.builder()
             .context(context)
-            .profile(profile)
             .id(id)
             .actor(actor)
+            .profile(profile)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .generated(generated)
+            .eventTime(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)
             .membership(membership)

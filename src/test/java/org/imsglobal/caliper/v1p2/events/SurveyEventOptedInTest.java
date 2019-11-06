@@ -19,7 +19,6 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -46,8 +45,6 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
@@ -68,7 +65,9 @@ public class SurveyEventOptedInTest {
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
+
         id = "urn:uuid:4bfb7726-3564-11e9-b210-d663bd873d93";
+
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
         object = Survey.builder().id(BASE_IRI.concat("/survey/1")).build();
@@ -81,14 +80,11 @@ public class SurveyEventOptedInTest {
             .academicSession("Fall 2018")
             .build();
 
-        List<Role> roles = Lists.newArrayList();
-        roles.add(Role.LEARNER);
-
         membership = Membership.builder()
             .id(SECTION_IRI.concat("/rosters/1"))
             .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
             .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
-            .roles(roles)
+            .role(Role.LEARNER)
             .status(Status.ACTIVE)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();

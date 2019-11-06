@@ -19,7 +19,6 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -27,15 +26,13 @@ import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Person;
-import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.Questionnaire;
-import org.imsglobal.caliper.entities.resource.QuestionnaireItem;
-import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.QuestionnaireEvent;
+import org.imsglobal.caliper.entities.outcome.Attempt;
+import org.imsglobal.caliper.entities.outcome.Score;
+import org.imsglobal.caliper.entities.resource.Assessment;
+import org.imsglobal.caliper.entities.resource.AssessmentItem;
+import org.imsglobal.caliper.events.GradeEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -47,73 +44,77 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class QuestionnaireEventStartedTest {
+public class GradeEventGradedItemTest {
     private JsonldContext context;
     private String id;
-    private Person actor;
-    private Questionnaire object;
+    private SoftwareApplication actor, edApp;
+    private Person learner;
+    private Attempt object;
+    private Score generated;
     private CourseSection group;
-    private SoftwareApplication edApp;
-    private Membership membership;
-    private Session session;
-    private QuestionnaireEvent event;
+    private GradeEvent event;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
+    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:23995ed4-3c6b-11e9-b210-d663bd873d93";
-        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        QuestionnaireItem itemOne = QuestionnaireItem.builder()
-            .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/1"))
+        id = "urn:uuid:12c05c4e-253f-4073-9f29-5786f3ff3f36";
+
+        actor = SoftwareApplication.builder().id(BASE_IRI.concat("/autograder")).version("v2").build();
+        learner = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
+
+        Assessment assessment = Assessment.builder()
+            .id(SECTION_IRI.concat("/assess/1"))
             .build();
 
-        QuestionnaireItem itemTwo = QuestionnaireItem.builder()
-            .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/2"))
+        AssessmentItem assessmentItem = AssessmentItem.builder()
+            .id(SECTION_IRI.concat("/assess/1/items/3"))
+            .name("Assessment Item 3")
+            .isPartOf(assessment)
             .build();
 
-        List<QuestionnaireItem> items = Lists.newArrayList();
-        items.add(itemOne);
-
-        object = Questionnaire.builder()
-            .id(BASE_IRI.concat("/surveys/100/questionnaires/30"))
-            .items(items)
-            .item(itemTwo)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+        Attempt parentAttempt = Attempt.builder()
+            .id(SECTION_IRI.concat("/assess/1/users/554433/attempts/1"))
+            .coercedToId(true)
             .build();
 
-        group = CourseSection.builder()
-            .id(SECTION_IRI)
-            .courseNumber("CPS 435-01")
-            .academicSession("Fall 2018")
+        object = Attempt.builder()
+            .id(SECTION_IRI.concat("/assess/1/items/3/users/554433/attempts/1"))
+            .assignable(assessmentItem)
+            .assignee(learner)
+            .count(1)
+            .isPartOf(parentAttempt)
+            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
+            .endedAtTime(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
             .build();
 
-        membership = Membership.builder()
-            .id(SECTION_IRI.concat("/rosters/1"))
-            .role(Role.LEARNER)
-            .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
-            .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
-            .status(Status.ACTIVE)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .build();
-
-        session = Session.builder()
-            .id(BASE_IRI.concat("/sessions/f095bbd391ea4a5dd639724a40b606e98a631823"))
-            .startedAtTime(new DateTime(2018, 11, 12, 10, 0, 0, 0, DateTimeZone.UTC))
+        generated = Score.builder()
+            .id(SECTION_IRI.concat("/assess/1/items/3/users/554433/attempts/1/scores/1"))
+            .attempt(Attempt.builder().id(SECTION_IRI.concat("/assess/1/users/554433/attempts/1")).coercedToId(true).build())
+            .maxScore(5)
+            .scoreGiven(5)
+            .scoredBy(SoftwareApplication.builder().id(BASE_IRI.concat("/autograder")).coercedToId(true).build())
+            .comment("auto-graded exam")
+            .dateCreated(new DateTime(2016, 11, 15, 10, 55, 5, 0, DateTimeZone.UTC))
             .build();
 
         edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
 
-        // Build event
-        event = buildEvent(Profile.SURVEY, Action.STARTED);
+        group = CourseSection.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1"))
+            .courseNumber("CPS 435-01")
+            .academicSession("Fall 2016")
+            .build();
+
+        // Build Outcome Event
+        event = buildEvent(Profile.GRADING, Action.GRADED);
     }
 
     @Test
@@ -121,13 +122,13 @@ public class QuestionnaireEventStartedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventQuestionnaireStarted.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventGradeGradedItem.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void questionnaireEventRejectsCommentedAction() {
-        buildEvent(Profile.SURVEY, Action.COMMENTED);
+    public void gradeEventRejectsHidAction() {
+        buildEvent(Profile.GRADING, Action.HID);
     }
 
     @After
@@ -136,23 +137,22 @@ public class QuestionnaireEventStartedTest {
     }
 
     /**
-     * Build QuestionnaireEvent.
+     * Build GradeEvent.
      * @param profile, action
      * @return event
      */
-    private QuestionnaireEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return QuestionnaireEvent.builder()
+    private GradeEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return GradeEvent.builder()
             .context(context)
             .id(id)
             .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 12, 10, 15, 0, 0, DateTimeZone.UTC))
+            .generated(generated)
             .edApp(edApp)
             .group(group)
-            .membership(membership)
-            .session(session)
+            .eventTime(new DateTime(2016, 11, 15, 10, 57, 6, 0, DateTimeZone.UTC))
             .build();
     }
 }

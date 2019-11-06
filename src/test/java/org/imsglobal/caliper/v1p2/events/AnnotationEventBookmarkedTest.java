@@ -31,10 +31,10 @@ import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.DigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
+import org.imsglobal.caliper.entities.annotation.BookmarkAnnotation;
+import org.imsglobal.caliper.entities.resource.Page;
 import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.ResourceManagementEvent;
+import org.imsglobal.caliper.events.AnnotationEvent;
 import org.imsglobal.caliper.profiles.CaliperProfile;
 import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
@@ -49,67 +49,72 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class ResourceManagementEventCreatedTest {
+public class AnnotationEventBookmarkedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
-    private CourseSection section;
-    private DigitalResource object;
-    private DigitalResourceCollection collection;
+    private Page object;
+    private BookmarkAnnotation generated;
+    private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
-    private ResourceManagementEvent event;
     private Session session;
-    private SoftwareApplication edApp;
+    private AnnotationEvent event;
 
-    private static final String BASE_IRI = "https://example.edu";
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
+    private static final String BASE_EDU_IRI = "https://example.edu";
+    private static final String BASE_COM_IRI = "https://example.com";
+    private static final String SECTION_IRI = BASE_EDU_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
-        id = "urn:uuid:0c81f804-62ee-4953-81c5-62d9579c4369";
-        actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
-        collection = DigitalResourceCollection.builder()
-            .id(SECTION_IRI.concat("/resources/1"))
-            .name("Course Assets")
-            .isPartOf(CourseSection.builder().id(SECTION_IRI).build())
+        id = "urn:uuid:d4618c23-d612-4709-8d9a-478d87808067";
+
+        actor = Person.builder().id(BASE_EDU_IRI.concat("/users/554433")).build();
+        Person annotator = Person.builder().id(actor.getId()).coercedToId(true).build();
+
+        object = Page.builder()
+            .id(BASE_COM_IRI.concat("/#/texts/imscaliperimplguide/cfi/6/10!/4/2/2/2@0:0"))
+            .name("IMS Caliper Implementation Guide, pg 5")
+            .version("1.1")
             .build();
 
-        object = DigitalResource.builder()
-            .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
-            .name("Course Syllabus")
-            .creator(actor)
-            .mediaType("application/pdf")
-            .isPartOf(collection)
-            .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
+        generated = BookmarkAnnotation.builder()
+            .id(BASE_COM_IRI.concat("/users/554433/texts/imscaliperimplguide/bookmarks/1"))
+            .annotated(Page.builder().id(object.getId()).coercedToId(true).build())
+            .annotator(annotator)
+            .bookmarkNotes("Caliper profiles model discrete learning activities or supporting activities that facilitate learning.")
+            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
+        edApp = SoftwareApplication.builder()
+            .id(BASE_COM_IRI.concat("/reader"))
+            .name("ePub Reader")
+            .version("1.2.3").build();
 
         group = CourseSection.builder()
             .id(SECTION_IRI)
             .courseNumber("CPS 435-01")
-            .academicSession("Fall 2018")
+            .academicSession("Fall 2016")
             .build();
 
         membership = Membership.builder()
-            .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1/rosters/1"))
-            .member(Person.builder().id(actor.getId()).coercedToId(true).build())
-            .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
+            .id(SECTION_IRI.concat("/rosters/1"))
+            .member(annotator)
+            .organization(CourseSection.builder().id(group.getId()).coercedToId(true).build())
             .status(Status.ACTIVE)
-            .role(Role.INSTRUCTOR)
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .role(Role.LEARNER)
+            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         session = Session.builder()
-            .id(BASE_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
-            .startedAtTime(new DateTime(2018, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
+            .id(BASE_COM_IRI.concat("/sessions/1f6442a482de72ea6ad134943812bff564a76259"))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         // Build event
-        event = buildEvent(Profile.RESOURCE_MANAGEMENT, Action.CREATED);
+        event = buildEvent(Profile.ANNOTATION, Action.BOOKMARKED);
     }
 
     @Test
@@ -117,14 +122,12 @@ public class ResourceManagementEventCreatedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEventResourceManagementCreated.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEventAnnotationBookmarked.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void resourceManagementEventRejectsLaunchedAction() {
-        buildEvent(Profile.SURVEY, Action.LAUNCHED);
-    }
+    public void annotationEventRejectsCompletedAction() { buildEvent(Profile.ANNOTATION, Action.COMPLETED); }
 
     @After
     public void teardown() {
@@ -132,19 +135,20 @@ public class ResourceManagementEventCreatedTest {
     }
 
     /**
-     * Build ResourceManagementEvent.
+     * Build AnnotationEvent.
      * @param profile, action
      * @return event
      */
-    private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {
-        return ResourceManagementEvent.builder()
+    private AnnotationEvent buildEvent(CaliperProfile profile, CaliperAction action) {
+        return AnnotationEvent.builder()
             .context(context)
-            .profile(profile)
             .id(id)
+            .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)
-            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .generated(generated)
+            .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)
             .membership(membership)

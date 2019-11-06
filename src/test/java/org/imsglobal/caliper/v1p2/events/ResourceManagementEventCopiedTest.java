@@ -25,7 +25,12 @@ import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.*;
+import org.imsglobal.caliper.entities.agent.CourseSection;
+import org.imsglobal.caliper.entities.agent.Membership;
+import org.imsglobal.caliper.entities.agent.Person;
+import org.imsglobal.caliper.entities.agent.Role;
+import org.imsglobal.caliper.entities.agent.SoftwareApplication;
+import org.imsglobal.caliper.entities.agent.Status;
 import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
 import org.imsglobal.caliper.entities.session.Session;
@@ -41,9 +46,6 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
@@ -56,7 +58,6 @@ public class ResourceManagementEventCopiedTest {
     private DigitalResource generated;
     private DigitalResourceCollection collection;
     private CourseSection group;
-    private List<CaliperAgent> creators;
     private Membership membership;
     private ResourceManagementEvent event;
     private Session session;
@@ -70,20 +71,17 @@ public class ResourceManagementEventCopiedTest {
         context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
         id = "urn:uuid:d3543a73-e307-4190-a755-5ce7b3187bc5";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
-        creators = new ArrayList<CaliperAgent>();
-        creators.add(actor);
-        section = CourseSection.builder().id(SECTION_IRI).build();
 
         collection = DigitalResourceCollection.builder()
             .id(SECTION_IRI.concat("/resources/1"))
             .name("Course Assets")
-            .isPartOf(section)
+            .isPartOf(CourseSection.builder().id(SECTION_IRI).build())
             .build();
 
         object = DigitalResource.builder()
             .id(SECTION_IRI.concat("/resources/1/syllabus.pdf"))
             .name("Course Syllabus")
-            .creators(creators)
+            .creator(actor)
             .mediaType("application/pdf")
             .isPartOf(collection)
             .dateCreated(new DateTime(2018, 8, 2, 11, 32, 0, 0, DateTimeZone.UTC))
@@ -92,7 +90,7 @@ public class ResourceManagementEventCopiedTest {
         generated = DigitalResource.builder()
             .id(SECTION_IRI.concat("/resources/1/syllabus_copy.pdf"))
             .name("Course Syllabus (copy)")
-            .creators(creators)
+            .creator(actor)
             .mediaType("application/pdf")
             .isPartOf(collection)
             .dateCreated(new DateTime(2018, 11, 15, 10, 05, 0, 0, DateTimeZone.UTC))
@@ -133,14 +131,19 @@ public class ResourceManagementEventCopiedTest {
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void resourceManagementEventRejectsLaunchedAction() {
+        buildEvent(Profile.SURVEY, Action.LAUNCHED);
+    }
+
     @After
     public void teardown() {
         event = null;
     }
 
     /**
-     * Build Media event.
-     * @param action
+     * Build ResourceManagementEvent.
+     * @param profile, action
      * @return event
      */
     private ResourceManagementEvent buildEvent(CaliperProfile profile, CaliperAction action) {

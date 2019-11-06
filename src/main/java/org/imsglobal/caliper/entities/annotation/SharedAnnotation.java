@@ -75,6 +75,15 @@ public class SharedAnnotation extends AbstractAnnotation {
         }
 
         /**
+         * @param withAgent
+         * @return builder.
+         */
+        public T withAgent(CaliperAgent withAgent) {
+            this.withAgents.add(withAgent);
+            return self();
+        }
+
+        /**
          * Client invokes build method in order to create an immutable object.
          * @return a new instance of the SharedAnnotation.
          */

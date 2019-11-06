@@ -108,6 +108,24 @@ public class MultiselectQuestion extends AbstractQuestion {
         }
 
         /**
+         * @param itemLabel
+         * @return builder.
+         */
+        public T itemLabel(String itemLabel) {
+            this.itemLabels.add(itemLabel);
+            return self();
+        }
+
+        /**
+         * @param itemValue
+         * @return builder.
+         */
+        public T itemValue(String itemValue) {
+            this.itemValues.add(itemValue);
+            return self();
+        }
+
+        /**
          * Client invokes build method in order to create an immutable object.
          * @return a new instance of the MultiselectQuestion.
          */

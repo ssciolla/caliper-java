@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.imsglobal.caliper.entities.EntityType;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * This class provides a skeletal implementation of the Resource interface

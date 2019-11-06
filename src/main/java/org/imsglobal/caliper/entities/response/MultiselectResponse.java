@@ -68,6 +68,15 @@ public class MultiselectResponse extends AbstractResponse {
         }
 
         /**
+         * @param selection
+         * @return builder.
+         */
+        public T selection(String selection) {
+            this.selections.add(selection);
+            return self();
+        }
+        
+        /**
          * Client invokes build method in order to create an immutable object.
          * @return a new instance of MultiselectResponse.
          */

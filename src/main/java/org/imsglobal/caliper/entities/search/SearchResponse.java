@@ -19,13 +19,10 @@
 package org.imsglobal.caliper.entities.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.entities.*;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class SearchResponse extends AbstractEntity implements CaliperGeneratable {
 

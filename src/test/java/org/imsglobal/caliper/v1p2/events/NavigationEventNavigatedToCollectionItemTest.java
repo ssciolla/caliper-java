@@ -19,6 +19,7 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -45,6 +46,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
@@ -74,10 +77,13 @@ public class NavigationEventNavigatedToCollectionItemTest {
 
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
+        List<String> keywords = Lists.newArrayList();
+        keywords.add("collection");
+
         object = DigitalResourceCollection.builder()
             .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/resources/2"))
             .name("Video Collection")
-            .keyword("collection")
+            .keywords(keywords)
             .keyword("videos")
             .dateCreated(dateCreated)
             .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))

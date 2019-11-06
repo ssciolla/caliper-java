@@ -19,6 +19,7 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -45,6 +46,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
@@ -77,9 +80,12 @@ public class QuestionnaireEventStartedTest {
             .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/2"))
             .build();
 
+        List<QuestionnaireItem> items = Lists.newArrayList();
+        items.add(itemOne);
+
         object = Questionnaire.builder()
             .id(BASE_IRI.concat("/surveys/100/questionnaires/30"))
-            .item(itemOne)
+            .items(items)
             .item(itemTwo)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();

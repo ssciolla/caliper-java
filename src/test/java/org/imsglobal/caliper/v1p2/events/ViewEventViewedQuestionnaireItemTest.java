@@ -19,6 +19,7 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -45,6 +46,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import java.util.List;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
@@ -77,10 +80,13 @@ public class ViewEventViewedQuestionnaireItemTest {
             .questionPosed("What would you change about your course?")
             .build();
 
+        List<String> categories = Lists.newArrayList();
+        categories.add("teaching effectiveness");
+
         object = QuestionnaireItem.builder()
             .id(ITEM_IRI)
             .question(question)
-            .category("teaching effectiveness")
+            .categories(categories)
             .category("Course structure")
             .weight(1.0)
             .build();

@@ -71,7 +71,6 @@ public class AnnotationEventBookmarkedTest {
 
         id = "urn:uuid:d4618c23-d612-4709-8d9a-478d87808067";
 
-
         actor = Person.builder().id(BASE_EDU_IRI.concat("/users/554433")).build();
         Person annotator = Person.builder().id(actor.getId()).coercedToId(true).build();
 

@@ -160,7 +160,7 @@ public class ToolUseEventUsedWithProgressTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void viewEventRejectsNavigatedToAction() {
+    public void toolUseEventRejectsNavigatedToAction() {
         buildEvent(Profile.TOOL_USE, Action.NAVIGATED_TO);
     }
 

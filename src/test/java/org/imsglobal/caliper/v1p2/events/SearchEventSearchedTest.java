@@ -25,7 +25,6 @@ import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.CaliperEntity;
 import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Person;
@@ -47,8 +46,6 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
@@ -58,7 +55,6 @@ public class SearchEventSearchedTest {
     private Person actor;
     private Person creator;
     private Query query;
-    private List<CaliperEntity> results;
     private SoftwareApplication catalog;
     private SoftwareApplication object;
     private SearchResponse generated;
@@ -132,7 +128,7 @@ public class SearchEventSearchedTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void viewEventRejectsNavigatedToAction() {
+    public void searchEventRejectsNavigatedToAction() {
         buildEvent(Profile.SEARCH, Action.NAVIGATED_TO);
     }
 
@@ -148,18 +144,18 @@ public class SearchEventSearchedTest {
      */
     private SearchEvent buildEvent(CaliperProfile profile, CaliperAction action) {
         return SearchEvent.builder()
-                .context(context)
-                .profile(profile)
-                .id(id)
-                .actor(actor)
-                .action(action)
-                .object(object)
-                .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
-                .generated(generated)
-                .edApp(edApp)
-                .group(group)
-                .membership(membership)
-                .session(session)
-                .build();
+            .context(context)
+            .profile(profile)
+            .id(id)
+            .actor(actor)
+            .action(action)
+            .object(object)
+            .eventTime(new DateTime(2018, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .generated(generated)
+            .edApp(edApp)
+            .group(group)
+            .membership(membership)
+            .session(session)
+            .build();
     }
 }

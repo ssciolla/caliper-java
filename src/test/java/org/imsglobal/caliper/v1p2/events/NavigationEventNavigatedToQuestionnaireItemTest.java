@@ -46,8 +46,6 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.prefs.BackingStoreException;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
@@ -84,7 +82,6 @@ public class NavigationEventNavigatedToQuestionnaireItemTest {
             .category("Course structure")
             .weight(1.0)
             .build();
-
 
         edApp = SoftwareApplication.builder().id(BASE_IRI).coercedToId(true).build();
 

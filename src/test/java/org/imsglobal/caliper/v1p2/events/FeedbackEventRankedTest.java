@@ -19,7 +19,7 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.fest.util.Lists;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -101,19 +101,19 @@ public class FeedbackEventRankedTest {
         itemLabels.add("Strongly Disagree");
         itemLabels.add("Disagree");
         itemLabels.add("Agree");
-        itemLabels.add("Strongly Agree");
 
         List<String> itemValues = Lists.newArrayList();
         itemValues.add("-2");
         itemValues.add("-1");
         itemValues.add("1");
-        itemValues.add("2");
 
         scale = LikertScale.builder()
             .id(BASE_IRI.concat("/scale/2"))
             .scalePoints(4)
             .itemLabels(itemLabels)
+            .itemLabel("Strongly Agree")
             .itemValues(itemValues)
+            .itemValue("2")
             .build();
 
         question = RatingScaleQuestion.builder()

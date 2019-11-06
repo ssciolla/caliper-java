@@ -58,7 +58,6 @@ public class AnnotationEventTaggedTest {
     private Person actor;
     private Page object;
     private TagAnnotation generated;
-    private List<String> tags;
     private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
@@ -87,16 +86,18 @@ public class AnnotationEventTaggedTest {
         List<String> tags = new ArrayList<>();
         tags.add("profile");
         tags.add("event");
-        tags.add("entity");
 
         generated = TagAnnotation.builder()
             .id(BASE_COM_IRI.concat("/users/554433/texts/imscaliperimplguide/tags/3"))
-            .annotated(Page.builder()
+            .annotated(
+                Page.builder()
                 .id(BASE_COM_IRI.concat("/#/texts/imscaliperimplguide/cfi/6/10!/4/2/2/2@0:0"))
                 .coercedToId(true)
-                .build())
+                .build()
+            )
             .annotator(annotator)
             .tags(tags)
+            .tag("entity")
             .dateCreated(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .build();
 

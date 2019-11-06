@@ -102,11 +102,13 @@ public class AssessmentItemEventCompletedTest {
         Attempt attempt = Attempt.builder()
             .id(SECTION_IRI.concat("/assess/1/items/3/users/554433/attempts/1"))
             .assignee(Person.builder().id(actor.getId()).coercedToId(true).build())
-            .assignable(AssessmentItem.builder()
+            .assignable(
+                AssessmentItem.builder()
                 .id(object.getId())
                 .name(object.getName())
                 .isPartOf(assessment)
-                .build())
+                .build()
+            )
             .isPartOf(assessmentAttempt)
             .count(1)
             .dateCreated(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
@@ -117,7 +119,6 @@ public class AssessmentItemEventCompletedTest {
         List<String> values = new ArrayList<String>();
         values.add("subject");
         values.add("object");
-        values.add("predicate");
 
         generated = FillinBlankResponse.builder()
             .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/assess/1/items/3/users/554433/responses/1"))
@@ -126,6 +127,7 @@ public class AssessmentItemEventCompletedTest {
             .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 2, 0, DateTimeZone.UTC))
             .endedAtTime(new DateTime(2016, 11, 15, 10, 15, 12, 0, DateTimeZone.UTC))
             .values(values)
+            .value("predicate")
             .build();
 
         edApp = SoftwareApplication.builder().id(BASE_IRI).version("v2").build();
@@ -175,7 +177,6 @@ public class AssessmentItemEventCompletedTest {
 
     /**
      * Build AssessmentItemEvent.
-     *
      * @param profile, action
      * @return event
      */

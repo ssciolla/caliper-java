@@ -77,7 +77,6 @@ public class ForumEventSubscribedThinnedTest {
             .coercedToId(true)
             .build();
 
-
         membership = Membership.builder()
             .id(BASE_IRI.concat("/terms/201801/courses/7/sections/1/rosters/1"))
             .coercedToId(true)

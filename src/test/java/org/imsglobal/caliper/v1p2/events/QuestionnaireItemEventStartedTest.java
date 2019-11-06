@@ -19,6 +19,7 @@
 package org.imsglobal.caliper.v1p2.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.actions.CaliperAction;
@@ -47,6 +48,8 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import java.util.List;
+
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
@@ -71,16 +74,22 @@ public class QuestionnaireItemEventStartedTest {
         id = "urn:uuid:23995ed4-3c6b-11e9-b210-d663bd873d93";
         actor = Person.builder().id(BASE_IRI.concat("/users/554433")).build();
 
+        List<String> itemLabels = Lists.newArrayList();
+        itemLabels.add("Strongly Disagree");
+        itemLabels.add("Disagree");
+        itemLabels.add("Agree");
+
+        List<String> itemValues = Lists.newArrayList();
+        itemValues.add("-2");
+        itemValues.add("-1");
+        itemValues.add("1");
+
         LikertScale scale = LikertScale.builder()
             .id(BASE_IRI.concat("/scale/2"))
             .scalePoints(4)
-            .itemLabel("Strongly Disagree")
-            .itemLabel("Disagree")
-            .itemLabel("Agree")
+            .itemLabels(itemLabels)
             .itemLabel("Strongly Agree")
-            .itemValue("-2")
-            .itemValue("-1")
-            .itemValue("1")
+            .itemValues(itemValues)
             .itemValue("2")
             .build();
 
@@ -90,10 +99,13 @@ public class QuestionnaireItemEventStartedTest {
             .scale(scale)
             .build();
 
+        List<String> categories = Lists.newArrayList();
+        categories.add("teaching effectiveness");
+
         object = QuestionnaireItem.builder()
             .id(ITEM_IRI)
             .question(question)
-            .category("teaching effectiveness")
+            .categories(categories)
             .category("Course structure")
             .weight(1.0)
             .build();

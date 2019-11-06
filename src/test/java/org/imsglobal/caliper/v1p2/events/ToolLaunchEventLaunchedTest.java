@@ -102,14 +102,11 @@ public class ToolLaunchEventLaunchedTest {
             .academicSession("Fall 2018")
             .build();
 
-        List<Role> roles = Lists.newArrayList();
-        roles.add(Role.LEARNER);
-
         membership = Membership.builder()
             .id(SECTION_IRI.concat("/rosters/1"))
             .member(Person.builder().id(BASE_IRI.concat("/users/554433")).coercedToId(true).build())
             .organization(CourseSection.builder().id(SECTION_IRI).coercedToId(true).build())
-            .roles(roles)
+            .role(Role.LEARNER)
             .status(Status.ACTIVE)
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();

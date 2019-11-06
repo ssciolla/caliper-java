@@ -100,6 +100,11 @@ public class ToolUseEventUsedAnonymousTest {
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void toolUseEventRejectsNavigatedToAction() {
+        buildEvent(Profile.TOOL_USE, Action.NAVIGATED_TO);
+    }
+
     @After
     public void teardown() {
         event = null;

@@ -54,19 +54,19 @@ public class RatingScaleQuestionTest {
         labels.add("Strongly Disagree");
         labels.add("Disagree");
         labels.add("Agree");
-        labels.add("Strongly Agree");
 
         values = Lists.newArrayList();
         values.add("-2");
         values.add("-1");
         values.add("1");
-        values.add("2");
 
         scale = LikertScale.builder()
             .id(BASE_IRI.concat("/scale/2"))
             .scalePoints(4)
             .itemLabels(labels)
+            .itemLabel("Strongly Agree")
             .itemValues(values)
+            .itemValue("2")
             .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 

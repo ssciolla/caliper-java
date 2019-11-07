@@ -23,10 +23,8 @@ import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.CaliperAgent;
 import org.imsglobal.caliper.entities.agent.CourseOffering;
 import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
 import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
 import org.imsglobal.caliper.entities.resource.VideoObject;
@@ -45,16 +43,13 @@ import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class DigitalResourceCollectionTest {
-    private DigitalResourceCollection collection;
     private CourseOffering course;
     private CourseSection section;
-    private Person actor;
-    private List<CaliperAgent> creators;
     private List<CaliperDigitalResource> resources;
     private List<String> keywords;
-    private DigitalResourceCollection entity;
     private VideoObject video1;
     private VideoObject video2;
+    private DigitalResourceCollection entity;
 
     private static final String BASE_IRI = "https://example.edu";
     private static final String COURSE_IRI = BASE_IRI.concat("/terms/201601/courses/7");
@@ -97,7 +92,6 @@ public class DigitalResourceCollectionTest {
             .build();
 
         resources = Lists.newArrayList();
-        resources.add(video1);
         resources.add(video2);
 
         entity = DigitalResourceCollection.builder()
@@ -106,6 +100,7 @@ public class DigitalResourceCollectionTest {
             .name("Video Collection")
             .keywords(keywords)
             .items(resources)
+            .item(video1)
             .isPartOf(section)
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))

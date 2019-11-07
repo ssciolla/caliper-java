@@ -34,7 +34,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.util.List;
-import java.util.Arrays;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
@@ -43,20 +42,18 @@ public class MultiselectResponseTest {
     private MultiselectResponse entity;
 
     private static final String BASE_IRI = "https://example.edu";
+    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
-        String[] selectionArray = {
-            "https://example.edu/terms/201801/courses/7/sections/1/objectives/1",
-            "https://example.edu/terms/201801/courses/7/sections/1/objectives/2",
-        };
         List<String> selections = Lists.newArrayList();
-        selections.addAll(Arrays.asList(selectionArray));
+        selections.add(SECTION_IRI.concat("/objectives/1"));
 
         entity = MultiselectResponse.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/5/users/554433/responses/5"))
             .selections(selections)
+            .selection(SECTION_IRI.concat("/objectives/2"))
             .startedAtTime(new DateTime(2018, 8, 1, 5, 55, 48, 0, DateTimeZone.UTC))
             .endedAtTime(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .duration("PT4M12S")

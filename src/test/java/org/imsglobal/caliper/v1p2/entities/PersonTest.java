@@ -79,7 +79,7 @@ public class PersonTest {
             .extensions(extensionsForFour)
             .build();
 
-        SystemIdentifier[] systemIdentifierArray = { identifierOne,  identifierTwo, identifierThree, identifierFour };
+        SystemIdentifier[] systemIdentifierArray = { identifierOne,  identifierTwo, identifierThree };
 
         List<SystemIdentifier> otherIdentifiers = Lists.newArrayList();
         otherIdentifiers.addAll(Arrays.asList(systemIdentifierArray));
@@ -88,6 +88,7 @@ public class PersonTest {
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(BASE_IRI.concat("/users/554433"))
             .otherIdentifiers(otherIdentifiers)
+            .otherIdentifier(identifierFour)
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
             .build();

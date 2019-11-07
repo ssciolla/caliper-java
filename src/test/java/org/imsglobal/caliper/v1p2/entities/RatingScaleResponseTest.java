@@ -19,8 +19,6 @@
 package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
@@ -34,27 +32,21 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class RatingScaleResponseTest {
     private RatingScaleResponse entity;
-    private List<String> selections;
 
     private static final String BASE_IRI = "https://example.edu";
 
     @Before
     public void setUp() throws Exception {
 
-        selections = Lists.newArrayList();
-        selections.add("Satisfied");
-
         entity = RatingScaleResponse.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/1/users/554433/responses/1"))
-            .selections(selections)
+            .selection("Satisfied")
             .startedAtTime(new DateTime(2018, 8, 1, 5, 55, 48, 0, DateTimeZone.UTC))
             .endedAtTime(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .duration("PT4M12S")

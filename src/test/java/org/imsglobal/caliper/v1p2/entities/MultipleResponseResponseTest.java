@@ -70,7 +70,7 @@ public class MultipleResponseResponseTest {
             .endedAtTime(new DateTime(2016, 11, 15, 10, 15, 30, 0, DateTimeZone.UTC))
             .build();
 
-        String[] valueArray = {"A", "D", "E"};
+        String[] valueArray = {"A", "D"};
         List<String> values = Lists.newArrayList();
         values.addAll(Arrays.asList(valueArray));
 
@@ -82,6 +82,7 @@ public class MultipleResponseResponseTest {
             .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 22, 0, DateTimeZone.UTC))
             .endedAtTime(new DateTime(2016, 11, 15, 10, 15, 30, 0, DateTimeZone.UTC))
             .values(values)
+            .value("E")
             .build();
     }
 

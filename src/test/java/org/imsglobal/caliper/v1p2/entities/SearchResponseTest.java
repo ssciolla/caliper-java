@@ -47,7 +47,7 @@ public class SearchResponseTest {
     private SearchResponse entity;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String BASE_CATALOG_IRI = "https://example.edu/catalog";
+    private static final String BASE_CATALOG_IRI = BASE_IRI.concat("/catalog");
 
     @Before
     public void setUp() throws Exception {

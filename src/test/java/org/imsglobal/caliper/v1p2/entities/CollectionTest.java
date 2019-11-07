@@ -74,12 +74,12 @@ public class CollectionTest {
 
         items = Lists.newArrayList();
         items.add(video1);
-        items.add(video2);
 
         entity = Collection.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
             .id(SECTION_IRI.concat("/resources/2"))
             .items(items)
+            .item(video2)
             .dateCreated(new DateTime(2019, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .dateModified(new DateTime(2019, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
             .build();

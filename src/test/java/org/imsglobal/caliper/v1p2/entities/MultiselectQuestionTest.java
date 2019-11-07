@@ -41,23 +41,22 @@ public class MultiselectQuestionTest {
     private MultiselectQuestion entity;
 
     private static final String BASE_IRI = "https://example.edu";
+    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201801/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
 
-        String[] labelArray = {"Calculus", "Number theory", "Combinatorics", "Algebra"};
+        String[] labelArray = {"Calculus", "Number theory", "Combinatorics"};
         List<String> itemLabels = Lists.newArrayList();
         itemLabels.addAll(Arrays.asList(labelArray));
 
         String[] valueArray = {
-            "https://example.edu/terms/201801/courses/7/sections/1/objectives/1",
-            "https://example.edu/terms/201801/courses/7/sections/1/objectives/2",
-            "https://example.edu/terms/201801/courses/7/sections/1/objectives/3",
-            "https://example.edu/terms/201801/courses/7/sections/1/objectives/4"
+            SECTION_IRI.concat("/objectives/1"),
+            SECTION_IRI.concat("/objectives/2"),
+            SECTION_IRI.concat("/objectives/3")
         };
         List<String> itemValues = Lists.newArrayList();
         itemValues.addAll(Arrays.asList(valueArray));
-
 
         entity = MultiselectQuestion.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
@@ -65,7 +64,9 @@ public class MultiselectQuestionTest {
             .questionPosed("What do you want to study today?")
             .points(4)
             .itemLabels(itemLabels)
+            .itemLabel("Algebra")
             .itemValues(itemValues)
+            .itemValue(SECTION_IRI.concat("/objectives/4"))
             .build();
     }
 

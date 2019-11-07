@@ -19,10 +19,11 @@
 package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.response.RatingScaleResponse;
+import org.imsglobal.caliper.entities.agent.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -32,25 +33,53 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import java.util.List;
+
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class RatingScaleResponseTest {
-    private RatingScaleResponse entity;
+public class GroupTest {
+    private Group entity;
+    private List<CaliperAgent> people;
+    private CourseOffering courseOffering;
+    private CourseSection courseSection;
 
     private static final String BASE_IRI = "https://example.edu";
 
     @Before
     public void setUp() throws Exception {
 
-        entity = RatingScaleResponse.builder()
+        String[] iriEndings = {
+            "/users/554433",
+            "/users/778899",
+            "/users/445566",
+            "/users/667788",
+        };
+
+        Person person;
+        people = Lists.newArrayList();
+        for (String iriEnding: iriEndings) {
+            person = Person.builder().id(BASE_IRI.concat(iriEnding)).build();
+            people.add(person);
+        }
+
+        courseOffering = CourseOffering.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7"))
+            .build();
+
+        courseSection = CourseSection.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1"))
+            .subOrganizationOf(courseOffering)
+            .build();
+
+        entity = Group.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
-            .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/1/users/554433/responses/1"))
-            .selection("Satisfied")
-            .startedAtTime(new DateTime(2018, 8, 1, 5, 55, 48, 0, DateTimeZone.UTC))
-            .endedAtTime(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .duration("PT4M12S")
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1/groups/2"))
+            .name("Discussion Group 2")
+            .subOrganizationOf(courseSection)
+            .members(people)
+            .member(Person.builder().id(BASE_IRI.concat("/users/889900")).build())
+            .dateCreated(new DateTime(2016, 11, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
     }
 
@@ -59,7 +88,7 @@ public class RatingScaleResponseTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEntityRatingScaleResponse.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityGroup.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

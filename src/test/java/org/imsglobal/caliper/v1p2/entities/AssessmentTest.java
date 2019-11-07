@@ -23,11 +23,8 @@ import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.CourseOffering;
-import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
-import org.imsglobal.caliper.entities.resource.VideoObject;
+import org.imsglobal.caliper.entities.resource.Assessment;
+import org.imsglobal.caliper.entities.resource.AssessmentItem;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -42,68 +39,36 @@ import java.util.List;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class DigitalResourceCollectionTest {
-    private CourseOffering course;
-    private CourseSection section;
-    private List<CaliperDigitalResource> resources;
-    private List<String> keywords;
-    private VideoObject video1;
-    private VideoObject video2;
-    private DigitalResourceCollection entity;
+public class AssessmentTest {
+    private Assessment entity;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String COURSE_IRI = BASE_IRI.concat("/terms/201601/courses/7");
     private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
-        
-        keywords = Lists.newArrayList();
-        keywords.add("collection");
-        keywords.add("videos");
 
-        course = CourseOffering.builder()
-            .id(COURSE_IRI)
-            .build();
+        List<AssessmentItem> items = Lists.newArrayList();
+        items.add(AssessmentItem.builder().id(SECTION_IRI.concat("/assess/1/items/1")).build());
+        items.add(AssessmentItem.builder().id(SECTION_IRI.concat("/assess/1/items/2")).build());
 
-        section = CourseSection.builder()
-            .id(SECTION_IRI)
-            .subOrganizationOf(course)
-            .build();
-
-        video1 = VideoObject.builder()
-            .id(BASE_IRI.concat("/videos/1225"))
-            .mediaType("video/ogg")
-            .name("Introduction to IMS Caliper")
-            .storageName("caliper-intro.ogg")
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .duration("PT1H12M27S")
-            .version("1.1")
-            .build();
-
-        video2 = VideoObject.builder()
-            .id(BASE_IRI.concat("/videos/5629"))
-            .mediaType("video/ogg")
-            .name("IMS Caliper Activity Profiles")
-            .storageName("caliper-activity-profiles.ogg")
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .duration("PT55M13S")
-            .version("1.1.1")
-            .build();
-
-        resources = Lists.newArrayList();
-        resources.add(video2);
-
-        entity = DigitalResourceCollection.builder()
+        entity = Assessment.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
-            .id(SECTION_IRI.concat("/resources/2"))
-            .name("Video Collection")
-            .keywords(keywords)
-            .items(resources)
-            .item(video1)
-            .isPartOf(section)
+            .id(SECTION_IRI.concat("/assess/1"))
+            .name("Quiz One")
+            .items(items)
+            .item(AssessmentItem.builder().id(SECTION_IRI.concat("/assess/1/items/3")).build())
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
+            .datePublished(new DateTime(2016, 8, 15, 9, 30, 0, 0, DateTimeZone.UTC))
+            .dateToActivate(new DateTime(2016, 8, 16, 5, 0, 0, 0, DateTimeZone.UTC))
+            .dateToShow(new DateTime(2016, 8, 16, 5, 0, 0, 0, DateTimeZone.UTC))
+            .dateToStartOn(new DateTime(2016, 8, 16, 5, 0, 0, 0, DateTimeZone.UTC))
+            .dateToSubmit(new DateTime(2016, 9, 28, 11, 59, 59, 0, DateTimeZone.UTC))
+            .maxAttempts(2)
+            .maxSubmits(2)
+            .maxScore(15.0)
+            .version("1.0")
             .build();
     }
 
@@ -112,7 +77,7 @@ public class DigitalResourceCollectionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEntityDigitalResourceCollection.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityAssessment.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

@@ -19,15 +19,13 @@
 package org.imsglobal.caliper.v1p2.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.agent.CourseOffering;
 import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.resource.CaliperDigitalResource;
-import org.imsglobal.caliper.entities.resource.DigitalResourceCollection;
-import org.imsglobal.caliper.entities.resource.VideoObject;
+import org.imsglobal.caliper.identifiers.SystemIdentifier;
+import org.imsglobal.caliper.identifiers.SystemIdentifierType;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -37,73 +35,38 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import java.util.List;
-
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class DigitalResourceCollectionTest {
-    private CourseOffering course;
-    private CourseSection section;
-    private List<CaliperDigitalResource> resources;
-    private List<String> keywords;
-    private VideoObject video1;
-    private VideoObject video2;
-    private DigitalResourceCollection entity;
+public class CourseSectionTest {
+    private CourseSection entity;
+    private CourseOffering courseOffering;
 
     private static final String BASE_IRI = "https://example.edu";
-    private static final String COURSE_IRI = BASE_IRI.concat("/terms/201601/courses/7");
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
 
     @Before
     public void setUp() throws Exception {
-        
-        keywords = Lists.newArrayList();
-        keywords.add("collection");
-        keywords.add("videos");
 
-        course = CourseOffering.builder()
-            .id(COURSE_IRI)
+        SystemIdentifier otherIdentifier = SystemIdentifier.builder()
+            .identifier("example.edu:SI182-001-F16")
+            .identifierType(SystemIdentifierType.LIS_SOURCED_ID)
             .build();
 
-        section = CourseSection.builder()
-            .id(SECTION_IRI)
-            .subOrganizationOf(course)
+        courseOffering = CourseOffering.builder()
+            .id(BASE_IRI.concat("/terms/201601/courses/7"))
+            .courseNumber("CPS 435")
             .build();
 
-        video1 = VideoObject.builder()
-            .id(BASE_IRI.concat("/videos/1225"))
-            .mediaType("video/ogg")
-            .name("Introduction to IMS Caliper")
-            .storageName("caliper-intro.ogg")
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .duration("PT1H12M27S")
-            .version("1.1")
-            .build();
-
-        video2 = VideoObject.builder()
-            .id(BASE_IRI.concat("/videos/5629"))
-            .mediaType("video/ogg")
-            .name("IMS Caliper Activity Profiles")
-            .storageName("caliper-activity-profiles.ogg")
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .duration("PT55M13S")
-            .version("1.1.1")
-            .build();
-
-        resources = Lists.newArrayList();
-        resources.add(video2);
-
-        entity = DigitalResourceCollection.builder()
+        entity = CourseSection.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
-            .id(SECTION_IRI.concat("/resources/2"))
-            .name("Video Collection")
-            .keywords(keywords)
-            .items(resources)
-            .item(video1)
-            .isPartOf(section)
+            .id(BASE_IRI.concat("/terms/201601/courses/7/sections/1"))
+            .academicSession("Fall 2016")
+            .courseNumber("CPS 435-01")
+            .name("CPS 435 Learning Analytics, Section 01")
+            .otherIdentifier(otherIdentifier)
+            .category("seminar")
+            .subOrganizationOf(courseOffering)
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .dateModified(new DateTime(2016, 9, 2, 11, 30, 0, 0, DateTimeZone.UTC))
             .build();
     }
 
@@ -112,7 +75,7 @@ public class DigitalResourceCollectionTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEntityDigitalResourceCollection.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityCourseSection.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

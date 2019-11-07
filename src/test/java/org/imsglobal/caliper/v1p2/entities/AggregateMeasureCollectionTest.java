@@ -45,9 +45,6 @@ public class AggregateMeasureCollectionTest {
     private AggregateMeasure unitsCompleted;
     private AggregateMeasure minutesOnTask;
 
-    private static final String BASE_IRI = "https://example.edu";
-    private static final String SECTION_IRI = BASE_IRI.concat("/terms/201601/courses/7/sections/1");
-
     @Before
     public void setUp() throws Exception {
 
@@ -79,7 +76,6 @@ public class AggregateMeasureCollectionTest {
             .id("urn:uuid:60b4db01-f1e5-4a7f-add9-6a8f761625b1")
             .items(measures)
             .build();
-
     }
 
     @Test

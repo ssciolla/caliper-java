@@ -22,9 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.response.RatingScaleResponse;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import org.imsglobal.caliper.entities.agent.Organization;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,22 +33,25 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class RatingScaleResponseTest {
-    private RatingScaleResponse entity;
+public class OrganizationTest {
+    private Organization entity;
+    private Organization college;
 
     private static final String BASE_IRI = "https://example.edu";
 
     @Before
     public void setUp() throws Exception {
 
-        entity = RatingScaleResponse.builder()
+        college = Organization.builder()
+            .id(BASE_IRI.concat("/colleges/1"))
+            .name("College of Engineering")
+            .build();
+
+        entity = Organization.builder()
             .context(JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value()))
-            .id(BASE_IRI.concat("/surveys/100/questionnaires/30/items/1/users/554433/responses/1"))
-            .selection("Satisfied")
-            .startedAtTime(new DateTime(2018, 8, 1, 5, 55, 48, 0, DateTimeZone.UTC))
-            .endedAtTime(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .duration("PT4M12S")
-            .dateCreated(new DateTime(2018, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+            .id(BASE_IRI.concat("/colleges/1/depts/1"))
+            .name("Computer Science Department")
+            .subOrganizationOf(college)
             .build();
     }
 
@@ -59,7 +60,7 @@ public class RatingScaleResponseTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(entity);
 
-        String fixture = jsonFixture("fixtures/v1p2/caliperEntityRatingScaleResponse.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEntityOrganization.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

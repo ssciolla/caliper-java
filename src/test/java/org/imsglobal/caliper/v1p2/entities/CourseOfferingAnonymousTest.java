@@ -37,8 +37,6 @@ import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 public class CourseOfferingAnonymousTest {
     private CourseOffering entity;
 
-    private static final String BASE_IRI = "https://example.edu";
-
     @Before
     public void setUp() throws Exception {
 

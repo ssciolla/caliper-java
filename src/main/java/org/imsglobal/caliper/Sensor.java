@@ -96,7 +96,7 @@ public class Sensor {
      * @param data
      * @return envelope
      */
-    public Envelope create(String id, DateTime sendTime, String dataVersion, List<CaliperSendable> data) {
+    public Envelope createEnvelope(String id, DateTime sendTime, String dataVersion, List<CaliperSendable> data) {
         return new Envelope(id, DateTime.now(), dataVersion, data);
     }
 

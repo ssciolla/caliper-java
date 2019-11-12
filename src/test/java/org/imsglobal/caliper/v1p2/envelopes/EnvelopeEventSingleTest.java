@@ -16,7 +16,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.v1p1.envelopes;
+package org.imsglobal.caliper.v1p2.envelopes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.ContentType;
@@ -26,22 +26,18 @@ import org.imsglobal.caliper.Envelope;
 import org.imsglobal.caliper.Sensor;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
-import org.imsglobal.caliper.clients.HttpClient;
-import org.imsglobal.caliper.clients.HttpClientOptions;
+import org.imsglobal.caliper.actions.CaliperAction;
 import org.imsglobal.caliper.config.Config;
 import org.imsglobal.caliper.context.CaliperJsonldContextIRI;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
-import org.imsglobal.caliper.entities.agent.CourseSection;
-import org.imsglobal.caliper.entities.agent.Membership;
-import org.imsglobal.caliper.entities.agent.Person;
-import org.imsglobal.caliper.entities.agent.Role;
-import org.imsglobal.caliper.entities.agent.SoftwareApplication;
-import org.imsglobal.caliper.entities.agent.Status;
-import org.imsglobal.caliper.entities.resource.Assessment;
+import org.imsglobal.caliper.entities.agent.*;
 import org.imsglobal.caliper.entities.outcome.Attempt;
+import org.imsglobal.caliper.entities.resource.Assessment;
 import org.imsglobal.caliper.entities.session.Session;
 import org.imsglobal.caliper.events.AssessmentEvent;
+import org.imsglobal.caliper.profiles.CaliperProfile;
+import org.imsglobal.caliper.profiles.Profile;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -80,7 +76,7 @@ public class EnvelopeEventSingleTest {
 
     @Before
     public void setup() {
-        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P1.value());
+        context = JsonldStringContext.create(CaliperJsonldContextIRI.V1P2.value());
 
         id = "urn:uuid:c51570e4-f8ed-4c18-bb3a-dfe51b2cc594";
 
@@ -129,7 +125,7 @@ public class EnvelopeEventSingleTest {
             .build();
 
         // Build event
-        event = buildEvent(Action.STARTED);
+        event = buildEvent(Profile.ASSESSMENT, Action.STARTED);
 
         // Add event to data array
         List<CaliperSendable> data = new ArrayList<>();
@@ -138,20 +134,12 @@ public class EnvelopeEventSingleTest {
         // Send time
         sendTime = new DateTime(2016, 11, 15, 11, 5, 1, 0, DateTimeZone.UTC);
 
-        // For fun, initialize Sensor, Client and Requestor provisioned with Options
-        Sensor sensor = Sensor.create(BASE_IRI.concat("/sensors/1"));
-        HttpClientOptions opts = HttpClientOptions.builder().apiKey("869e5ce5-214c-4e85-86c6-b99e8458a592").build();
-        HttpClient client = HttpClient.create(sensor.getId(), opts);
-        sensor.registerClient(client);
-
-        // Create config instance
-        Config config = Config.builder().dataVersion(CaliperJsonldContextIRI.V1P1.value()).build();
+        // Create Config instance
+        Config config = Config.builder().dataVersion(Config.DATA_VERSION).build();
 
         // Create envelope
+        Sensor sensor = Sensor.create(BASE_IRI.concat("/sensors/1"));
         envelope = sensor.createEnvelope(sensor.getId(), sendTime, config.getDataVersion(), data);
-
-        // Don't send
-        // sensor.send(client, envelope);
     }
 
     @Test
@@ -164,7 +152,7 @@ public class EnvelopeEventSingleTest {
         Matcher matcher = pattern.matcher(json);
         json = matcher.replaceFirst("\"sendTime\":\"" + sendTime +"\"");
 
-        String fixture = jsonFixture("fixtures/v1p1/caliperEnvelopeEventSingle.json");
+        String fixture = jsonFixture("fixtures/v1p2/caliperEnvelopeEventSingle.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -189,10 +177,11 @@ public class EnvelopeEventSingleTest {
      * @param action
      * @return event
      */
-    private AssessmentEvent buildEvent(Action action) {
+    private AssessmentEvent buildEvent(CaliperProfile profile, CaliperAction action) {
         return AssessmentEvent.builder()
             .context(context)
             .id(id)
+            .profile(profile)
             .actor(actor)
             .action(action)
             .object(object)

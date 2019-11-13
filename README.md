@@ -57,8 +57,8 @@ documentation, and reporting.
     * Then, create two symbolic links from the `v1p1` and `v1p2` directories under `fixtures` in *caliper-spec*. When 
       creating links from the project's root, the paths must be absolute or begin with the home (`~`) symbol.
         ```
-        ln -s /Absolute/Path/To/caliper-spec/fixtures/v1p1 /Absolute/Path/To/caliper-java/src/test/resources/fixtures/v1p1
-        ln -s /Absolute/Path/To/caliper-spec/fixtures/v1p2 /Absolute/Path/To/caliper-java/src/test/resources/fixtures/v1p2   
+        ln -s /absolute/path/to/caliper-spec/fixtures/v1p1 /Absolute/Path/To/caliper-java/src/test/resources/fixtures/v1p1
+        ln -s /absolute/path/to/caliper-spec/fixtures/v1p2 /Absolute/Path/To/caliper-java/src/test/resources/fixtures/v1p2   
         ```
 
 4) Run a Maven install command.

@@ -68,12 +68,11 @@ documentation, and reporting.
         ./mvnw clean install
         ```
 
-    * You can also build a jar with all the dependencies compiled by invoking the `uber-jar` build profile:
+    * You can also build a `.jar` file with all the dependencies compiled by invoking the `uber-jar` build profile. This
+      will create a file at the path `target/caliper-java-{version}.jar`.
         ```
         mvn clean -P uber-jar install
         ```
-
-    This will create a jar in: `target/caliper-java-{version}.jar`
 
 ### Dependency Management
 You can specify *caliper-java* as a project or module dependency in the appropriate `pom.xml` file:

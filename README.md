@@ -73,11 +73,10 @@ documentation, and reporting.
 
 4) Run a Maven install command.
     
-    * You can run the standard install process and tests with the following:
+    * You can run the standard build process and tests with the following:
         ```
         ./mvnw clean install
         ```
-
     * You can also build a `.jar` file with all the dependencies compiled by invoking the `uber-jar` build profile. This
       will create a file at the path `target/caliper-java-{version}.jar`.
         ```

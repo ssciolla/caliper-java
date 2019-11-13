@@ -37,14 +37,25 @@ documentation, and reporting.
 ### Building
 
 1) Clone the IMS Global *caliper-java* project repository to your development machine. 
-
     * We recommend forking the repository using your GitHub account and then cloning the fork.
+        ```
+        git clone https://github.com/{your GitHub id}/caliper-java.git  # HTTPS
+        git clone git@github.com:{your GitHub id}/caliper-java.git      # SSH
+        ```
 
 2) Gain access to the JSON-LD fixtures in [*caliper-spec*](https://github.com/imsglobal/caliper-spec).
     * Clone *caliper-spec* to your development machine somewhere outside of your *caliper-java* repository. We 
       typically set up the two projects so they reside in sibling directories.
+      ```
+      git clone https://github.com/imsglobal/caliper-spec.git  # HTTPS
+      git clone git@github.com:imsglobal/caliper-java.git      # SSH
+      ```
     * Checkout the `develop` branch. The `fixtures` directory will then be accessible. (Note: the develop branch of 
       *caliper-spec* may be merged to the master branch in the near future).
+        ```
+        cd caliper-spec
+        git checkout develop
+        ```
 
 3) Back in *caliper-java*, add symbolic links to the v1p1 and v1p2 fixture directories in *caliper-spec.*
     * From the root directory, create a `resources` directory under `src/test` and a `fixtures` directory inside 
@@ -53,17 +64,16 @@ documentation, and reporting.
         mkdir src/test/resources
         mkdir src/test/resources/fixtures 
         ```
-      
     * Then, create two symbolic links from the `v1p1` and `v1p2` directories under `fixtures` in *caliper-spec*. When 
       creating links from the project's root, the paths must be absolute or begin with the home (`~`) symbol.
         ```
-        ln -s /absolute/path/to/caliper-spec/fixtures/v1p1 /Absolute/Path/To/caliper-java/src/test/resources/fixtures/v1p1
-        ln -s /absolute/path/to/caliper-spec/fixtures/v1p2 /Absolute/Path/To/caliper-java/src/test/resources/fixtures/v1p2   
+        ln -s /absolute/path/to/caliper-spec/fixtures/v1p1 /absolute/path/to/caliper-java/src/test/resources/fixtures/v1p1
+        ln -s /absolute/path/to/caliper-spec/fixtures/v1p2 /absolute/path/to/caliper-java/src/test/resources/fixtures/v1p2   
         ```
 
 4) Run a Maven install command.
     
-    * You can run the standard install routine and tests with the following:
+    * You can run the standard install process and tests with the following:
         ```
         ./mvnw clean install
         ```

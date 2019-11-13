@@ -5,61 +5,75 @@
 
 # caliper-java
 The [Caliper Analytics® Specification](https://www.imsglobal.org/caliper/v1p1/caliper-spec-v1p1) 
-provides a structured approach to describing, collecting and exchanging learning activity data at 
+provides a structured approach to describing, collecting, and exchanging learning activity data at 
 scale. Caliper also defines an application programming interface (the Sensor API™) for marshalling 
 and transmitting event data from instrumented applications to target endpoints for storage, 
-analysis and use.  
+analysis, and use.
 
-*caliper-java* is a reference implementation of the Sensor API™ written in Javas.
+*caliper-java* is a reference implementation of the Sensor API™ written in Java.
 
 ## Branches
-* __master__: stable, deployable branch that stores the official release history.  
-* __develop__: unstable development branch.  Current work that targets a future release is merged 
+* __master__: stable, deploy-able branch that stores the official release history.  
+* __develop__: unstable development branch. Current work that targets a future release is merged 
 to this branch.
 
 ## Tags
 *caliper-java* releases are tagged and versioned MAJOR.MINOR.PATCH\[-label\] (e.g., 1.1.1). 
-Pre-release tags are identified with an extensions label (e.g., "1.2.0-RC01").  The tags are stored 
+Pre-release tags are identified with an extensions label (e.g., "1.2.0-RC01"). The tags are stored 
 in this repository.
 
 ## Contributing
-We welcome the posting of issues by non IMS Global Learning Consortium members (e.g., feature 
-requests, bug reports, questions, etc.) but we *do not* accept contributions in the form of pull 
+We welcome the posting of issues by non-IMS Global Learning Consortium members (e.g., feature 
+requests, bug reports, questions, etc.), but we *do not* accept contributions in the form of pull 
 requests from non-members. See [CONTRIBUTING.md](./CONTRIBUTING.md) for more 
 information.
 
 ## Getting Started
-Fork the IMS Global *caliper-java* project to your Github account and then clone your copy to your 
-local development machine.  
 
 ### Prerequisites
 *caliper-java* uses Apache [Maven](https://maven.apache.org/) 3.x to manage the build process, 
-documentation and reporting.
+documentation, and reporting.
 
 ### Building
-First, clone the *caliper-spec* project to your development machine. Checkout the `develop` branch. Then 
-and add symbolic links for the v1p1 and v1p2 fixtures: 
 
-```
-ln -s /Path/to/caliper-spec/fixtures/v1p0 src/test/resources/fixtures/v1p0
-ln -s /Path/to/caliper-spec/fixtures/v1p1 src/test/resources/fixtures/v1p1
-ln -s /Path/to/caliper-spec/fixtures/v1p2 src/test/resources/fixtures/v1p2
-``` 
+1) Clone the IMS Global *caliper-java* project repository to your development machine. 
 
-Then from your local *caliper-java* directory run:
+    * We recommend forking the repository using your GitHub account and then cloning the fork.
 
-```
-./mvnw clean install
-```
+2) Gain access to the JSON-LD fixtures in [*caliper-spec*](https://github.com/imsglobal/caliper-spec).
+    * Clone *caliper-spec* to your development machine somewhere outside of your *caliper-java* repository. We 
+      typically set up the two projects so they reside in sibling directories.
+    * Checkout the `develop` branch. The `fixtures` directory will then be accessible. (Note: the develop branch of 
+      *caliper-spec* may be merged to the master branch in the near future).
 
-You can also build a jar with all the dependencies compiled by invoking the `uber-jar` build 
-profile:
+3) Back in *caliper-java*, add symbolic links to the v1p1 and v1p2 fixture directories in *caliper-spec.*
+    * From the root directory, create a `resources` directory under `src/test` and a `fixtures` directory inside 
+      `resources`.
+        ```
+        mkdir src/test/resources
+        mkdir src/test/resources/fixtures 
+        ```
+      
+    * Then, create two symbolic links from the `v1p1` and `v1p2` directories under `fixtures` in *caliper-spec*. When 
+      creating links from the project's root, the paths must be absolute or begin with the home (`~`) symbol.
+        ```
+        ln -s /Absolute/Path/To/caliper-spec/fixtures/v1p1 /Absolute/Path/To/caliper-java/src/test/resources/fixtures/v1p1
+        ln -s /Absolute/Path/To/caliper-spec/fixtures/v1p2 /Absolute/Path/To/caliper-java/src/test/resources/fixtures/v1p2   
+        ```
 
-```
-mvn clean -P uber-jar install
-```
+4) Run a Maven install command.
+    
+    * You can run the standard install routine and tests with the following:
+        ```
+        ./mvnw clean install
+        ```
 
-This will create a jar in: `target/caliper-java-{version}.jar`
+    * You can also build a jar with all the dependencies compiled by invoking the `uber-jar` build profile:
+        ```
+        mvn clean -P uber-jar install
+        ```
+
+    This will create a jar in: `target/caliper-java-{version}.jar`
 
 ### Dependency Management
 You can specify *caliper-java* as a project or module dependency in the appropriate `pom.xml` file:
